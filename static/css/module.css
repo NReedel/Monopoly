@@ -1,2 +1,174 @@
-/* module.css */
-/* modular elements */
+/*************************************/
+/* module.css                       */
+/* modular elements                */
+/**********************************/
+
+/* Tiles */
+.tile {
+	position: relative;
+	/* Height will probably need changed: */
+	height: 600px;
+
+	display: flex;
+	flex-flow: column nowrap;
+	align-content: flex-start;
+	align-items: center;
+	justify-content: flex-start;
+
+	text-align: center;
+	font-family: var(--tile-font);
+	font-size: var(--tile-font-size);
+	line-height: var(--tile-line-height);
+	font-weight: var(--tile-font-weight);
+	text-transform: uppercase;
+
+	background-color: var(--board-color);
+	border: var(--tile-border);
+}
+
+/*************************************/
+/* Tile Content                     */
+/***********************************/
+
+.tile-top, .tile-middle, .tile-bottom {
+	display: flex;
+	flex-flow: row wrap;
+
+	padding: 10px;
+	width: calc(100% - 20px);
+}
+.tile-top, .tile-bottom {
+	align-content: center;
+	align-items: center;
+	justify-content: center;
+}
+
+/*****************************************/
+/* Tile Content: Top                    */
+/* Property color and other tile names */
+/**************************************/
+.tile-top {
+	height: var(--tile-top-height);
+}
+
+/*****************************************/
+/* Tile Content: Middle                 */
+/* Property Names, special tile images */
+/**************************************/
+.tile-middle {
+	align-content: flex-start;
+	align-items: center;
+	justify-content: center;
+
+	padding-top: 30px;
+	
+	/**************************************/
+	/* The height is calculated as:      */
+	/* 100% - all content padding       */
+	/* - middle-top padding            */
+	/* - all content borders          */
+	/* - top height                  */
+	/* - bottom height              */
+	/*******************************/	
+	height: calc(100% - 60px - 20px
+		- calc(3 * var(--tile-border-size))
+		- var(--tile-top-height) 
+		- var(--tile-bottom-height));
+}
+
+/* Might need adjusted if we add property images */
+.tile-middle img {
+	height: calc(100% - 20px);
+	width: auto;
+}
+
+/**************************************/
+/* Tile Content: Bottom              */
+/* Prices, amounts to pay, or empty */
+/***********************************/
+.tile-bottom {
+	height: var(--tile-bottom-height);
+	position: absolute;
+	bottom: 0;
+}
+
+.tile-bottom img {
+	height: 100%;
+	width: auto;
+}
+
+/*************************************/
+/* Tile Aspect Ratios               */
+/***********************************/
+.property, .special {
+	aspect-ratio: 80 / 124;
+}
+.corner {
+	aspect-ratio: 1 / 1;
+}
+
+/*************************************/
+/* Tile Types                       */
+/***********************************/
+.property {
+
+}
+/* Unique height for property color */
+.property .tile-top {
+	height: var(--tile-top-height-property);
+	border-bottom: var(--tile-border);
+}
+
+/* Includes all non-property tiles */
+.special {
+
+}
+
+/* Special: Corner tiles */
+/* Go keeps default font size */
+.corner:not(.go) {
+	font-size: var(--tile-font-size-corner);
+}
+
+.corner .tile-top {
+	height: var(--tile-top-height-corner);
+}
+
+.corner .tile-middle {
+	height: calc(100% - 60px - 20px
+		- calc(3 * var(--tile-border-size))
+		- var(--tile-top-height-corner) 
+		- var(--tile-bottom-height));
+}
+
+/* Special: Corner: Go Tile */
+/* Unique tile content spacing */
+.go .tile-top {
+	height: var(--tile-top-height-go);
+}
+.go .tile-middle {
+	height: calc(100% - 60px - 20px
+		- calc(3 * var(--tile-border-size))
+		- var(--tile-top-height-go) 
+		- var(--tile-bottom-height-go));
+}
+.go .tile-bottom {
+	height: var(--tile-bottom-height-go);
+}
+
+.card {
+
+}
+/* Larger font size for tax tiles */
+.tax .tile-top {
+	font-size: var(--tile-font-size-tax);
+}
+.railroad {
+
+}
+.utility {
+
+}
+
+
+/*************************************/

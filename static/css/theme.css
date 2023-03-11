@@ -1,2 +1,46 @@
-/* theme.css */
-/* theme-dependent styles */
+/*************************************/
+/* theme.css                        */
+/* theme-dependent styles          */
+/**********************************/
+
+/* Tile > Properties > Top Colors */
+
+.prop-purple .tile-top {
+	background-color: var(--property-purple);
+}
+.prop-light-blue .tile-top {
+	background-color: var(--property-light-blue);
+}
+.prop-magenta .tile-top {
+	background-color: var(--property-magenta);
+}
+.prop-orange .tile-top {
+	background-color: var(--property-orange);
+}
+.prop-red .tile-top {
+	background-color: var(--property-red);
+}
+.prop-yellow .tile-top {
+	background-color: var(--property-yellow);
+}
+.prop-green .tile-top {
+	background-color: var(--property-green);
+}
+.prop-blue .tile-top {
+	background-color: var(--property-blue);
+}
+
+/*************************************/
+
+.jail .tile-top {
+	background-color: var(--tile-jail-orange);
+}
+.jail .tile-middle {
+	background: var(--tile-jail-orange);
+	background: -webkit-linear-gradient(
+		180deg, var(--tile-jail-orange), transparent);
+	background: linear-gradient(
+		180deg, var(--tile-jail-orange), transparent);
+}
+
+/*************************************/

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="100mm"
+   height="64mm"
+   viewBox="0 0 100 64"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="go.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="101.43852"
+     inkscape:cy="111.1964"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect880"
+       style="fill:#000000;stroke:#000000;stroke-width:0.535999;stroke-linecap:round;stroke-linejoin:round"
+       d="m 54.351378,6.1189897 v 9.2562823 h 0.03597 v 33.174615 h -0.03597 v 9.256284 h 0.03597 v 0.05457 h 9.184349 v -0.05457 h 21.505664 v 0.0186 h 9.184761 v -0.0186 -9.256284 -42.4308973 z m 9.220316,9.2562823 H 85.077357 V 48.549887 H 63.571694 Z" />
+    <path
+       id="rect880-8"
+       style="fill:#000000;stroke:#000000;stroke-width:0.535999;stroke-linecap:round;stroke-linejoin:round"
+       d="m 5.7378779,6.1189987 v 9.2562823 33.174616 9.256283 0.0186 H 14.92264 v -0.0186 h 21.466389 v 0.07483 h 9.334418 V 38.314243 h 0.04754 v -9.351368 h -26.74896 v 9.351368 h 17.367 V 48.549897 H 14.92264 V 15.375281 H 45.64862 V 6.1189987 H 14.92264 Z" />
+  </g>
+</svg>

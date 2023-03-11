@@ -10,10 +10,22 @@ A monopoly-style game implemented in Python using object-oriented programming.
 │   ├── screenshots
 │   └── uml
 ├── static/
-│   ├── css
-│   ├── img
-│   ├── js
-│   ├── json
+│   ├── css/
+│   │   ├── animation.css
+│   │   ├── base.css
+│   │   ├── layout.css
+│   │   ├── media.css
+│   │   ├── module.css
+│   │   ├── state.css
+│   │   └── theme.css
+│   ├── img/
+│   │   ├── tiles/
+│   │   │   └── *.svg
+│   │   └── favicon.ico
+│   ├── js/
+│   │   └── scripts.js
+│   ├── json/
+│   │   └── tiles.json
 │   └── py/
 │       ├── bank.py
 │       ├── board.py
@@ -21,7 +33,8 @@ A monopoly-style game implemented in Python using object-oriented programming.
 │       ├── players.py
 │       └── tiles.py
 ├── templates/
-│   └── *.html
+│   ├── layout.html
+│   └── tile.html
 ├── README.md
 ├── routes.py
 ├── __init__.py

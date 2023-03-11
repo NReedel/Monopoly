@@ -1,0 +1,361 @@
+<!-- tile.html -->
+<!-- HTML snippet later to be converted to a Flask template -->
+
+<!-- FLASK TEMPLATES WILL GO HERE LATER -->
+<!--
+
+{% for tile in tiles: %}
+<div class="{{ tile.css.class }}">
+	<div class="tile-top">
+		{{ tile.render.top }}
+	</div>
+
+	<div class="tile-middle">
+		{{ tile.render.middle }}	
+	</div>
+
+	<div class="tile-bottom">
+		{{ tile.render.bottom }}	
+	</div>
+</div>
+{% endfor %}
+
+-->
+
+<html><head>
+
+<!-- FAVICON -->
+<link rel="icon" type="image/x-icon" href="../static/img//favicon.ico">
+
+<!-- GOOGLE FONTS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Miriam+Libre:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- SMACSS -->
+<link rel="stylesheet" href="../static/css/animation.css">
+<link rel="stylesheet" href="../static/css/base.css">
+<link rel="stylesheet" href="../static/css/layout.css">
+<link rel="stylesheet" href="../static/css/media.css">
+<link rel="stylesheet" href="../static/css/module.css">
+<link rel="stylesheet" href="../static/css/state.css">
+<link rel="stylesheet" href="../static/css/theme.css">
+
+<style>
+	/* All styles here are for this test file's use only */
+	#tile-tests {
+		position: relative;
+		padding: 20px;
+		display: flex;
+		flex-flow: column wrap;
+		align-content: center;
+		align-items: center;
+		justify-content: flex-start;
+	}
+	.tile {
+		margin-top: 20px;
+		margin-bottom: 30px;
+	}
+	hr {
+		border: 1px dotted gray;
+		width: 100%;
+	}
+	p {
+		width: 70%;
+		margin: 0 auto 10px auto !important;
+		text-align: center;
+	}
+	p, span {
+		font-size: 1.1em;
+		margin: 0;
+	}
+	pre {
+		font-size: 1.5em;
+		margin: 0 0 20px 0;
+	}
+	span {
+		font-weight: 700;
+		margin: auto 5px;
+	}
+
+	h3 {
+		font-size: 2.5em;
+	}
+</style>
+
+</head><body><div id="tile-tests">
+
+<h3>Tile Tests</h3>
+<p>Test renderings of tiles and css class hierarchies.</p>
+<p>Some tile images from <a href="https://fonts.google.com/icons">Google Material Symbols</a>, others made by me.</p>
+<br><br>
+
+<h3>Tile Structures</h3>
+<p>Each tile has three main sections: top, middle, and bottom.</p>
+<p>The styles of each section is determined by the class of the tile container.</p>
+<p>The classes are descriptive of the tile's location in the hierarchy.</p>
+
+<br><br><hr><br><br>
+
+<!-- TILE TESTS -->
+<h3>Property Tile</h3>
+<pre>div class="tile property prop-purple"</pre>
+<p>Properties have special classes that determine their <span>tile-top</span> color. </p>
+<p>These colors are located in <span>./css/theme.css</span> instead of <span>./css/module.css</span> because they might be altered with different board themes later.</p>
+
+<div class="tile property prop-purple">
+	<div class="tile-top">
+		&nbsp;
+	</div>
+
+	<div class="tile-middle">
+		Baltic Avenue
+	</div>
+
+	<div class="tile-bottom">
+		$60
+	</div>
+</div>
+
+<!----->
+<br><br><hr><br><br>
+<!----->
+
+<h3>Card Tile - Community</h3>
+<pre>div class="tile special card"</pre>
+<p>All tiles that are not properties have the class <span>special</span>.</p>
+<p>The <span>card</span> class doesn't really have any special traits right now.</p>
+
+<div class="tile special card">
+	<div class="tile-top">
+		Community Chest
+	</div>
+
+	<div class="tile-middle">
+		<img src="../static/img/tiles/community-chest.svg">
+	</div>
+
+	<div class="tile-bottom">
+	</div>
+</div>
+
+<!----->
+<br><br>
+<!----->
+
+<h3>Card Tile - Chance</h3>
+<div class="tile special card">
+	<div class="tile-top">
+		Chance
+	</div>
+
+	<div class="tile-middle">
+		<img src="../static/img/tiles/chance.svg">
+	</div>
+
+	<div class="tile-bottom">
+	</div>
+</div>
+
+<!----->
+<br><br><hr><br><br>
+<!----->
+
+<h3>Tax Tile - Income</h3>
+<pre>div class="tile special tax"</pre>
+<p>The <span>tax</span> class has a slightly larger <span>tile-top</span> font size than other tiles.</p>
+
+<div class="tile special tax">
+	<div class="tile-top">
+		Income Tax
+	</div>
+
+	<div class="tile-middle">
+		<img src="../static/img/tiles/income-tax.svg">
+	</div>
+
+	<div class="tile-bottom">
+		Pay $200
+	</div>
+</div>
+
+<!----->
+<br><br>
+<!----->
+
+<h3>Tax Tile - Luxury</h3>
+<div class="tile special tax">
+	<div class="tile-top">
+		Luxury Tax
+	</div>
+
+	<div class="tile-middle">
+		<img src="../static/img/tiles/luxury-tax.svg">
+	</div>
+
+	<div class="tile-bottom">
+		Pay $100
+	</div>
+</div>
+
+<!----->
+<br><br><hr><br><br>
+<!----->
+
+<h3>Railroad Tile</h3>
+<pre>div class="tile special railroad"</pre>
+<p>The <span>railroad</span> class currently has no unique features.</p>
+
+<div class="tile special railroad">
+	<div class="tile-top">
+		Reading Railroad
+	</div>
+
+	<div class="tile-middle">
+		<img src="../static/img/tiles/railroad.svg">
+	</div>
+
+	<div class="tile-bottom">
+		$200
+	</div>
+</div>
+
+<!----->
+<br><br><hr><br><br>
+<!----->
+
+<h3>Utility Tile - Electric</h3>
+<pre>div class="tile special railroad"</pre>
+<p>The <span>utility</span> class currently has no unique features.</p>
+
+<div class="tile special utility">
+	<div class="tile-top">
+		Electric Company
+	</div>
+
+	<div class="tile-middle">
+		<img src="../static/img/tiles/electric-company.svg">
+	</div>
+
+	<div class="tile-bottom">
+		$150
+	</div>
+</div>
+
+<!----->
+<br><br>
+<!----->
+
+<h3>Utility Tile - Water</h3>
+<div class="tile special utility">
+	<div class="tile-top">
+		Water Works
+	</div>
+
+	<div class="tile-middle">
+		<img src="../static/img/tiles/water-works.svg">
+	</div>
+
+	<div class="tile-bottom">
+		$150
+	</div>
+</div>
+
+<!----->
+<br><br><hr><br><br>
+<!----->
+
+<h3>Corner Tile - Go</h3>
+<pre>div class="tile special corner go"</pre>
+<p>The <span>corner</span> class has a 1 / 1 aspect ratio, bigger font sizes, and a smaller <span>tile-top</span> and <span>tile-bottom</span>.</p>
+<p>Depending on how we implement the board, I'm thinking the corners might lose their square aspect ratio at some point... at least for mobile.</p><br>
+<p>The <span>go</span> class is unique but actually has the default <span>tile-top</span> font size.</p>
+<p>It has unique <span>tile-top</span> and <span>tile-bottom</span> spacing due to its longer top text and unique arrow image at the bottom.</p>
+
+<div class="tile special corner go">
+	<div class="tile-top">
+		Collect $200 salary <br> as you pass
+	</div>
+
+	<div class="tile-middle">
+		<img src="../static/img/tiles/go.svg">
+	</div>
+
+	<div class="tile-bottom">
+		<img src="../static/img/tiles/go-arrow.svg">		
+	</div>
+</div>
+
+<!----->
+<br><br>
+<!----->
+
+<h3>Corner Tile - Jail</h3>
+<pre>div class="tile special corner jail"</pre>
+<p>The <span>jail</span> class is also unique, but has most of the default <span>corner</span> characteristics.</p>
+<p>It has a unique background gradient that may be redesigned later...</p>
+<p>I'm thinking we might actually have two different versions of the tile depending on whether the player is sent to jail or not.</p>
+
+<div class="tile special corner jail">
+	<div class="tile-top">
+		In Jail
+	</div>
+
+	<div class="tile-middle">
+		<img src="../static/img/tiles/jail.svg">
+	</div>
+
+	<div class="tile-bottom">
+		Just Visiting
+	</div>
+</div>
+
+<!----->
+<br><br>
+<!----->
+
+<h3>Corner Tile - Free Parking</h3>
+<pre>div class="tile special corner"</pre>
+<p>The Free Parking class is a generic <span>corner</span>tile.</p>
+
+<div class="tile special corner">
+	<div class="tile-top">
+		Free
+	</div>
+
+	<div class="tile-middle">
+		<img src="../static/img/tiles/free-parking.svg">
+	</div>
+
+	<div class="tile-bottom">
+		Parking
+	</div>
+</div>
+
+<!----->
+<br><br>
+<!----->
+
+<h3>Corner Tile - Go to Jail</h3>
+<pre>div class="tile special corner"</pre>
+<p>The Free Parking class is also a generic <span>corner</span>tile.</p>
+
+<div class="tile special corner">
+	<div class="tile-top">
+		Go to
+	</div>
+
+	<div class="tile-middle">
+		<img src="../static/img/tiles/go-to-jail.svg">
+	</div>
+
+	<div class="tile-bottom">
+		Jail
+	</div>
+</div>
+
+<!----->
+<br><br><hr><br><br>
+<!----->
+
+</div></body></html>

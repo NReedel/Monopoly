@@ -1,2 +1,78 @@
-/* base.css */
-/* global variables and tags */
+/*************************************/
+/* base.css                         */
+/* global variables and tags       */
+/**********************************/
+
+:root {
+
+	--board-color: #c7dec4;
+
+	/* Tiles have 3 sections: */
+	/* tile-top: */
+	--tile-top-height: 30%;
+	--tile-top-height-property: 15%;
+	--tile-top-height-corner: 15%;
+	--tile-top-height-go: 20%;
+
+	/* tile-middle: calculated from top and bottom */
+	/* tile-bottom: */
+	--tile-bottom-height-go: 20%;
+	--tile-bottom-height: 15%;
+	
+	/* Tile borders: */
+	--tile-border-size: 7px;
+	--tile-border: var(--tile-border-size) solid black;
+	
+	/* Tile fonts: */
+	--tile-font: 'Miriam Libre', sans-serif;
+	--tile-font-size: 2.75em;
+	--tile-font-size-tax: 1.5em;
+	--tile-font-size-corner: 4em;
+	--tile-font-weight: 700;
+	--tile-line-height: 1;
+
+	/* Tile colors: */
+	--tile-jail-orange: #f48404;
+	--property-purple: #5a1484;
+	--property-light-blue: #99d4f6;
+	--property-magenta: #dd3290;
+	--property-orange: #f08002;
+	--property-red: #f3131b;
+	--property-yellow: #fcec01;
+	--property-green: #19af4e;
+	--property-blue: #036ebc;
+
+}
+
+/*************************************/
+/* Global Tags                      */
+/***********************************/
+
+html, body {
+	width: 100%;
+	min-height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+div {
+	margin: 0;
+	padding: 0;
+}
+
+/*************************************/
+/* Text Defaults                    */
+/***********************************/
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--tile-font);
+	margin: 0;
+}
+
+p, span, label, input, textarea {
+	font-family: var(--tile-font);
+	line-height: 1;
+	margin: 0;
+}
+
+/*************************************/
