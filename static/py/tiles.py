@@ -31,9 +31,12 @@ Tile
 ├── Tile_Property
 │   ├── Property_Street
 │   └── Property_Special
-├── Tile_Card
-├── Tile_Tax
-└── Tile_Corner
+│       ├── Property_Railroad
+│       └── Property_Utility
+└── Tile_Special
+    ├── Tile_Card
+    ├── Tile_Tax
+    └── Tile_Corner
 '''
 ###############################################################
 
@@ -87,31 +90,49 @@ class Property_Street(Tile_Property):
         return self.num_houses == 4
 
 
-# Railroads and Utilities
-# Might need to split later to calculate rent cost ⚠⚠⚠
-class Property_Special(Tile_Property):
+class Property_Special(Tile):
     def __init__ (self):
         self.fname_icon = ""
 
 
+class Property_Railroad(Property_Special):
+    def Get_Rent_Owed():
+        return self.set_num_owned * 25
+
+
+class Property_Utility(Property_Special):
+    def Get_Rent_Owed(roll):
+        if self.set_num_owned == 0:
+            return 0
+        elif self.set_num_owned == 1:
+            return roll * 4
+        else:
+            return roll * 10
+
+
 ###############################################################
-# Event Tiles 🎲
+# Special Tiles 🎲
 ###############################################################
+
+class Tile_Special(Tile):
+    def __init__ (self):
+        self.fname_icon = ""
+
 
 # Chance and Community Chest
-class Tile_Card(Tile):
-    def __init__ (self):
-        self.fname_icon = ""
+class Tile_Card(Tile_Special):
+    pass
+
 
 # Income and Luxury Tax
-class Tile_Tax(Tile):
+class Tile_Tax(Tile_Special):
     def __init__ (self):
-        self.fname_icon = ""
         self.tax_amount = 0
 
+
 # Will need updating later ⚠⚠⚠
-class Tile_Corner(Tile):
-    def __init__ (self):
-        self.fname_icon = ""
+class Tile_Corner(Tile_Special):
+    pass
+
 
 ###############################################################
