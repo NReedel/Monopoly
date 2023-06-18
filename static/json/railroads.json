@@ -8,7 +8,8 @@
 			"rent2": 50,
 			"rent3": 100,
 			"rent4": 200,
-			"mortgageValue": 100
+			"mortgageValue": 100,
+			"unmortgageValue": 110
 		}
 	},
 	{
@@ -20,7 +21,8 @@
 			"rent2": 50,
 			"rent3": 100,
 			"rent4": 200,
-			"mortgageValue": 100
+			"mortgageValue": 100,
+			"unmortgageValue": 110
 		}
 	},
 	{
@@ -32,7 +34,8 @@
 			"rent2": 50,
 			"rent3": 100,
 			"rent4": 200,
-			"mortgageValue": 100
+			"mortgageValue": 100,
+			"unmortgageValue": 110
 		}
 	},
 	{
@@ -44,7 +47,8 @@
 			"rent2": 50,
 			"rent3": 100,
 			"rent4": 200,
-			"mortgageValue": 100
+			"mortgageValue": 100,
+			"unmortgageValue": 110
 		}
 	}
 ]
