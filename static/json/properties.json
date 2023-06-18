@@ -11,6 +11,7 @@
 			"rentHouse4": 160,
 			"rentHotel": 250,
 			"mortgageValue": 30,
+			"unmortgageValue": 33,
 			"houseCost": 50,
 			"hotelCost": 50
 		}
@@ -27,6 +28,7 @@
 			"rentHouse4": 320,
 			"rentHotel": 450,
 			"mortgageValue": 30,
+			"unmortgageValue": 33,
 			"houseCost": 50,
 			"hotelCost": 50
 		}
@@ -43,6 +45,7 @@
 			"rentHouse4": 400,
 			"rentHotel": 550,
 			"mortgageValue": 50,
+			"unmortgageValue": 55,
 			"houseCost": 50,
 			"hotelCost": 50
 		}
@@ -59,6 +62,7 @@
 			"rentHouse4": 400,
 			"rentHotel": 550,
 			"mortgageValue": 50,
+			"unmortgageValue": 55,
 			"houseCost": 50,
 			"hotelCost": 50
 		}
@@ -75,6 +79,7 @@
 			"rentHouse4": 450,
 			"rentHotel": 600,
 			"mortgageValue": 60,
+			"unmortgageValue": 66,
 			"houseCost": 50,
 			"hotelCost": 50
 		}
@@ -91,6 +96,7 @@
 			"rentHouse4": 625,
 			"rentHotel": 750,
 			"mortgageValue": 70,
+			"unmortgageValue": 77,
 			"houseCost": 100,
 			"hotelCost": 100
 		}
@@ -107,6 +113,7 @@
 			"rentHouse4": 625,
 			"rentHotel": 750,
 			"mortgageValue": 70,
+			"unmortgageValue": 77,
 			"houseCost": 100,
 			"hotelCost": 100
 		}
@@ -123,6 +130,7 @@
 			"rentHouse4": 700,
 			"rentHotel": 900,
 			"mortgageValue": 80,
+			"unmortgageValue": 88,
 			"houseCost": 100,
 			"hotelCost": 100
 		}
@@ -139,6 +147,7 @@
 			"rentHouse4": 750,
 			"rentHotel": 950,
 			"mortgageValue": 90,
+			"unmortgageValue": 99,
 			"houseCost": 100,
 			"hotelCost": 100
 		}
@@ -155,6 +164,7 @@
 			"rentHouse4": 750,
 			"rentHotel": 950,
 			"mortgageValue": 90,
+			"unmortgageValue": 99,
 			"houseCost": 100,
 			"hotelCost": 100
 		}
@@ -171,6 +181,7 @@
 			"rentHouse4": 800,
 			"rentHotel": 1000,
 			"mortgageValue": 100,
+			"unmortgageValue": 110,
 			"houseCost": 100,
 			"hotelCost": 100
 		}
@@ -187,6 +198,7 @@
 			"rentHouse4": 875,
 			"rentHotel": 1050,
 			"mortgageValue": 110,
+			"unmortgageValue": 121,
 			"houseCost": 150,
 			"hotelCost": 150
 		}
@@ -203,6 +215,7 @@
 			"rentHouse4": 875,
 			"rentHotel": 1050,
 			"mortgageValue": 110,
+			"unmortgageValue": 121,
 			"houseCost": 150,
 			"hotelCost": 150
 		}
@@ -219,6 +232,7 @@
 			"rentHouse4": 925,
 			"rentHotel": 1100,
 			"mortgageValue": 120,
+			"unmortgageValue": 132,
 			"houseCost": 150,
 			"hotelCost": 150
 		}
@@ -235,6 +249,7 @@
 			"rentHouse4": 975,
 			"rentHotel": 1150,
 			"mortgageValue": 130,
+			"unmortgageValue": 143,
 			"houseCost": 150,
 			"hotelCost": 150
 		}
@@ -251,6 +266,7 @@
 			"rentHouse4": 975,
 			"rentHotel": 1150,
 			"mortgageValue": 130,
+			"unmortgageValue": 143,
 			"houseCost": 150,
 			"hotelCost": 150
 		}
@@ -267,6 +283,7 @@
 			"rentHouse4": 1025,
 			"rentHotel": 1200,
 			"mortgageValue": 140,
+			"unmortgageValue": 154,
 			"houseCost": 150,
 			"hotelCost": 150
 		}
@@ -283,6 +300,7 @@
 			"rentHouse4": 1100,
 			"rentHotel": 1275,
 			"mortgageValue": 150,
+			"unmortgageValue": 165,
 			"houseCost": 200,
 			"hotelCost": 200
 		}
@@ -299,6 +317,7 @@
 			"rentHouse4": 1100,
 			"rentHotel": 1275,
 			"mortgageValue": 150,
+			"unmortgageValue": 165,
 			"houseCost": 200,
 			"hotelCost": 200
 		}
@@ -315,6 +334,7 @@
 			"rentHouse4": 1200,
 			"rentHotel": 1400,
 			"mortgageValue": 160,
+			"unmortgageValue": 176,
 			"houseCost": 200,
 			"hotelCost": 200
 		}
@@ -331,6 +351,7 @@
 			"rentHouse4": 1300,
 			"rentHotel": 1500,
 			"mortgageValue": 175,
+			"unmortgageValue": 193,
 			"houseCost": 200,
 			"hotelCost": 200
 		}
@@ -347,6 +368,7 @@
 			"rentHouse4": 1700,
 			"rentHotel": 2000,
 			"mortgageValue": 200,
+			"unmortgageValue": 220,
 			"houseCost": 200,
 			"hotelCost": 200
 		}
