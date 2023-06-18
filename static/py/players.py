@@ -18,9 +18,9 @@ class players:
    in_jail = False # +in_Jail : bool 
    time_jailed = int(0) # +time_jailded : int 
    jail_free_card = int(0) # +jail_free_card : int
-   owned_deeds = [] # +owned_deeds : list <Deeds>
+   # owned_deeds = [] # +owned_deeds : list <Deeds>
    # owned_deeds = ["Baltic Ave.","Boardwalk"] #example version
-   # owned_mortgages = [] # +owned_mortgages : list <Deeds> #maybe?
+   owned_mortgages = [] # +owned_mortgages : list <Deeds> #maybe?
    total_houses = int(0) # +total_houses : int
    total_buildings = int(0) # +total_buildings : int
    bankrupt = False # +bankrupt : bool
@@ -76,8 +76,19 @@ class players:
    def current_money(self):
       return  self.__money   
    
+   # recieve_money(self, amount : int) : void
+   def receive_money(self,amount):
+      self.__money += amount
+      print("\t\tplayer",self.__player_number, "recieved $", amount)
+   
+   # pay_money(self, amount : int ) :  int
+   def pay_money(self,amount):
+      self.__money -= amount
+      print("\t\tplayer",self.__player_number, "payed $", amount)
+      return amount
+   
    # change_balance(self, new_total : int) : void
-   def change_balance(self, new_total):
+   def set_balance(self, new_total):
        """ Sets the total amount of money held by the player equal to the new total parameter """
        self.__money = new_total
    
@@ -108,4 +119,9 @@ class players:
    # unmortgage_propety() : void
    # develop_building(property : int) : void
    # deconstruct_building(property : int) : void
+   
+
+
+   
+
    
