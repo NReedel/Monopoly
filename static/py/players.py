@@ -18,7 +18,7 @@ class players:
    in_jail = False # +in_Jail : bool 
    time_jailed = int(0) # +time_jailded : int 
    jail_free_card = int(0) # +jail_free_card : int
-   # owned_deeds = [] # +owned_deeds : list <Deeds>
+   owned_deeds = [] # +owned_deeds : list <Deeds>
    # owned_deeds = ["Baltic Ave.","Boardwalk"] #example version
    owned_mortgages = [] # +owned_mortgages : list <Deeds> #maybe?
    total_houses = int(0) # +total_houses : int
