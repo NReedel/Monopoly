@@ -6,7 +6,8 @@
 		"deed": {
 			"image": "electric-company.svg",
 			"description": "If one \"Utility\" is owned, rent is 4 times the amount shown on dice. If both \"Utilities\" are owned, rent is 10 times the amount shown on dice.",
-			"mortgageValue": 75
+			"mortgageValue": 75,
+			"unmortgageValue": 83
 		}
 	},
 	{
@@ -16,7 +17,8 @@
 		"deed": {
 			"image": "water-works.svg",
 			"description": "If one \"Utility\" is owned, rent is 4 times the amount shown on dice. If both \"Utilities\" are owned, rent is 10 times the amount shown on dice.",
-			"mortgageValue": 75
+			"mortgageValue": 75,
+			"unmortgageValue": 83
 		}
 	}
 ]
