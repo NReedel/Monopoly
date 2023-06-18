@@ -1,4 +1,4 @@
-# players.py
+#players.py
 ###
 # *Name:      Nate Reedel
 # *Credit:    PennWest Projects! (discord server)
@@ -13,14 +13,15 @@ class players:
    _location = 0 # -_location : int
    _money = int(0) # -_money : int
    doubles_rolled = int(0) # doublesrolled : int
-   deeds = [] # +deeds #list <int>
-   mortgages = [] # +mortgages #list <int>
-   # +buildings #int[]
-   in_jail = False # +in_Jail #bool 
-   _bankrupt = False # -bankrupt #bool
-   # -_jail_free_card : int
+   deeds = [] # +deeds : list <int>
+   mortgages = [] # +mortgages : list <int>
+   # +buildings : list <int>
+   in_jail = False # +in_Jail : bool #new
+   _bankrupt = False # -bankrupt : bool
+   time_jailed = 0 # +time_jailded : int #new
+   jail_free_card = 1 # +jail_free_card : int
    
-   #--Contstructor
+   #--Contstructor--
    def __init__(self,startingTotal=5000, id_number=0):
       self._money = startingTotal
       self._player_number = id_number
@@ -34,6 +35,7 @@ class players:
    def move_location(self,next_location):
       # print("move to location number",next_location)
       self._location = next_location
+      print("\t\tplayer",self._player_number,"location now = ",self._location)
       
    # current_location(self) : int
    def current_location(self):
@@ -43,8 +45,8 @@ class players:
    def current_money(self):
       return  self._money   
    
-   # recieve_money(self, amount : int) : void
-   def recieve_money(self,amount):
+   # receive_money(self, amount : int) : void
+   def receive_money(self,amount):
       self._money += amount
       print("\t\tplayer",self._player_number, "recieved $", amount)
       
@@ -53,6 +55,11 @@ class players:
       self._money -= amount
       print("\t\tplayer",self._player_number, "payed $", amount)
       return amount
+
+   # change_balance(self, new_total : int) : void
+   def change_balance(self, new_total):
+       """ Sets the total amount of money held by the player equal to the new total parameter """
+       self._money = new_total
    
    # def inDebt(self) : bool
    def in_debt(self) :
@@ -76,11 +83,13 @@ class players:
    # bid() : void 
    
    # go_to_Jail() : void
-   def go_to_jail(self): # unused
+   def go_to_jail(self): #new
       self._location = 9
-      in_jail = True
+      print("\t\tplayer", self._player_number,"location = ", self._location) 
+      self.in_jail = True
+      print("\t\tplayer",self._player_number,"is now in jail")
       jail_counter = 0
-      
+   # self.doubles_rolled = 0
    # get_out_of_Jail() : void
    
    # declare_bankruptcy() : void
