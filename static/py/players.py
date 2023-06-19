@@ -85,7 +85,6 @@ class players:
    def pay_money(self,amount):
       self.__money -= amount
       print("\t\tplayer",self.__player_number, "payed $", amount)
-      return amount
    
    # change_balance(self, new_total : int) : void
    def set_balance(self, new_total):
