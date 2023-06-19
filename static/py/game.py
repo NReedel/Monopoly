@@ -56,7 +56,7 @@ def move(player): #new, changed arg to single datatype
    next_location = player.current_location()
    next_location  += (die[0]+die[1])
    if next_location >= 40:
-      player.recieve_money(200)
+      player.receive_money(200)
       next_location = next_location % 40
    player.move_location(next_location) # move
    print("")
@@ -248,11 +248,17 @@ def take_turn(target_players = []): ### ! make target_players target_playerss
       print("\n\t\tPlayer",turn,"goes again, \"doubles rolled\" = ",target_players[turn-1].doubles_rolled)
    
    if turn > len(target_players): # reset turns, start next round
+      ##(not part of actual code)
+      # payment = 300      
+      # target_players[turn-2].pay_money(payment)
+      # target_players[0].receive_money(payment)
+      # payment = 0
+      ##(end not part of actual code)  
       ###(not part of actual code)      
       # payment = int(300)
-      # target_players[turn-2].change_balance(int(target_players[turn-2].current_money()) - int(payment))
+      # target_players[turn-2].set_balance(int(target_players[turn-2].current_money()) - int(payment))
       # print("\t\tplayer",target_players[turn-2].player_number(),"payed",payment)
-      # target_players[0].change_balance(int(target_players[0].current_money()) + int(payment))
+      # target_players[0].set_balance(int(target_players[0].current_money()) + int(payment))
       # print("\t\tplayer",target_players[0].player_number(),"payed",payment)
       # print()
       ###(end not part of actual code)
