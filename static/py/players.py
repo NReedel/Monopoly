@@ -5,7 +5,7 @@
 # *Purpose:   Define monopoly player traits and actions
 ###
 
-class players:
+class Players:
    
    # --Global Data--
    # nickname : string # represents username of player in monopoly
@@ -14,7 +14,7 @@ class players:
    __money = int(0) # -__money : int
    __location = 0 # -__location : int
    has_rolled = False
-   doubles_rolled = int(0) # doublesrolled : int
+   same_values_rolled = int(0) # doublesrolled : int
    in_jail = False # +in_Jail : bool 
    time_jailed = int(0) # +time_jailded : int 
    jail_free_card = int(0) # +jail_free_card : int
@@ -31,7 +31,7 @@ class players:
       self.__player_number = id_number
       
    #--Method Implementations--
-   # player_assets( target_player : player ) : void
+   # player_assets(self) : void
    def player_status(self): 
       ###List Player Assets (static stats)
       # print("player number = "self.__player_number)
@@ -39,7 +39,7 @@ class players:
       print("\t\tmoney = $",self.current_money())
       print("\t\tin debt =",self.in_debt())
       print("\t\tlocation =",self.current_location())
-      print("\t\tdoubles rolled =",self.doubles_rolled )
+      print("\t\tsame values rolled =",self.same_values_rolled )
       # if self.in_jail == True:
       print("\t\tin jail =",self.in_jail)
       if self.in_jail == True:
@@ -118,6 +118,11 @@ class players:
    # unmortgage_propety() : void
    # develop_building(property : int) : void
    # deconstruct_building(property : int) : void
+   
+
+
+   
+
    
 
 
