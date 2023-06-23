@@ -1,7 +1,8 @@
 ###
 # *Name:      Nate Reedel
 # *Credit:    PennWest Projects! (discord server)
-# *Purpose:   Define monopoly player traits and actions
+# *Purpose:   Define monopoly dice, takes quantity and number of sides
+#             as an argument.
 ###
 #--import--
 import random
