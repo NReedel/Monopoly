@@ -5,6 +5,7 @@
 		"color": "#5a1484",
 		"deed": {
 			"rent": 2,
+			"monopolyRent": 4,
 			"rentHouse1": 10,
 			"rentHouse2": 30,
 			"rentHouse3": 90,
@@ -22,6 +23,7 @@
 		"color": "#5a1484",
 		"deed": {
 			"rent": 4,
+			"monopolyRent": 8,
 			"rentHouse1": 20,
 			"rentHouse2": 60,
 			"rentHouse3": 180,
@@ -39,6 +41,7 @@
 		"color": "#99d4f6",
 		"deed": {
 			"rent": 6,
+			"monopolyRent": 12,
 			"rentHouse1": 30,
 			"rentHouse2": 90,
 			"rentHouse3": 270,
@@ -56,6 +59,7 @@
 		"color": "#99d4f6",
 		"deed": {
 			"rent": 6,
+			"monopolyRent": 12,
 			"rentHouse1": 30,
 			"rentHouse2": 90,
 			"rentHouse3": 270,
@@ -73,6 +77,7 @@
 		"color": "#99d4f6",
 		"deed": {
 			"rent": 8,
+			"monopolyRent": 16,
 			"rentHouse1": 40,
 			"rentHouse2": 100,
 			"rentHouse3": 300,
@@ -90,6 +95,7 @@
 		"color": "#dd3290",
 		"deed": {
 			"rent": 10,
+			"monopolyRent": 20,
 			"rentHouse1": 50,
 			"rentHouse2": 150,
 			"rentHouse3": 450,
@@ -107,6 +113,7 @@
 		"color": "#dd3290",
 		"deed": {
 			"rent": 10,
+			"monopolyRent": 20,
 			"rentHouse1": 50,
 			"rentHouse2": 150,
 			"rentHouse3": 450,
@@ -124,6 +131,7 @@
 		"color": "#dd3290",
 		"deed": {
 			"rent": 12,
+			"monopolyRent": 24,
 			"rentHouse1": 60,
 			"rentHouse2": 180,
 			"rentHouse3": 500,
@@ -141,6 +149,7 @@
 		"color": "#f08002",
 		"deed": {
 			"rent": 14,
+			"monopolyRent": 28,
 			"rentHouse1": 70,
 			"rentHouse2": 200,
 			"rentHouse3": 550,
@@ -158,6 +167,7 @@
 		"color": "#f08002",
 		"deed": {
 			"rent": 14,
+			"monopolyRent": 28,
 			"rentHouse1": 70,
 			"rentHouse2": 200,
 			"rentHouse3": 550,
@@ -175,6 +185,7 @@
 		"color": "#f08002",
 		"deed": {
 			"rent": 16,
+			"monopolyRent": 32,
 			"rentHouse1": 80,
 			"rentHouse2": 220,
 			"rentHouse3": 600,
@@ -192,6 +203,7 @@
 		"color": "#f3131b",
 		"deed": {
 			"rent": 18,
+			"monopolyRent": 36,
 			"rentHouse1": 90,
 			"rentHouse2": 250,
 			"rentHouse3": 700,
@@ -209,6 +221,7 @@
 		"color": "#f3131b",
 		"deed": {
 			"rent": 18,
+			"monopolyRent": 36,
 			"rentHouse1": 90,
 			"rentHouse2": 250,
 			"rentHouse3": 700,
@@ -226,6 +239,7 @@
 		"color": "#f3131b",
 		"deed": {
 			"rent": 20,
+			"monopolyRent": 40,
 			"rentHouse1": 100,
 			"rentHouse2": 300,
 			"rentHouse3": 750,
@@ -243,6 +257,7 @@
 		"color": "#fcec01",
 		"deed": {
 			"rent": 22,
+			"monopolyRent": 44,
 			"rentHouse1": 110,
 			"rentHouse2": 330,
 			"rentHouse3": 800,
@@ -260,6 +275,7 @@
 		"color": "#fcec01",
 		"deed": {
 			"rent": 22,
+			"monopolyRent": 44,
 			"rentHouse1": 110,
 			"rentHouse2": 330,
 			"rentHouse3": 800,
@@ -277,6 +293,7 @@
 		"color": "#fcec01",
 		"deed": {
 			"rent": 24,
+			"monopolyRent": 48,
 			"rentHouse1": 120,
 			"rentHouse2": 360,
 			"rentHouse3": 850,
@@ -294,6 +311,7 @@
 		"color": "#19af4e",
 		"deed": {
 			"rent": 26,
+			"monopolyRent": 52,
 			"rentHouse1": 130,
 			"rentHouse2": 390,
 			"rentHouse3": 900,
@@ -311,6 +329,7 @@
 		"color": "#19af4e",
 		"deed": {
 			"rent": 26,
+			"monopolyRent": 52,
 			"rentHouse1": 130,
 			"rentHouse2": 390,
 			"rentHouse3": 900,
@@ -328,6 +347,7 @@
 		"color": "#19af4e",
 		"deed": {
 			"rent": 28,
+			"monopolyRent": 56,
 			"rentHouse1": 150,
 			"rentHouse2": 450,
 			"rentHouse3": 1000,
@@ -345,6 +365,7 @@
 		"color": "#036ebc",
 		"deed": {
 			"rent": 35,
+			"monopolyRent": 70,
 			"rentHouse1": 175,
 			"rentHouse2": 500,
 			"rentHouse3": 1100,
@@ -362,6 +383,7 @@
 		"color": "#036ebc",
 		"deed": {
 			"rent": 50,
+			"monopolyRent": 100,
 			"rentHouse1": 200,
 			"rentHouse2": 600,
 			"rentHouse3": 1400,
