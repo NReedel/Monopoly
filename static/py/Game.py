@@ -16,11 +16,8 @@ import random
 starting_total = int(500)
 bail = int(50)
 # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse")
-player_events = ("roll","build","sell","mortgage","redeem","menue")
+player_events = ("roll","build","sell","mortgage","redeem","trade","menue")
 jailed_player_events = ("roll doubles","pay jail fee","jail free card")
-# bankrupt_player_events = ("")                       
-# avaliable_property_events = ("")
-# auction_property_events = ("")
 payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
 GameDice = Dice(2,6)
 turn = int(1)
@@ -76,8 +73,6 @@ def jailed_move_attempt(Player):
       print("\t\tplayer",Player.player_number(),"remains in jail")
       print("")  
       return True # so in_jail = True
- 
-# display_player_events( target_player : Players ) : void #maybe? 
    
 # player_event(Player : Players, event : string) : void
 def player_event(Player,event = ""):
@@ -89,9 +84,8 @@ def player_event(Player,event = ""):
    # if event == "sell":
    # if event == "mortgage":
    # if event == "redeem":
-   # if event == "menue":
-   
-# display_jailed_player_events( TargetPlayer : Players ) : void #maybe?    
+   # if event == "trade:
+   # if event == "menue":   
    
 # jailed_player_event(Player : Players, event : string) : bool
 def jailed_player_event(Player,event=""): #new
@@ -114,15 +108,7 @@ def jailed_player_event(Player,event=""): #new
    
    return True
 
-# display_bankrupt_player_events(Player : Players, event : string) : void #maybe
-      
-# bankrupt_player_event(Player : Players, event : string) : void
-
 # player_landed_on(player_location : int)
-
-# avaliable_property_event(Player : Players, event : string) : void
-
-# auction_property_event(Player : Players, event : string) : void
 
 # end_round_check(RemainingPlayers : list<Players>) : void
 def end_round_check(RemainingPlayers = []):
