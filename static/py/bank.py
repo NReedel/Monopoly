@@ -1,28 +1,36 @@
 # bank.py
 
-'''
-    *Name: Alicyn Knapp
-    *Credit: PennWest Projects! (discord server)
-    *Purpose: Define Monopoly bank traits and actions
-'''
+#
+# *Name:    Alicyn Knapp
+# *Credit:  PennWest Projects! (discord server)
+# *Purpose: Define Monopoly bank traits and actions
+#
 
+import json
 from deeds import *
+
 
 class Bank:
     ### -- Constructor ###
     def __init__(self):
         ### -- Data -- ###
         # bills = {'ones': 40, 'fives': 40, 'tens': 40, 'twenties': 50, 'fifties': 30, 'hundreds': 20, 'five_hundreds': 20}
+        self.deeds = list()
+
+        with open('properties.json', 'r') as rf:
+            for i in json:
+                pass
+
         houses = 32
         hotels = 12
 
     ### -- Methods -- ###
-    def pay_bank(self, current_balance = int(0), amount_paid = int(0)):
+    def pay_money(self, current_balance = int(0), amount_paid = int(0)):
         """ Subtracts amount paid to bank from current balance and returns the new balance """
         # print('Paid $', amount_paid, ' to The Bank.')
         return current_balance - amount_paid
 
-    def receive_bank(self, current_balance = int(0), amount_received = int(0)):
+    def receive_money(self, current_balance = int(0), amount_received = int(0)):
         """ Adds amount received from bank to current balance and returns the new balance """
         # print('Received $', amount_received, ' from The Bank.')
         return amount_received + current_balance
