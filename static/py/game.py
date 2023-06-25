@@ -7,8 +7,8 @@
 ###
 
 #--Imports--
-from Dice import *
-from Players import *
+from dice import *
+from players import *
 # from enum import Enum
 import random
 
