@@ -28,22 +28,22 @@ class Monopoly(Enum):
 ###############################################################
 '''
 Tile
-├── Tile_Property
-│   ├── Property_Street
-│   └── Property_Special
-│       ├── Property_Railroad
-│       └── Property_Utility
-└── Tile_Special
-    ├── Tile_Card
-    ├── Tile_Tax
-    └── Tile_Corner
+├── TileProperty
+│   ├── PropertyStreet
+│   └── PropertySpecial
+│       ├── PropertyRailroad
+│       └── PropertyUtility
+└── TileSpecial
+    ├── TileCard
+    ├── TileTax
+    └── TileCorner
 '''
 ###############################################################
 
 class Tile:
 	
     def __init__ (self, index):
-		
+
         self.tile_id = index
         self.tile_name = ""
         
@@ -53,7 +53,7 @@ class Tile:
         self.fname_bg = ""      # option for later dynamic rendering
         self.css_class = ""     # used later for web app
 	
-    def Render_HTML():
+    def render_html():
         pass
 
 
@@ -61,10 +61,12 @@ class Tile:
 # Purchasable Tiles 🏠
 ###############################################################
 
-class Tile_Property(Tile):
+class TileProperty(Tile):
 
     def __init__ (self):
-  
+
+        super(TileProperty, self).__init__(index)
+
         self.property_cost = 0
         self.mortgage_value = 0
         self.is_mortgaged = False
@@ -76,63 +78,79 @@ class Tile_Property(Tile):
         self.monopoly_type = Monopoly.NONE
 
 
-class Property_Street(Tile_Property):
+class PropertyStreet(TileProperty):
 
     def __init__ (self):
     
+        super(PropertyStreet, self).__init__(index)
+        
         self.tile_color = ""    # need to standardize color format, ie. hex
 
         self.cost_house = 0
         self.num_houses = 0
         self.num_hotels = 0
 
-    def Can_Buy_Hotel():
+    def can_buy_hotel():
         return self.num_houses == 4
 
 
-class Property_Special(Tile):
+class PropertySpecial(Tile):
+
     def __init__ (self):
+        super(PropertySpecial, self).__init__(index)
         self.fname_icon = ""
 
 
-class Property_Railroad(Property_Special):
-    def Get_Rent_Owed():
+class PropertyRailroad(PropertySpecial):
+
+    def __init__ (self):
+        super(PropertyRailroad, self).__init__(index)
+
+    def get_rent_owed():
         return self.set_num_owned * 25
 
 
-class Property_Utility(Property_Special):
-    def Get_Rent_Owed(roll):
-        if self.set_num_owned == 0:
-            return 0
+class PropertyUtility(PropertySpecial):
+
+    def __init__ (self):
+        super(PropertyUtility, self).__init__(index)
+
+    def get_rent_owed(roll):
+        if self.set_num_owned == 2:
+            return roll * 10
         elif self.set_num_owned == 1:
             return roll * 4
         else:
-            return roll * 10
+            return 0
 
 
 ###############################################################
 # Special Tiles 🎲
 ###############################################################
 
-class Tile_Special(Tile):
+class TileSpecial(Tile):
     def __init__ (self):
+        super(TileSpecial, self).__init__(index)
         self.fname_icon = ""
 
 
 # Chance and Community Chest
-class Tile_Card(Tile_Special):
-    pass
+class TileCard(TileSpecial):
+    def __init__ (self):
+        super(TileCard, self).__init__(index)
 
 
 # Income and Luxury Tax
-class Tile_Tax(Tile_Special):
+class TileTax(TileSpecial):
     def __init__ (self):
+        super(TileTax, self).__init__(index)
         self.tax_amount = 0
 
 
 # Will need updating later ⚠⚠⚠
-class Tile_Corner(Tile_Special):
-    pass
+class TileCorner(TileSpecial):
+    def __init__ (self):
+        super(TileCorner, self).__init__(index)
 
 
 ###############################################################
