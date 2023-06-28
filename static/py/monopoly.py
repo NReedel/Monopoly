@@ -10,12 +10,12 @@ from game import *
 from players import *
 
 class Monopoly:
-#--Global Data--
-monopoly_game = Game()
-end_game = bool(False)
-#--Method Implementation--
+   #--Global Data--
+   monopoly_game = Game()
+   end_game = bool(False)
+   #--Method Implementation--
 
-#--Main Executable--
+   #--Main Executable--
 
    ###Menue
    while monopoly_game.starting_player_count < 2 or monopoly_game.starting_player_count > 6: # initial starting players
