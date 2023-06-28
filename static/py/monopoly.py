@@ -11,12 +11,12 @@ from players import *
 
 class Monopoly:
 #--Global Data--
-
+monopoly_game = Game()
+end_game = bool(False)
 #--Method Implementation--
 
 #--Main Executable--
-   #--Main Executable--
-   monopoly_game = Game()
+
    ###Menue
    while monopoly_game.starting_player_count < 2 or monopoly_game.starting_player_count > 6: # initial starting players
       initialPlayers = input("Enter number of players(2-6): ")
@@ -26,7 +26,6 @@ class Monopoly:
       monopoly_game.all_players.append(Players(monopoly_game.starting_total, i+1))
       
    ###Start Game
-   end_game = bool(False)
    print("\nRound ",monopoly_game.round,"\n")
    while end_game == False: # Taking turn
       monopoly_game.take_turn(monopoly_game.all_players)
