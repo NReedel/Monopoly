@@ -1,6 +1,7 @@
 # game.py
+
 ###
-# *Name:      Alicyn, Chris, Nate
+# *Name:      Alicyn Knapp, Chris Schneider, Nate Reedel
 # *Credit:    PennWest Projects! (discord server)
 # *Purpose:   Connects all other classes other than monopoly. Deals with 
 #             turns, the players, and their interactions with each other,
@@ -127,7 +128,6 @@ class Game:
 
    # take_self.turn(Target_players : list<Players>) : void
    def take_turn(self,target_players = []):
-
       print("\tPlayer",self.turn, ":") 
       ###List Target_players Status 
       target_players[self.turn-1].player_status() 
