@@ -1,4 +1,5 @@
-#player.py
+# players.py
+
 ###
 # *Name:      Nate Reedel
 # *Credit:    PennWest Projects! (discord server)
@@ -106,8 +107,8 @@ class Players:
    
    # go_to_Jail() : void
    def go_to_jail(self): 
-      self.__location = 9
-      print("\t\tplayer", self.__player_number,"location = ", self.__location) 
+      self.__location = 10
+      print("\t\tplayer", self.__player_number,"location =", self.__location) 
       self.in_jail = True
       print("\t\tplayer",self.__player_number,"is now in jail")
       self.jail_counter = 0

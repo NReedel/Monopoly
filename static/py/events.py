@@ -11,15 +11,15 @@
 ###############################################################
 '''
 Events
-├── InitialPlayerEventS
+├── InitialPlayerEvents
 ├── PlayerEvents
 ├── JailedPlayerEvents
-├── MenuePlayerEvents   
+├── MenuPlayerEvents   
 ├── BankruptPlayerEvents
 ├── AvaliablePropertyEvents
 ├── AuctionPropertyEvents
 ├── CardEvents #new   
-├── MainMenueEvents
+├── MainMenuEvents
 ├── SellPropertyEvents
 ├── BuildPropertyEvents         
 ├── MortgagePropertyEvents
@@ -53,7 +53,7 @@ class Events:
    
 class PlayerEvents(Events): # partial completion
    #--Global Data--
-   events = ["roll","build","sell","mortgage","redeem","trade","menue"]
+   events = ["roll","build","sell","mortgage","redeem","trade","menu"]
    '''    
    #--Method Implementations--
    # display_event_options(self) : void
@@ -68,7 +68,7 @@ class PlayerEvents(Events): # partial completion
       if event == "mortgage":
       if event == "redeem":
       if event == "trade"
-      if event == "menue":
+      if event == "menu":
    '''   
       
 class Jailed_Player_Events(Events): # partial completion
@@ -100,7 +100,7 @@ class Jailed_Player_Events(Events): # partial completion
       
       return True
    '''
-class MenuePlayerEvents(Events):
+class MenuPlayerEvents(Events):
    #--Global Data--
    events = ["leave game","return to game","rules"]
     
@@ -115,7 +115,7 @@ class MenuePlayerEvents(Events):
    
 class BankruptPlayerEvents(Events):
    #--Global Data--
-   events = ["give up","sell","mortgage","trade","menue"]
+   events = ["give up","sell","mortgage","trade","menu"]
    #--Method Implementations--
    # display_event_options(self) : void
    def display_event_options(self):
@@ -164,7 +164,7 @@ class CardEvents(Events):
    def event(self,player,event = ""):
       return
 
-class MainMenueEvents(Events):
+class MainMenuEvents(Events):
    #--Global Data--
    events = ["start game","number of players","rules","settings"] 
    
@@ -176,4 +176,14 @@ class MainMenueEvents(Events):
    # event(self, event : string) : void
    def event(self, event = " "): 
       return
+   
+# class SellPropertyEvents(Events):
+
+# class BuildPropertyEvents(Events):  
+       
+# class MortgagePropertyEvents(Events):
+
+# class RedeemPropertyEvents(Events):       
+  
+# class TradeEvents(Events):
 

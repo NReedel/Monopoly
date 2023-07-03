@@ -11,17 +11,19 @@
 #--Imports--
 from dice import *
 from players import *
+from tiles import *
+
 # from enum import Enum
 import random
 class Game:
    #--Global Data--
    starting_total = int(500)
    bail = int(50)
-   # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse")
+   # make owned by bank # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
    player_events = ("roll","build","sell","mortgage","redeem","trade","menue")
    jailed_player_events = ("roll doubles","pay jail fee","jail free card")
    payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
-   game_dice = Dice(2,6)
+   game_dice = Dice(2,1)
    turn = int(1)
    round = int(1)
    starting_player_count = int(0)
@@ -92,7 +94,7 @@ class Game:
    
       
    # jailed_player_event(player : Players, event : string) : bool
-   def jailed_player_event(self,player,event=""): #new
+   def jailed_player_event(self,player,event=""):
       
       if event == "roll doubles":
          return True # attempt_escape == True
@@ -213,7 +215,7 @@ class Game:
                target_players[self.turn-1].in_jail = self.jailed_move_attempt(target_players[self.turn-1])
                has_rolled = True
             elif self.game_dice.rolled_same_values() == True and target_players[self.turn-1].same_values_rolled == 2 and self.player_events[int(target_event)] == "roll":   
-               print("\t\tsame values rolled = ",target_players[self.turn-1].same_values_rolled+1)
+               print("\t\tsame values rolled =",target_players[self.turn-1].same_values_rolled+1)
                target_players[self.turn-1].go_to_jail()
                print("")
                target_players[self.turn-1].same_values_rolled += 1

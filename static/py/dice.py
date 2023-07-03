@@ -3,6 +3,7 @@
 # *Credit:    PennWest Projects! (discord server)
 # *Purpose:   Define monopoly dice
 ###
+
 #--import--
 import random
 class Dice:
