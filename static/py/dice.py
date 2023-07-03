@@ -1,9 +1,9 @@
 ###
 # *Name:      Nate Reedel
 # *Credit:    PennWest Projects! (discord server)
-# *Purpose:   Define monopoly dice, takes quantity and number of sides
-#             as an argument.
+# *Purpose:   Define monopoly dice
 ###
+
 #--import--
 import random
 class Dice:

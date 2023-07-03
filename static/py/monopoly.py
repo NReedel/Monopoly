@@ -1,3 +1,5 @@
+# monopoly.py
+
 ###
 # *Name:      Nate Reedel
 # *Credit:    PennWest Projects! (discord server)
@@ -6,7 +8,6 @@
 ###
 
 # Imports
-from asyncio import run
 from game import *
 from players import *
 
