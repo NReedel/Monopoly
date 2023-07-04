@@ -71,7 +71,7 @@ class PlayerEvents(Events): # partial completion
       if event == "menu":
    '''   
       
-class Jailed_Player_Events(Events): # partial completion
+class JailedPlayerEvents(Events): # partial completion
    #--Global Data--
    event = ["roll doubles","pay jail fee","jail free card"]
    
