@@ -1,69 +1,100 @@
-#players.py
+# players.py
+
 ###
 # *Name:      Nate Reedel
 # *Credit:    PennWest Projects! (discord server)
 # *Purpose:   Define monopoly player traits and actions
 ###
 
-class players:
+class Players:
+   
    # --Global Data--
-   # nickname : string //represents username of player in monopoly
-   # character : string //represents the figure a player uses in game
-   _player_number = int(0) # -_player_number : int
-   _location = 0 # -_location : int
-   _money = int(0) # -_money : int
-   doubles_rolled = int(0) # doublesrolled : int
-   deeds = [] # +deeds : list <int>
-   mortgages = [] # +mortgages : list <int>
-   # +buildings : list <int>
-   in_jail = False # +in_Jail : bool #new
-   _bankrupt = False # -bankrupt : bool
-   time_jailed = 0 # +time_jailded : int #new
-   jail_free_card = 1 # +jail_free_card : int
+   # nickname : string # represents username of player in monopoly
+   # character : string # represents the figure a player uses in game
+   __player_number = int(0) # -__player_number : int
+   __money = int(0) # -__money : int
+   __location = 0 # -__location : int
+   has_rolled = False
+   same_values_rolled = int(0) # doublesrolled : int
+   in_jail = False # +in_Jail : bool 
+   time_jailed = int(0) # +time_jailded : int 
+   jail_free_card = int(0) # +jail_free_card : int
+   owned_deeds = [] # +owned_deeds : list <Deeds>
+   # owned_deeds = ["Baltic Ave.","Boardwalk"] #example version
+   owned_mortgages = [] # +owned_mortgages : list <Deeds> #maybe?
+   total_houses = int(0) # +total_houses : int
+   total_buildings = int(0) # +total_buildings : int
+   bankrupt = False # +bankrupt : bool
    
    #--Contstructor--
-   def __init__(self,startingTotal=5000, id_number=0):
-      self._money = startingTotal
-      self._player_number = id_number
+   def __init__(self,startingTotal = 0, id_number = 0):
+      self.__money = startingTotal
+      self.__player_number = id_number
       
-   #--Method Implementation--
+   #--Method Implementations--
+   # player_assets(self) : void
+   def player_status(self): 
+      ###List Player Assets (static stats)
+      # print("player number = "self.__player_number)
+      # print("player character = "self.character)
+      print("\t\tmoney = $",self.current_money())
+      print("\t\tin debt =",self.in_debt())
+      print("\t\tlocation =",self.current_location())
+      print("\t\tsame values rolled =",self.same_values_rolled )
+      # if self.in_jail == True:
+      print("\t\tin jail =",self.in_jail)
+      if self.in_jail == True:
+         print("\t\ttime jailed =",self.time_jailed)
+      # if self.jail_free_card > 0:
+      print("\t\tjail free cards =",self.jail_free_card)
+      print("\t\tproperties:",len(self.owned_deeds))
+      for i in range(0,len(self.owned_deeds)):
+         print("\t\t   -",self.owned_deeds[i]) #needs modification
+      # print("\t\tmortgages :",len(self.owned_mortgages)) #maybe
+      # for i in range(0,len(self.owned_mortgages)):
+      #    print("\t\t   -",self.owned_mortgages[i])  #needs modification
+      print("\t\ttotal houses =",self.total_houses)
+      print("\t\ttotal hotels =",self.total_buildings)
+      # print("\t\tbankrupt =",self.bankrupt)
+      # print("\t\t")
+      print("\t\t-----------------------------") 
+      
    # player_number(self) : int
    def player_number(self):
-      return int(self._player_number)
+      return int(self.__player_number)
    
    # move_location(location : int) : void
    def move_location(self,next_location):
       # print("move to location number",next_location)
-      self._location = next_location
-      print("\t\tplayer",self._player_number,"location now = ",self._location)
+      self.__location = next_location
+      print("\t\tplayer",self.__player_number,"location now =",self.__location)
       
    # current_location(self) : int
    def current_location(self):
-      return self._location
+      return self.__location
    
    # current_money(self) : void
    def current_money(self):
-      return  self._money   
+      return  self.__money   
    
-   # receive_money(self, amount : int) : void
+   # recieve_money(self, amount : int) : void
    def receive_money(self,amount):
-      self._money += amount
-      print("\t\tplayer",self._player_number, "recieved $", amount)
-      
+      self.__money += amount
+      print("\t\tplayer",self.__player_number, "recieved $", amount)
+   
    # pay_money(self, amount : int ) :  int
    def pay_money(self,amount):
-      self._money -= amount
-      print("\t\tplayer",self._player_number, "payed $", amount)
-      return amount
-
+      self.__money -= amount
+      print("\t\tplayer",self.__player_number, "payed $", amount)
+   
    # change_balance(self, new_total : int) : void
-   def change_balance(self, new_total):
+   def set_balance(self, new_total):
        """ Sets the total amount of money held by the player equal to the new total parameter """
-       self._money = new_total
+       self.__money = new_total
    
    # def inDebt(self) : bool
    def in_debt(self) :
-      if self._money < 0:
+      if self.__money < 0:
          return True
       return False
    
@@ -73,29 +104,18 @@ class players:
          self.doubles_rolled == self.doubles_rolled + 1
          return True
       return False
-      
+   
+   # go_to_Jail() : void
+   def go_to_jail(self): 
+      self.__location = 10
+      print("\t\tplayer", self.__player_number,"location =", self.__location) 
+      self.in_jail = True
+      print("\t\tplayer",self.__player_number,"is now in jail")
+      self.jail_counter = 0
 
    # get_property(contributor : string , property_value : int) : void
    # sell_property(property : int, reciever : string ) : int
    # mortgage_property() : void 
+   # unmortgage_propety() : void
    # develop_building(property : int) : void
    # deconstruct_building(property : int) : void
-   # bid() : void 
-   
-   # go_to_Jail() : void
-   def go_to_jail(self): #new
-      self._location = 9
-      print("\t\tplayer", self._player_number,"location = ", self._location) 
-      self.in_jail = True
-      print("\t\tplayer",self._player_number,"is now in jail")
-      jail_counter = 0
-   # self.doubles_rolled = 0
-   # get_out_of_Jail() : void
-   
-   # declare_bankruptcy() : void
-   def declare_bankruptcy(self):
-      self._bankrupt = True
-      
-   # is_bankrupt() : bool
-   def is_bankrupt(self):
-      return bool(self._bankrupt)   

@@ -69,4 +69,3 @@ class Bank:
     # bankrupt_balance_collections()
     """ Collects deeds, money, houses/hotels, and Get Out Of Jail Free card(s) from player. """
     """ Auctions deeds and conducts most if not all post-bankruptcy management """
-
