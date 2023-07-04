@@ -23,7 +23,7 @@ class Game:
    player_events = ("roll","build","sell","mortgage","redeem","trade","menue")
    jailed_player_events = ("roll doubles","pay jail fee","jail free card")
    payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
-   game_dice = Dice(2,1)
+   game_dice = Dice(2,6)
    turn = int(1)
    round = int(1)
    starting_player_count = int(0)
