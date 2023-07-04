@@ -37,12 +37,20 @@ class Events:
    #--Global Data--
    argc = 0
    events = []
+   
    #--Constuctor--
    def __init__(self,*args):
-      self.argc = 0 # argument count
+      # self.arg = 0 # argument count, check for built in one
+      self.argc = len(args) 
       if len(args) > 0:
-         for i in args:
-            self.argc += i
+         for i in range(len(args)):
+            self.arg.append(args[i]) 
+                 
+   #--Method Implementation--
+   def display_event_options(self): 
+      return 
+   def event(self): # event() : void
+      return
             
    #--Method Implementation--
    def display_event_options(self): 
