@@ -19,7 +19,7 @@ class Game:
    #--Global Data--
    starting_total = int(500)
    bail = int(50)
-   # make owned by bank # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
+   # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
    player_events = ("roll","build","sell","mortgage","redeem","trade","menue")
    jailed_player_events = ("roll doubles","pay jail fee","jail free card")
    payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
