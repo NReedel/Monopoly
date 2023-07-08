@@ -1,1 +1,18 @@
-
+[ 
+   { 
+     "index": 0
+     "type": "Community Chest",
+     "subtype": "Holistic Charity",
+     "title": "type",
+     "description": “Just when you think you can’t go another step, you finish that foot race - and raise money for your local hospital! ADVANCE TO GO. COLLECT $200.",
+     "image": running-pennybags.svg
+   },
+   { 
+     "index": 1
+     "type": "Community Chest",
+     "subtype": "Neighborhood Charity",
+     "title": "type",
+     "description": “Your fuzzy friends at the animal shelter will be thankful for your donation. PAY $50.",
+     "image": leaning-pennybags.svg
+   }
+]
