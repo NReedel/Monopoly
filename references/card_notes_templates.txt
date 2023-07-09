@@ -1,18 +1,21 @@
 Each card has a common theme (within their Community Chest and Chance designations) for which there is a common picture as follows:
 (format is "'image-description': 'card-theme' \n\t '- card-text'" except in the case of subgroups of Chance movement cards, in which the cards are subdivided by movement type.)
 
+*** For some context, the name of the Monopoly man is Rich Uncle Pennybags. His name is used in the image names below.
+
 Community Chest:
-
-  {
-    "index": 1,
-    "type": "Community Chest",
-    "subtype": "Neighborhood Charity",
-    "title": "type",
-    "description": "copy text here",
-    "image": "leaning-pennybags.svg"
-  },
-
-(1) Running: charity with personal financial benefits (movement to GO)
+[
+	{
+		"index": 1,
+		"type": "Community Chest",
+		"subtype": "Neighborhood Charity",
+		"title": "type",
+		"description": "copy description text here.",
+		"image": "leaning-pennybags.svg",
+		"customAttribute": "based on description text, e.g. 'payAmount' or 'moveTo'"
+	},
+]
+(1) Running: charity with personal financial benefits named in the code as holistic charity (movement to GO)
 	- “Just when you think you can't go another step, you finish that foot race - and raise money for your local hospital! ADVANCE TO GO. COLLECT $200.”
 (2) Leaning on Cane: neighborhood charity (pay/collect of same value)
 	- “Your fuzzy friends at the animal shelter will be thankful for your donation. PAY $50.”
@@ -40,6 +43,17 @@ Community Chest:
 
 
 Chance:
+[
+	{
+		"index": 1,
+		"type": "Chance",
+		"subtype": "Movement",
+		"title": "type",
+		"description": "copy description text here.",
+		"image": "running-pennybags.svg",
+		"customAttribute": "based on description text, e.g. 'payAmount' or 'moveTo'"
+	},
+]
 (9) Running: in meta terms, always moving positions on the board with overall neutral financial consequences. See subgroups below
 	(1) Advance to the nearest Utility. Collect $200 if pass GO, but, if owned, pay 10 times your dice roll (the card does not mention whether the owner must own both utilities for this task, meaning the player must pay 10 times regardless of number of utilities owned)
 		- “ADVANCE TO THE NEAREST UTILITY. If UNOWNED, you may buy it from the Bank. If OWNED, roll the dice, and pay the owner 10 times your roll. IF YOU PASS GO, COLLECT $200.”
