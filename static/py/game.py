@@ -11,6 +11,7 @@
 #--Imports--
 from dice import *
 from players import *
+from events import *
 from tiles import *
 
 # from enum import Enum
@@ -19,11 +20,9 @@ class Game:
    #--Global Data--
    starting_total = int(500)
    bail = int(50)
-   # make owned by bank # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
-   player_events = ("roll","build","sell","mortgage","redeem","trade","menue")
-   jailed_player_events = ("roll doubles","pay jail fee","jail free card")
+   # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
    payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
-   game_dice = Dice(2,1)
+   game_dice = Dice(2,6)
    turn = int(1)
    round = int(1)
    starting_player_count = int(0)
@@ -76,44 +75,6 @@ class Game:
          print("\t\tplayer",player.player_number(),"remains in jail")
          print("")  
          return True # in_jail = True
-   
-
-      
-   # player_event(self player : Players, event : string) : void
-   def player_event(self,player,event = ""):
-      
-      if event == "roll":
-         self.move(player)
-         
-      # if event == "build":
-      # if event == "sell":
-      # if event == "mortgage":
-      # if event == "redeem":
-      # if event == "trade"
-      # if event == "menue":
-   
-      
-   # jailed_player_event(player : Players, event : string) : bool
-   def jailed_player_event(self,player,event=""):
-      
-      if event == "roll doubles":
-         return True # attempt_escape == True
-      
-      if event == "pay jail fee":   
-         player.pay_money(self.bail)
-         player.time_jailed == 0
-         print("\t\tPlayer",player.player_number(),"is now out of jail\n")
-         return False #player.in_jail == False
-      
-      if event == "jail free card":
-         player.jail_free_card -= 1
-         player.time_jailed == 0
-         print("\t\tPlayer",player.player_number(),"is now out of jail\n")
-         return False #player.in_jail == False
-      
-      return True
-
-   # player_landed_on(player_location : int)
 
    # end_round_check(RemainingPlayers : list<Players>) : void
    def end_round_check(self,remainingPlayers = []):
@@ -121,7 +82,6 @@ class Game:
       if self.turn > len(remainingPlayers): # reset turns, start next round
          self.turn = self.turn % len(remainingPlayers) 
          self.round += 1
-         print("")
          print("Round ",self.round)
          print("")
                   
@@ -133,88 +93,64 @@ class Game:
       print("\tPlayer",self.turn, ":") 
       ###List Target_players Status 
       target_players[self.turn-1].player_status() 
-      if target_players[self.turn-1].in_debt() == True: # if Target_players is in dept
+      if target_players[self.turn-1].in_debt() == True: 
+         ###In debt
          print("\t\tplayer",target_players[self.turn-1].player_number(),"is in dept at $",target_players[self.turn-1].current_money())
          give_up = "y"
          # give_up = input("\tWould the Target_players like to continue y/n? ")
          if give_up == "y":
             target_players[self.turn-1].bankrupt = True
             return 
-      # while Target_players[self.turn-1].in_dept() == True: 
+         # while Target_players[self.turn-1].in_dept() == True: 
       if target_players[self.turn-1].in_jail == True:
          target_players[self.turn-1].time_jailed += 1
-      ###List Target_players Events (dynamic actions) 
       has_rolled = False
       end_turn = False
       attempt_escape = False
-      ###start self.turn
+      ###Events
+      player_events =  PlayerEvents(self,has_rolled) #new
+      player_events.arg[1] = has_rolled #new? 
+      jailed_player_events =  JailedPlayerEvents(self) #new
+      ###Start Turn
       while end_turn == False:
-         ###jailed player events
+         ###Jailed Player Events
          if target_players[self.turn-1].in_jail == True and has_rolled == False: 
-            global bail
-            print("\t\tSelect Jailed player action:")
-            print("\t\t   0)",self.jailed_player_events[0])
-            print("\t\t   1)",self.jailed_player_events[1],"$",self.bail) # needs if statment for being broke
-            if target_players[self.turn-1].jail_free_card > 0: 
-               print("\t\t   2)", self.jailed_player_events[2])
-            target_event = input("\t\tchoice -> ")
-            
-            while int(target_event) < 0 or len(self.jailed_player_events) <= int(target_event) or int(target_event == 2) and target_players[self.turn-1].jail_free_card == 0:
-               print("\t\tInvalid choice, try again")
-               print("\t\t\nSelect Jailed Target_players action:")
-               if has_rolled == False: 
-                  print("\t\t   0)",self.jailed_player_events[0])
-               print("\t\t   1)",self.jailed_player_events[1],"$",bail) # needs if statment for being broke
-               if target_players[self.turn-1].jail_free_card > 0: 
-                  print("\t\t   2)", self.jailed_player_events[2])
-               target_event = input("\t\tchoice -> ")
-               
+            target_event = jailed_player_events.display_event_options(target_players[self.turn-1]) #new
+            while int(target_event) < 0 or len(jailed_player_events.events) <= int(target_event) or int(target_event == 2) and target_players[self.turn-1].jail_free_card == 0:
+               ###redisplay if given bad input
+               print("\t\tInvalid choice, try again\n")
+               target_event = jailed_player_events.display_event_options(target_players[self.turn-1]) #new
             print("")
             
             if int(target_event) == 0:
-               ###jailed_player_event reself.turns True automatically
-               attempt_escape = self.jailed_player_event(target_players[self.turn-1],self.jailed_player_events[int(target_event)])
+               ###jailed_player_events.event returns True automatically
+               attempt_escape = jailed_player_events.event(target_players[self.turn-1],jailed_player_events.events[int(target_event)])
             else:
-               ###jailed_player_event reself.turns True if Target_players stays in jail
-               target_players[self.turn-1].in_jail= self.jailed_player_event(target_players[self.turn-1],self.jailed_player_events[int(target_event)])
+               ###jailed_player_events.event returns True if player stays in jail
+               target_players[self.turn-1].in_jail = jailed_player_events.event(target_players[self.turn-1],jailed_player_events.events[int(target_event)])
+         ###Player Events
+         target_event = player_events.display_event_options() #new
          
-         ###player events     
-         print("\t\tSelect players action:")  
-         
-         if has_rolled == True: 
-            print("\t\t   0) pass turn")
-         else: 
-            print("\t\t   0)",self.player_events[0])
-         ###more events to come!   
-         target_event = input("\t\tchoice -> ")
-         while int(target_event) < 0 or len(self.player_events) < int(target_event):
+         while int(target_event) < 0 or len(player_events.events) <= int(target_event):
             ###redisplay if given bad input
-            print("\t\tInvalid choice, try again")
-            print("\n\t\tSelect players action:")
-            
-            if has_rolled == True: 
-               print("\t\t   0) pass turn")
-            else: 
-               print("\t\t   0)",self.player_events[0])
-                  
-            target_event = input("\t\tchoice -> ")
+            print("\t\tInvalid choice, try again\n")
+            target_event = player_events.display_event_options()#new
             
          if int(target_event) == 0 and has_rolled == False:
             has_rolled = True
+            player_events.arg[1] = has_rolled #new
          elif int(target_event) == 0 and has_rolled == True:
             end_turn = True         
             
          if end_turn  == False:
             print("")
-            
             if (attempt_escape == True and int(target_event) != 0) or attempt_escape == False:   
-               self.player_event(target_players[self.turn-1],self.player_events[int(target_event)])
-
+               player_events.event(target_players[self.turn-1],player_events.events[int(target_event)]) #new
             if attempt_escape == True and int(target_event) == 0:
                print("\t\tattempt jail escape")
                target_players[self.turn-1].in_jail = self.jailed_move_attempt(target_players[self.turn-1])
                has_rolled = True
-            elif self.game_dice.rolled_same_values() == True and target_players[self.turn-1].same_values_rolled == 2 and self.player_events[int(target_event)] == "roll":   
+            elif self.game_dice.rolled_same_values() == True and target_players[self.turn-1].same_values_rolled == 2 and player_events.events[int(target_event)] == "roll":   
                print("\t\tsame values rolled =",target_players[self.turn-1].same_values_rolled+1)
                target_players[self.turn-1].go_to_jail()
                print("")
@@ -222,13 +158,16 @@ class Game:
                self.turn += 1
                self.end_round_check(target_players)
                return
-      ###end of self.turn
+      ###End Of Turn
+      del player_events
       if(self.game_dice.rolled_same_values() == False or attempt_escape == True):   
          self.turn += 1
       else:
          target_players[self.turn-1].same_values_rolled += 1
          print("\n\t\tPlayer",self.turn,"goes again")
          
+      print("")
+      
       if self.turn > len(target_players): # reset self.turns, start next self.round
          ##(not part of actual code)
          # payment = 300      
@@ -245,8 +184,6 @@ class Game:
          # print()
          ###(end not part of actual code)
          self.end_round_check(target_players)   
-      else:
-         print("")
    #end take_turn
 #end class
 
