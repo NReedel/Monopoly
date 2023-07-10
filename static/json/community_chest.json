@@ -133,7 +133,7 @@
 		"title": "type",
 		"image": "jailed-pennybags.svg",
 		"description": "Blasting music late at night? Your neighbors do not approve. GO TO JAIL. GO DIRECTLY TO JAIL. DO NOT PASS GO. DO NOT COLLECT $200.",
-		"moveTo": "Jail"
+		"moveTo": 10
 	},
 	{
 		"index": 15,
