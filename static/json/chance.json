@@ -1,1 +1,150 @@
-
+[
+	{
+		"index": 0,
+		"type": "Chance",
+		"subtype": "Movement",
+		"title": "type",
+		"image": "running-pennybags.svg",
+		"description": "ADVANCE TO THE NEAREST UTILITY. If UNOWNED, you may buy it from the Bank. If OWNED, roll the dice, and pay the owner 10 times your roll. IF YOU PASS GO, COLLECT $200.",
+		"moveToNearest": "Utility",
+		"cardRentMultiplier": 10
+	},
+	{
+		"index": 1,
+		"type": "Chance",
+		"subtype": "Movement",
+		"title": "type",
+		"image": "running-pennybags.svg",
+		"description": "ADVANCE TO THE NEXT RAILROAD. If UNOWNED, you may buy it from the Bank. If OWNED, pay the owner twice the rent to which they are otherwise entitled. IF YOU PASS GO, COLLECT $200.",
+		"moveToNearest": "Railroad",
+		"cardRentMultiplier": 2
+	},
+	{
+		"index": 2,
+		"type": "Chance",
+		"subtype": "Movement",
+		"title": "type",
+		"image": "running-pennybags.svg",
+		"description": "ADVANCE TO THE NEXT RAILROAD. If UNOWNED, you may buy it from the Bank. If OWNED, pay the owner twice the rent to which they are otherwise entitled. IF YOU PASS GO, COLLECT $200.",
+		"moveToNearest": "Railroad",
+		"cardRentMultiplier": 2
+	},
+	{
+		"index": 3,
+		"type": "Chance",
+		"subtype": "Movement",
+		"title": "type",
+		"image": "running-pennybags.svg",
+		"description": "TAKE A TRIP TO READING RAILROAD. IF YOU PASS GO, COLLECT $200.",
+		"moveTo": 5
+	},
+	{
+		"index": 4,
+		"type": "Chance",
+		"subtype": "Movement",
+		"title": "type",
+		"image": "running-pennybags.svg",
+		"description": "ADVANCE TO ST. CHARLES PLACE. IF YOU PASS GO, COLLECT $200.",
+		"moveTo": 11
+	},
+	{
+		"index": 5,
+		"type": "Chance",
+		"subtype": "Movement",
+		"title": "type",
+		"image": "running-pennybags.svg",
+		"description": "ADVANCE TO ILLINOIS AVENUE. IF YOU PASS GO, COLLECT $200.",
+		"moveTo": 24
+	},
+	{
+		"index": 6,
+		"type": "Chance",
+		"subtype": "Movement",
+		"title": "type",
+		"image": "running-pennybags.svg",
+		"description": "ADVANCE TO BOARDWALK.",
+		"moveTo": 39
+	},
+	{
+		"index": 7,
+		"type": "Chance",
+		"subtype": "Movement",
+		"title": "type",
+		"image": "running-pennybags.svg",
+		"description": "ADVANCE TO GO. COLLECT $200.",
+		"moveTo": 0
+	},
+	{
+		"index": 8,
+		"type": "Chance",
+		"subtype": "Movement",
+		"title": "type",
+		"image": "running-pennybags.svg",
+		"description": "GO BACK THREE SPACES",
+		"moveTo": -3
+	},
+	{
+		"index": 9,
+		"type": "Chance",
+		"subtype": "Financial Benefits",
+		"title": "type",
+		"image": "thumbs-up-pennybags.svg",
+		"description": "BANK PAYS YOU DIVIDEND OF $50.",
+		"collectStaticAmount": 50
+	},
+	{
+		"index": 10,
+		"type": "Chance",
+		"subtype": "Financial Benefits",
+		"title": "type",
+		"image": "thumbs-up-pennybags.svg",
+		"description": "YOUR BUILDING LOAN MATURES. COLLECT $150.",
+		"collectStaticAmount": 150
+	},
+	{
+		"index": 11,
+		"type": "Chance",
+		"subtype": "Property Repairs",
+		"title": "type",
+		"image": "wowed-pennybags.svg",
+		"description": "MAKE GENERAL REPAIRS ON ALL YOUR PROPERTY: FOR EACH HOUSE, PAY $25. FOR EACH HOTEL, PAY $100.",
+		"payHouseRateAmount": 25,
+		"payHotelRateAmount": 100
+	},
+	{
+		"index": 12,
+		"type": "Chance",
+		"subtype": "Property Repairs",
+		"title": "type",
+		"image": "negative-pennybags.svg",
+		"description": "SPEEDING FINE. PAY $15.",
+		"payStaticAmount": 15
+	},
+	{
+		"index": 13,
+		"type": "Chance",
+		"subtype": "Property Repairs",
+		"title": "type",
+		"image": "negative-pennybags.svg",
+		"description": "YOU HAVE BEEN ELECTED CHAIRPERSON OF THE BOARD. PAY EACH PLAYER $50.",
+		"payPlayerRateAmount": 50
+	},
+	{
+		"index": 14,
+		"type": "Chance",
+		"subtype": "Jail",
+		"title": "type",
+		"image": "jailed-pennybags.svg",
+		"description": "GO TO JAIL. GO DIRECTLY TO JAIL. DO NOT PASS GO. DO NOT COLLECT $200.",
+		"moveTo": 10
+	},
+	{
+		"index": 15,
+		"type": "Chance",
+		"subtype": "GOJF",
+		"title": "type",
+		"image": "jailbreak-pennybags.svg",
+		"description": "GET OUT OF JAIL FREE. This card may be kept until needed, traded, or sold.",
+		"isGOJF": true
+	}
+]
