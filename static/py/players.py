@@ -16,11 +16,12 @@ class Players:
    __location = 0 # -__location : int
    has_rolled = False
    same_values_rolled = int(0) # doublesrolled : int
-   in_jail = False # +in_Jail : bool 
+   # +in_Jail : bool 
+   in_jail = False
    time_jailed = int(0) # +time_jailded : int 
    jail_free_card = int(0) # +jail_free_card : int
+   # owned_deeds = ["Reading Railroad","Baltic Ave","Boardwalk"] # 
    owned_deeds = [] # +owned_deeds : list <Deeds>
-   # owned_deeds = ["Baltic Ave.","Boardwalk"] #example version
    owned_mortgages = [] # +owned_mortgages : list <Deeds> #maybe?
    total_houses = int(0) # +total_houses : int
    total_buildings = int(0) # +total_buildings : int
@@ -37,7 +38,7 @@ class Players:
       ###List Player Assets (static stats)
       # print("player number = "self.__player_number)
       # print("player character = "self.character)
-      print("\t\tmoney = $",self.current_money())
+      print("\t\tmoney =","$"+str(self.current_money()))
       print("\t\tin debt =",self.in_debt())
       print("\t\tlocation =",self.current_location())
       print("\t\tsame values rolled =",self.same_values_rolled )
@@ -95,13 +96,6 @@ class Players:
    # def inDebt(self) : bool
    def in_debt(self) :
       if self.__money < 0:
-         return True
-      return False
-   
-   # rolled_doubles(die1 : int, die2 : int) : bool
-   def rolled_doubles(self,die1 = 0, die2 = 0):
-      if die1 == die2:
-         self.doubles_rolled == self.doubles_rolled + 1
          return True
       return False
    
