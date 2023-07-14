@@ -19,10 +19,10 @@ Events
 ├── BankruptPlayerEvents
 ├── AvaliablePropertyEvents
 ├── AuctionPropertyEvents
-├── CardEvents #new   
+├── CardEvents 
 ├── MainMenuEvents
-├── BuildPropertyEvents 
-├── SellPropertyEvents        
+├── BuildBuildingEvents 
+├── SellBuildingEvents        
 ├── MortgagePropertyEvents
 ├── RedeemPropertyEvents         
 ├── TradeEvents
@@ -30,6 +30,7 @@ Events
 '''
 ###############################################################
 # current_player = self.arg[0].all_players[self.arg[0].turn-1] # alt
+ 
 #--Imports--
 from players import *
 import copy
@@ -56,7 +57,7 @@ class Events:
       return
 
    
-class PlayerEvents(Events): # partial completion
+class PlayerEvents(Events): # partial completion #add boundry while loop
    #--Argumets--
    # arg[0] = self from game 
    # arg[1] = bool(has_rolled) from game 
@@ -67,37 +68,53 @@ class PlayerEvents(Events): # partial completion
    #--Method Implementations--
    # display_event_options(self) : string
    def display_event_options(self):
-      print("\t\tSelect players action:")  
-      if self.arg[1] == True: 
-         print("\t\t   0) pass turn")
-      else: 
-         print("\t\t   0)",self.events[0])
-      for i in range(1,len(self.events)):
-         num = str(i)
-         num = num + ")"
-         print("\t\t  ",num,self.events[i])
-      target_event = input("\n\t\tchoice -> ")      
-      return target_event
+      if self.arg[0].all_players[self.arg[0].turn-1].bankrupt == False: # new
+         print("\t\tSelect players action:")  
+         if self.arg[1] == True: 
+            print("\t\t   0) pass turn")
+         else: 
+            print("\t\t   0)",self.events[0])
+         for i in range(1,len(self.events)):
+            num = str(i)
+            num = num + ")"
+            print("\t\t  ",num,self.events[i])
+         target_event = input("\n\t\tchoice -> ")      
+         return target_event
+      else: # new
+         return 0
    
    # event(self player : Players, event : string) : void
    def event(self,player,event = ""):
       if event == "roll":
          self.arg[0].move(player)
       if event == "build":
-         build = BuildPropertyEvents()
+         build = BuildBuildingEvents()
          choice = build.display_event_options(player)
+         if choice != -1 :
+            sell.event(player,choice)   
+         else: 
+            print()
+            return
       if event == "sell":
-         sell = SellPropertyEvents()
+         sell = SellBuildingEvents()
          choice = sell.display_event_options(player)
-         
-         sell.event(player,choice) 
+         if choice != -1 :
+            sell.event(player,choice)   
+         else: 
+            print()
+            return
+            
       '''      
       if event == "mortgage":
       if event == "redeem":
-      if event == "trade"
-      if event == "menu"
-      '''   
+      if event == "trade":
       
+      '''   
+      if event == "menu": # new
+         menu = MenuPlayerEvents()
+         choice = menu.display_event_options()
+         menu.event(player,menu.events[int(choice)])
+         
 class JailedPlayerEvents(Events): # partial completion
    #--Argumets--
    # arg[0] = self from game, used for bail and player
@@ -106,13 +123,11 @@ class JailedPlayerEvents(Events): # partial completion
    events = ["roll doubles","pay jail fee","jail free card"]
    
    #--Method Implementations--
-   
    # display_event_options(self, player : Players) : string
    def display_event_options(self,player):
       print("\t\tSelect Jailed player action:")
       for i in range(0,len(self.events)):
-         num = str(i)
-         num = num + ")"
+         num = str(i)+")"
          if i == 0:
             print("\t\t  ",num,self.events[i])
          elif i == 1:
@@ -130,13 +145,13 @@ class JailedPlayerEvents(Events): # partial completion
       
       if event == "pay jail fee":   
          player.pay_money(self.arg[0].bail)
-         player.time_jailed == 0
+         player.time_jailed = 0
          print("\t\tPlayer",player.player_number(),"is now out of jail\n")
          return False #player.in_jail == False
       
       if event == "jail free card":
          player.jail_free_card -= 1
-         player.time_jailed == 0
+         player.time_jailed = 0
          print("\t\tPlayer",player.player_number(),"is now out of jail\n")
          return False #player.in_jail == False
       
@@ -148,25 +163,57 @@ class MenuPlayerEvents(Events):
     
    #--Method Implementations--
    # display_event_options(self) : string
-   def display_event_options(self):
-      return
+   def display_event_options(self): # new
+      print("\t\tSelect players action:")
+      for i in range(0,len(self.events)):
+         num = str(i)+")"
+         print("\t\t  ",num,self.events[i])
+      target_event = input("\n\t\tchoice -> ")       
+      return target_event
       
    # event(self, player : Players, event : string) : void
-   def event(self,player,event = ""):
-      return
-   
+   def event(self,player,event = ""): # new
+      if event == "leave game":
+         player.bankrupt = True
+         print()
+         return
+      if event == "return to game":
+         print()
+         return
+      if event == "rules":
+         rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt'
+         with open(rules_file_path, 'r') as file:
+            # Read the contents of the file
+            file_contents = file.read()
+         # Print the contents of the file
+         print(file_contents)
+         blank = input("\npress enter to exit\n")
+         return
+            
 class BankruptPlayerEvents(Events):
    #--Global Data--
    events = ["give up","sell","mortgage","trade","menu"]
    #--Method Implementations--
    # display_event_options(self) : string
    def display_event_options(self):
-      return
+      print("\t\tSelect in dept players action:")  
+      for i in range(0,len(self.events)):
+         num = str(i)
+         num = num + ")"
+         print("\t\t  ",num,self.events[i])      
+      target_event = input("\n\t\tchoice -> ")      
+      return target_event
       
    # event(self, player : Players, event : string) : void
    def event(self,player,event = ""):
-      return
-      
+      if event == "give up":
+         player.bankrupt = True
+      '''      
+      if event == "sell":
+      if event == "mortgage":
+      if event == "trade"
+      if event == "menu"
+      '''   
 class AvaliablePropertyEvents(Events):
    #--Global Data--
    events = ["purchase","auction"]
@@ -219,16 +266,19 @@ class MainMenuEvents(Events):
    def event(self, event = " "): 
       return
    
-class BuildPropertyEvents(Events):
+class BuildBuildingEvents(Events):
    
    # display_event_options(self,player : players) : string
    def display_event_options(self,player): 
-      print("\t\tSelect property to build:")   
-      for i in range(0,len(player.owned_deeds)):  
-         self.events.append(player.owned_deeds[i]) #change to player.owned_deeds.name
-         num = str(i)
-         num = num + ")"   
-         print("\t\t  ",num,self.events[i])
+      print("\t\tSelect property to build on:")
+      '''
+      for i in range(0,len(player.owned_deeds)):
+         if player.owned_deeds[i].monopoly == True: #not actual code   
+            self.events.append(player.owned_deeds[i]) #change to player.owned_deeds.name
+            num = str(i) + ")"
+            print("\t\t  ",num,self.events[i])
+      '''
+      print("\t\t  ",str(-1)+")","cancel build")
       target_event = input("\n\t\tchoice -> ")     
       return int(target_event)
    
@@ -236,42 +286,38 @@ class BuildPropertyEvents(Events):
    # def event(self, player, event = 0):
 
    
-class SellPropertyEvents(Events): #almost complete
+class SellBuildingEvents(Events): #almost complete
 
    # display_event_options(self,player : players) : string
    def display_event_options(self,player): 
-      print("\t\tSelect property to sell:")   
-      for i in range(0,len(player.owned_deeds)):  
-         self.events.append(player.owned_deeds[i]) #change to player.owned_deeds.name
-         num = str(i)
-         num = num + ")"   
-         print("\t\t  ",num,self.events[i])
+      print("\t\tSelect building to sell:")
+      '''
+      for i in range(0,len(player.owned_deeds)):
+         if player.owned_deeds[i].has_building == True: #not actual code
+            self.events.append(player.owned_deeds[i]) #change to player.owned_deeds.name
+            num = str(i) + ")"   
+            print("\t\t  ",num,self.events[i])
+      ''' 
+      print("\t\t  ",str(-1)+")","cancel sale")
       target_event = input("\n\t\tchoice -> ")     
       return int(target_event)
    
    # event(self,player : Players, event : int) : void
    def event(self,player, event): #error
-      # self.arg[0].bank
-      print("\n\t\tplayer",player.player_number(),"sold",player.owned_deeds[event],"\n") #change to player.owned_deeds.name
-      ###Bank still needs to recieve property
-      ###Player still needs to recieve cash
-      player.owned_deeds.pop(event) # not working properly
-      ##not part of code
-      # print()
-      # player.player_status()
-      # print()
-      ##end not part of code
+      return
 
        
 class MortgagePropertyEvents(Events):
    # display_event_options(self,player : players) : string
    def display_event_options(self,player): 
-      print("\t\tSelect property to mortgage:")   
+      print("\t\tSelect property to mortgage:")
+      '''   
       for i in range(0,len(player.owned_deeds)):  
          self.events.append(player.owned_deeds[i]) #change to player.owned_deeds.name
          num = str(i)
          num = num + ")"   
          print("\t\t  ",num,self.events[i])
+      '''
       target_event = input("\n\t\tchoice -> ")     
       return int(target_event)
    
@@ -299,8 +345,7 @@ class TradeEvents(Events):
       print("\t\tSelect property to trade:")   
       for i in range(0,len(player.owned_deeds)):  
          self.events.append(player.owned_deeds[i]) #change to player.owned_deeds.name
-         num = str(i)
-         num = num + ")"   
+         num = str(i) + ")"
          print("\t\t  ",num,self.events[i])
       target_event = input("\n\t\tchoice -> ")
       print("\t\tSelect money to trade(",player.current_money(),")")
