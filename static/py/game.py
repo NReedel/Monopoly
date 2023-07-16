@@ -28,8 +28,18 @@ class Game:
    round = int(1)
    starting_player_count = int(0)
    all_players = []
-   # the_Bank = Bank()
+   bank = Bank()
    # the_Tiles = Tiles()
+
+   def __init__(self):
+       with open('tiles.json', 'r') as rf:
+           for tiles in json.load(rf):
+               if tiles['type'] == "street":
+                   self.bank.deeds.append(DeedStreet(tiles))
+               if tiles['type'] == "railroad":
+                   self.bank.deeds.append(DeedRailroad(tiles))
+               if tiles['type'] == "utility":
+                   self.bank.deeds.append(DeedUtility(tiles))
 
    # #--Method Implementations--
    # move(self,Player : Players) : void
