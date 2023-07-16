@@ -11,9 +11,6 @@
 #--Imports--
 # from enum import Enum
 import random
-import json
-# import sys #?
-# sys.path.insert(0, '/Users/Nreed/Code/All_Code/Monopoly/static/Json') #?
 from tiles import *
 from dice import *
 from players import *
@@ -35,14 +32,15 @@ class Game:
    bankrupt_player_events = BankruptPlayerEvents()
    # the_Bank = Bank()
    # the_Tiles = Tiles()
+   
    # #--Method Implementations--
-   # move(self,Player : Players) : void
-   def move(self,player): 
+   # move(self,Player : Players,  spaces_moving: int) : void
+   def move(self,player,spaces_moving): 
       
-      self.game_dice.roll()
-      print("\t\tplayer",player.player_number(),"roll =",self.game_dice.print_roll()) # add roll total
+      # self.game_dice.roll()
+      # print("\t\tplayer",player.player_number(),"roll =",self.game_dice.print_roll()) # add roll total
       next_location = player.current_location()
-      next_location  += (self.game_dice.total_rolled())
+      next_location  += (spaces_moving)
       if next_location >= 40:
          player.receive_money(200)
          next_location = next_location % 40
