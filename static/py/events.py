@@ -84,9 +84,11 @@ class PlayerEvents(Events): # partial completion #add boundry while loop
          return 0
    
    # event(self player : Players, event : string) : void
-   def event(self,player,event = ""):
       if event == "roll":
-         self.arg[0].move(player)
+         self.arg[0].game_dice.roll()
+         print("\t\tplayer",player.player_number(),"roll =",self.arg[0].game_dice.print_roll()) # add roll total
+         # needs if condition for alt moves
+         self.arg[0].move(player, self.arg[0].game_dice.total_rolled()) 
       if event == "build":
          build = BuildBuildingEvents()
          choice = build.display_event_options(player)
