@@ -17,19 +17,16 @@ from tiles import *
 import random
 class Game:
    #--Global Data--
-   starting_total = int(500)
+   starting_total = int(-1)
    bail = int(50)
-   # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
-   player_events = ("roll","build","sell","mortgage","redeem","trade","menue")
-   jailed_player_events = ("roll doubles","pay jail fee","jail free card")
+   monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
    payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
    game_dice = Dice(2,6)
    turn = int(1)
    round = int(1)
    starting_player_count = int(0)
    all_players = []
-   # the_Bank = Bank()
-   # the_Tiles = Tiles()
+   bank = Bank()
 
    # #--Method Implementations--
    # move(self,Player : Players) : void
