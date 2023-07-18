@@ -84,6 +84,7 @@ class PlayerEvents(Events): # partial completion #add boundry while loop
          return 0
    
    # event(self player : Players, event : string) : void
+   def event(self,player,event = ""):
       if event == "roll":
          self.arg[0].game_dice.roll()
          print("\t\tplayer",player.player_number(),"roll =",self.arg[0].game_dice.print_roll()) # add roll total
@@ -183,7 +184,7 @@ class MenuPlayerEvents(Events):
          print()
          return
       if event == "rules":
-         rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt'
+         rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt' #vary by user
          with open(rules_file_path, 'r') as file:
             # Read the contents of the file
             file_contents = file.read()
