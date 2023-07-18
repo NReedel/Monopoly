@@ -33,7 +33,7 @@ class Monopoly:
             ###Remove Player
             print("\t\tplayer",monopoly_game.turn,"is bankrupt and is now out of the game.")
             monopoly_game.all_players.pop(monopoly_game.turn-1)
-            print("\n\tcurrently",len(monopoly_game.all_players),"player(s) remaining")
+            print("\n\tCurrently",len(monopoly_game.all_players),"player(s) remaining\n")
             monopoly_game.turn += 1
             monopoly_game.end_round_check(monopoly_game.all_players)
             if len(monopoly_game.all_players) == 1:
@@ -48,5 +48,4 @@ class Monopoly:
    
    #--Main Executable--
    run()
-
 
