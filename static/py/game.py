@@ -45,7 +45,6 @@ class Game:
                    self.bank.deeds.append(DeedUtility(tiles))
 
    # #--Method Implementations--
-   # move(self,Player : Players) : void
    # move(self,Player : Players,  spaces_moving: int) : void
    def move(self,player,spaces_moving): 
       
