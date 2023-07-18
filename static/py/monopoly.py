@@ -31,7 +31,9 @@ class Monopoly:
          monopoly_game.take_turn(monopoly_game.all_players)
          if monopoly_game.all_players[monopoly_game.turn-1].bankrupt == True: 
             ###Remove Player
-            print("\t\tplayer",monopoly_game.turn,"is bankrupt and is now out of the game.")
+            if monopoly_game.all_players[monopoly_game.turn-1].in_debt():
+               print("\t\tplayer",monopoly_game.turn,"is bankrupt.")
+            print("\t\tplayer",monopoly_game.turn," is now out of the game.")
             monopoly_game.all_players.pop(monopoly_game.turn-1)
             print("\n\tcurrently",len(monopoly_game.all_players),"player(s) remaining")
             monopoly_game.turn += 1
