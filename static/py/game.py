@@ -9,31 +9,43 @@
 ###
 
 #--Imports--
-# from enum import Enum
-import random
-from tiles import *
 from dice import *
 from players import *
-from events import *
 from tiles import *
-
-
+from bank import *
+from events import *
+# from enum import Enum
+import random
 class Game:
    #--Global Data--
    starting_total = int(500)
    bail = int(50)
-   # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
+   # make owned by bank # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
+   player_events = ("roll","build","sell","mortgage","redeem","trade","menue")
+   jailed_player_events = ("roll doubles","pay jail fee","jail free card")
    payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
    game_dice = Dice(2,6)
    turn = int(1)
    round = int(1)
    starting_player_count = int(0)
    all_players = []
-   bankrupt_player_events = BankruptPlayerEvents()
-   # the_Bank = Bank()
-   # the_Tiles = Tiles()
-   
+   bank = Bank()
+   # tiles = Tiles()
+   ''' 
+   '''
+   def __init__(self):
+       with open('/mnt/c/Users/Nreed/Code/All_Code/Monopoly/static/Json/tiles.json', 'r') as rf:
+      # with open('tiles.json', 'r') as rf:
+           for tiles in json.load(rf):
+               if tiles['type'] == "street":
+                   self.bank.deeds.append(DeedStreet(tiles))
+               if tiles['type'] == "railroad":
+                   self.bank.deeds.append(DeedRailroad(tiles))
+               if tiles['type'] == "utility":
+                   self.bank.deeds.append(DeedUtility(tiles))
+
    # #--Method Implementations--
+   # move(self,Player : Players) : void
    # move(self,Player : Players,  spaces_moving: int) : void
    def move(self,player,spaces_moving): 
       
@@ -118,9 +130,9 @@ class Game:
       end_turn = False
       attempt_escape = False
       ###Events
-      player_events =  PlayerEvents(self,has_rolled) 
+      player_events = PlayerEvents(self,has_rolled) 
       player_events.arg[1] = has_rolled #? 
-      jailed_player_events =  JailedPlayerEvents(self) 
+      jailed_player_events = JailedPlayerEvents(self) 
       ###Start Turn
       while end_turn == False:
          ###Jailed Player Events
@@ -183,6 +195,6 @@ class Game:
       if self.turn > len(target_players): # reset self.turns, start next self.round
          self.end_round_check(target_players)   
    #end take_turn
-#end class
+#end class   
 
       
