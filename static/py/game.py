@@ -17,7 +17,7 @@ from tiles import *
 import random
 class Game:
    #--Global Data--
-   starting_total = int(-1)
+   starting_total = int(500)
    bail = int(50)
    monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
    payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
