@@ -10,42 +10,68 @@
 # Imports
 from game import *
 from players import *
+from events import MainMenuEvents
 
 class Monopoly:
-   
+
    #--Method Implementation--
+   # run() : bool
    def run():
       ###Data
-      monopoly_game = Game()
+      start_game = bool(False) # new
       end_game = bool(False)
-      ###Menue
-      while monopoly_game.starting_player_count < 2 or monopoly_game.starting_player_count > 6: # initial starting players
-         initialPlayers = input("Enter number of players(2-6): ")
-         monopoly_game.starting_player_count = int(initialPlayers) 
+      exit_menu = bool(False)
+      initial_players = int(2)
+      monopoly_game = Game()
+      
+      main_menu = MainMenuEvents()  # new
+      ###New
+      while start_game == False:
+         choice = main_menu.display_event_options(initial_players)
+         # main_event.event() uses unpacking to modify data
+         start_game, initial_players, exit_menu = main_menu.event(main_menu.events[int(choice)], start_game, initial_players, exit_menu)
+         if exit_menu == True:
+            return False
+      ###End New
+      print("\nStarting Game... ")   
          
-      for i in range(0,monopoly_game.starting_player_count): # initialize dynamic players list
-         monopoly_game.all_players.append(Players(monopoly_game.starting_total, i+1))
+      for i in range(1,initial_players+1): # initialize dynamic players list
+         monopoly_game.all_players.append(Players(monopoly_game.starting_total, i))
+         # print("\tInitialize Player",i)
+      
       ###Start Game
       print("\nRound ",monopoly_game.round,"\n")
+      
       while end_game == False: # Taking turn
          monopoly_game.take_turn(monopoly_game.all_players)
          if monopoly_game.all_players[monopoly_game.turn-1].bankrupt == True: 
             ###Remove Player
-            print("\t\tplayer",monopoly_game.turn,"is bankrupt and is now out of the game.")
+            if monopoly_game.all_players[monopoly_game.turn-1].in_debt():
+               print("\n\t\tplayer",monopoly_game.all_players[monopoly_game.turn-1].player_number(),"is bankrupt.")
+            print("\t\tplayer",monopoly_game.all_players[monopoly_game.turn-1].player_number()," is now out of the game.")
             monopoly_game.all_players.pop(monopoly_game.turn-1)
             print("\n\tCurrently",len(monopoly_game.all_players),"player(s) remaining\n")
-            monopoly_game.turn += 1
+            # monopoly_game.turn += 1
             monopoly_game.end_round_check(monopoly_game.all_players)
             if len(monopoly_game.all_players) == 1:
                ###End Game    
                end_game = True
                print("\tPlayer", monopoly_game.all_players[0].player_number(),"wins!\n")
-               print("Game Over\n")   
-   
-   # --Constructor--
-   # def __init__(self):
-   #    self.run()
-   
+               print("Game Over\n") 
+               
+      return True 
+
    #--Main Executable--
-   run()
+   running = True
+   while running == True:
+      running = run()
+      if running == True:  
+         input("\tpress enter to continue")
+      else:
+         print("\nExiting...\n")
+
+
+   
+   
+
 
