@@ -14,40 +14,36 @@ from players import *
 from tiles import *
 from bank import *
 from events import *
+from board import *
 # from enum import Enum
 import random
 class Game:
    #--Global Data--
    starting_total = int(500)
    bail = int(50)
-   # make owned by bank # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
-   player_events = ("roll","build","sell","mortgage","redeem","trade","menue")
-   jailed_player_events = ("roll doubles","pay jail fee","jail free card")
-   payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
+   monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
+   payment = int(0) # maybe
    game_dice = Dice(2,6)
    turn = int(1)
    round = int(1)
-   starting_player_count = int(0)
    all_players = []
    bank = Bank()
-   # tiles = Tiles()
-   ''' 
-   '''
-   def __init__(self):
-       with open('/mnt/c/Users/Nreed/Code/All_Code/Monopoly/static/Json/tiles.json', 'r') as rf:
-      # with open('tiles.json', 'r') as rf:
-           for tiles in json.load(rf):
-               if tiles['type'] == "street":
-                   self.bank.deeds.append(DeedStreet(tiles))
-               if tiles['type'] == "railroad":
-                   self.bank.deeds.append(DeedRailroad(tiles))
-               if tiles['type'] == "utility":
-                   self.bank.deeds.append(DeedUtility(tiles))
+   board = Board()
 
-   # #--Method Implementations--
+   def __init__(self):
+      with open('/mnt/c/Users/Nreed/Code/All_Code/Monopoly/static/Json/tiles.json', 'r') as rf:
+      # with open('tiles.json', 'r') as rf:
+         for tiles in json.load(rf):
+            if tiles['type'] == "street":
+               self.bank.deeds.append(DeedStreet(tiles))
+            if tiles['type'] == "railroad":
+               self.bank.deeds.append(DeedRailroad(tiles))
+            if tiles['type'] == "utility":
+               self.bank.deeds.append(DeedUtility(tiles))
+
+   ###--Method Implementations--
    # move(self,Player : Players,  spaces_moving: int) : void
    def move(self,player,spaces_moving): 
-      
       # self.game_dice.roll()
       # print("\t\tplayer",player.player_number(),"roll =",self.game_dice.print_roll()) # add roll total
       next_location = player.current_location()
@@ -55,7 +51,8 @@ class Game:
       if next_location >= 40:
          player.receive_money(200)
          next_location = next_location % 40
-      player.move_location(next_location) 
+      # add self.board.board_tiles[next_location].tile_name as string
+      player.move_location(next_location,"") # new
       print("")
 
       
@@ -85,6 +82,7 @@ class Game:
          player.move_location(next_location) # move
          print("")  
          return False # in_jail = False
+      
       else:
          print("\t\tplayer",player.player_number(),"remains in jail")
          print("")  
@@ -104,13 +102,11 @@ class Game:
 
    # take_self.turn(Target_players : list<Players>) : void
    def take_turn(self,target_players = []):
-      print("\tPlayer",self.turn, ":") 
+      print("\tPlayer",target_players[self.turn-1].player_number(), ":") 
       ###List Target_players Status 
       target_players[self.turn-1].player_status()
-      ###new
       while target_players[self.turn-1].in_debt() == True: 
-         ###In debt
-         # global bankrupt_player_events
+         ###Bakrupt Player Events 
          bankrupt_player_events = BankruptPlayerEvents()
          print("\t\tplayer",target_players[self.turn-1].player_number(),"is in dept at","$"+str(target_players[self.turn-1].current_money()),"\n")
          target_event = bankrupt_player_events.display_event_options()
@@ -119,10 +115,8 @@ class Game:
             print("\t\tInvalid choice, try again\n")
             target_event = bankrupt_player_events.display_event_options()
          bankrupt_player_events.event(target_players[self.turn-1],bankrupt_player_events.events[int(target_event)])
-
          if target_players[self.turn-1].bankrupt == True:
             return 
-      ###end new 
       if target_players[self.turn-1].in_jail == True:
          target_players[self.turn-1].time_jailed += 1
       has_rolled = False
@@ -155,10 +149,10 @@ class Game:
             ###redisplay if given bad input
             print("\t\tInvalid choice, try again\n")
             target_event = player_events.display_event_options()
-         ###Player Menu Quit #new  
+         ###Player Menu Quit 
          if target_players[self.turn-1].bankrupt == True: 
             return
-         ###end Player Menu Quit #new
+         ###end Player Menu Quit
          if int(target_event) == 0 and has_rolled == False:
             has_rolled = True
             player_events.arg[1] = has_rolled 
@@ -187,7 +181,7 @@ class Game:
          self.turn += 1
       else:
          target_players[self.turn-1].same_values_rolled += 1
-         print("\n\t\tPlayer",self.turn,"goes again")
+         print("\n\t\tPlayer",target_players[self.turn-1].player_number(),"goes again")
          
       print("")
       
