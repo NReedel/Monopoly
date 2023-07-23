@@ -153,7 +153,7 @@ class Game:
          if target_players[self.turn-1].bankrupt == True: 
             return
          ###end Player Menu Quit
-         if int(target_event) == 0 and has_rolled == False:
+         elif int(target_event) == 0 and has_rolled == False:
             has_rolled = True
             player_events.arg[1] = has_rolled 
          elif int(target_event) == 0 and has_rolled == True:
