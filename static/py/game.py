@@ -17,6 +17,7 @@ from events import *
 from board import *
 # from enum import Enum
 import random
+
 class Game:
    #--Global Data--
    starting_total = int(500)
