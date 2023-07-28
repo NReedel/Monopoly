@@ -41,7 +41,6 @@ class Events:
    argc = int(0)
    arg = []
    events = []
-   # player = Players() 
    
    #--Constuctor--
    def __init__(self,*args):
@@ -326,9 +325,11 @@ class MainMenuEvents(Events): # near complete
    
    # event(self, event : string, start_game : bool, initial_players : int, exit_menu : bool)) : tuple<T>
    def event(self, event, start_game, initial_players, exit_menu):
+    
       if event == "start game": # "start_game"
          #start_game = main_menu.event(main_menu.events[int(choice)])
          start_game = True
+       
       if event == "players": # "number of players"
          #initial_players = main_menu.event(main_menu.events[int(choice)])
          initial_players = 0     
@@ -340,12 +341,14 @@ class MainMenuEvents(Events): # near complete
                
       if event == "rules": # "rules"
          rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt' #vary by user
+       
          with open(rules_file_path, 'r') as file:
             # Read the contents of the file
             file_contents = file.read()
             # Print the contents of the file
             print(file_contents)
-         blank = input("\npress enter to exit\n")
+         
+       blank = input("\npress enter to exit\n")
          
       if event == "settings": # "settings" # for house rules, might be front-end 
          pass
