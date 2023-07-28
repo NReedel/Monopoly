@@ -10,7 +10,7 @@ import json
 ###############################################################
 class Board:
    
-        # --Data--
+      # --Data--
 	tile = []
 	# community_chest
 	# chance
