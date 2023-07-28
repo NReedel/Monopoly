@@ -16,6 +16,7 @@ class Bank:
         ### -- Data -- ###
         # bills = {'ones': 40, 'fives': 40, 'tens': 40, 'twenties': 50, 'fifties': 30, 'hundreds': 20, 'five_hundreds': 20}
         self.deeds = list()
+        self.id = "bank" # new
 
         with open('properties.json', 'r') as rf:
             for i in json:
