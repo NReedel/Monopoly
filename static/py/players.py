@@ -13,11 +13,12 @@ class Players:
    # character : string # represents the figure a player uses in game
    __player_number = int(0) # -__player_number : int
    __money = int(0) # -__money : int
-   __location = 0 # -__location : int
+   __location = int(0) # -__location : int
+   location_name = "Go" # location : str
    has_rolled = False
    same_values_rolled = int(0) # doublesrolled : int
-   # +in_Jail : bool 
-   in_jail = False
+
+   in_jail = False  # +in_Jail : bool 
    time_jailed = int(0) # +time_jailded : int 
    jail_free_card = int(0) # +jail_free_card : int
    # owned_deeds = ["Reading Railroad","Baltic Ave","Boardwalk"] # 
@@ -40,7 +41,7 @@ class Players:
       # print("player character = "self.character)
       print("\t\tmoney =","$"+str(self.current_money()))
       print("\t\tin debt =",self.in_debt())
-      print("\t\tlocation =",self.current_location())
+      print("\t\tlocation",str("["+str(self.current_location()))+"] =",self.location_name)
       print("\t\tsame values rolled =",self.same_values_rolled )
       # if self.in_jail == True:
       print("\t\tin jail =",self.in_jail)
@@ -64,11 +65,12 @@ class Players:
    def player_number(self):
       return int(self.__player_number)
    
-   # move_location(location : int) : void
-   def move_location(self,next_location):
+   # move_location(next_location : int, location_text) : void
+   def move_location(self,next_location, location_text): # new
       # print("move to location number",next_location)
       self.__location = next_location
-      print("\t\tplayer",self.__player_number,"location now =",self.__location)
+      self.location_name = location_text
+      print("\n\t\tplayer",self.__player_number,"location is ","\n\t\t["+str(self.__location)+"]",self.location_name)
       
    # current_location(self) : int
    def current_location(self):
