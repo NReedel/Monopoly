@@ -17,9 +17,10 @@ from events import *
 from board import *
 # from enum import Enum
 import random
+import json
 
 class Game:
-   #--Global Data--
+   ###--Global Data--
    starting_total = int(500)
    bail = int(50)
    monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
@@ -30,8 +31,10 @@ class Game:
    all_players = []
    bank = Bank()
    board = Board()
-
+   
+   ###--Constructor--
    def __init__(self):
+      # Load Json here, use your own link 💬
       with open('/mnt/c/Users/Nreed/Code/All_Code/Monopoly/static/Json/tiles.json', 'r') as rf:
       # with open('tiles.json', 'r') as rf:
          for tiles in json.load(rf):
@@ -52,8 +55,8 @@ class Game:
       if next_location >= 40:
          player.receive_money(200)
          next_location = next_location % 40
-      # add self.board.board_tiles[next_location].tile_name as string
-      player.move_location(next_location,"") # new
+      # board.location(next_location)
+      player.move_location(next_location, self.board.location(next_location)) # new
       print("")
 
       
@@ -151,8 +154,9 @@ class Game:
             print("\t\tInvalid choice, try again\n")
             target_event = player_events.display_event_options()
          ###Player Menu Quit 
-         if target_players[self.turn-1].bankrupt == True: 
-            return
+         if target_players[self.turn-1].bankrupt == True:
+            has_rolled = True 
+            return 
          ###end Player Menu Quit
          elif int(target_event) == 0 and has_rolled == False:
             has_rolled = True
