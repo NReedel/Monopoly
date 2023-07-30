@@ -9,55 +9,53 @@
 ###
 
 #--Imports--
+from dice import *
+from players import *
+from tiles import *
+from bank import *
+from events import *
+from board import *
 # from enum import Enum
 import random
 import json
-# import sys #?
-# sys.path.insert(0, '/Users/Nreed/Code/All_Code/Monopoly/static/Json') #?
-from tiles import *
-from dice import *
-from players import *
-from events import *
-from board import *
-from bank import *
-
 
 class Game:
-   #--Global Data--
+   ###--Global Data--
    starting_total = int(500)
    bail = int(50)
-   # monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse")
-   payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
+   monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
+   payment = int(0) # maybe
    game_dice = Dice(2,6)
    turn = int(1)
    round = int(1)
-   starting_player_count = int(0)
    all_players = []
    bank = Bank()
-   # the_Tiles = Tiles()
-
+   board = Board()
+   
+   ###--Constructor--
    def __init__(self):
-       with open('tiles.json', 'r') as rf:
-           for tiles in json.load(rf):
-               if tiles['type'] == "street":
-                   self.bank.deeds.append(DeedStreet(tiles))
-               if tiles['type'] == "railroad":
-                   self.bank.deeds.append(DeedRailroad(tiles))
-               if tiles['type'] == "utility":
-                   self.bank.deeds.append(DeedUtility(tiles))
+      # Load Json here, use your own link 💬
+      with open('tiles.json', 'r') as rf:
+      # with open('tiles.json', 'r') as rf:
+         for tiles in json.load(rf):
+            if tiles['type'] == "street":
+               self.bank.deeds.append(DeedStreet(tiles))
+            if tiles['type'] == "railroad":
+               self.bank.deeds.append(DeedRailroad(tiles))
+            if tiles['type'] == "utility":
+               self.bank.deeds.append(DeedUtility(tiles))
 
-   # #--Method Implementations--
-   # move(self,Player : Players) : void
-   def move(self,player): 
-      
-      self.game_dice.roll()
-      print("\t\tplayer",player.player_number(),"rolled =",self.game_dice.print_roll()) # add roll total
-      next_location = player.current_location()
-      next_location  += (self.game_dice.total_rolled())
+   ###--Method Implementations--
+   # move(self,Player : Players,  spaces_moving: int) : void
+   def move(self,player,spaces_moving): 
+      # self.game_dice.roll()
+      # print("\t\tplayer",player.player_number(),"roll =",self.game_dice.print_roll()) # add roll total
+      next_location = player.current_location() + spaces_moving
       if next_location >= 40:
-         self.player.change_balance(self.bank.receive_money(player.current_money(), 200))
+         player.receive_money(200)
          next_location = next_location % 40
-      player.move_location(next_location) 
+      # board.location(next_location)
+      player.move_location(next_location, self.board.location(next_location)) # new
       print("")
 
       
@@ -67,26 +65,26 @@ class Game:
    def jailed_move_attempt(self,player): 
       
       self.game_dice.roll()
-      print("\t\tplayer",player.player_number(),"rolled =",self.game_dice.print_roll())
+      print("\t\tplayer",player.player_number(),"roll =",self.game_dice.print_roll())
       
       if self.game_dice.rolled_same_values() == True or player.time_jailed == 3:
          
-         if player.time_jailed == 3 and Dice.rolled_same_values() == False:
-            player.time_jailed == 0
+         if player.time_jailed == 3 and self.game_dice.rolled_same_values() == False:
+            player.time_jailed = 0
             global bail
-            player.pay_money(bail)    
+            player.pay_money(self.bail)    
             
          print("\t\tplayer",player.player_number(),"is now out of jail")
-         next_location = player.current_location()
-         next_location += self.game_dice.total_rolled()
+         next_location = player.current_location() + self.game_dice.total_rolled()
          
          if next_location >= 40:
-            self.player.change_balance(self.bank.receive_money(player.current_money(), 200))
+            player.receive_amount(200)
             next_location = next_location % 40
             
          player.move_location(next_location) # move
          print("")  
          return False # in_jail = False
+      
       else:
          print("\t\tplayer",player.player_number(),"remains in jail")
          print("")  
@@ -98,7 +96,6 @@ class Game:
       if self.turn > len(remainingPlayers): # reset turns, start next round
          self.turn = self.turn % len(remainingPlayers) 
          self.round += 1
-         print("")
          print("Round ",self.round)
          print("")
                   
@@ -107,13 +104,11 @@ class Game:
 
    # take_self.turn(Target_players : list<Players>) : void
    def take_turn(self,target_players = []):
-      print("\tPlayer",self.turn, ":") 
+      print("\tPlayer",target_players[self.turn-1].player_number(), ":") 
       ###List Target_players Status 
       target_players[self.turn-1].player_status()
-      ###new
       while target_players[self.turn-1].in_debt() == True: 
-         ###In debt
-         # global bankrupt_player_events
+         ###Bakrupt Player Events 
          bankrupt_player_events = BankruptPlayerEvents()
          print("\t\tplayer",target_players[self.turn-1].player_number(),"is in dept at","$"+str(target_players[self.turn-1].current_money()),"\n")
          target_event = bankrupt_player_events.display_event_options()
@@ -122,19 +117,17 @@ class Game:
             print("\t\tInvalid choice, try again\n")
             target_event = bankrupt_player_events.display_event_options()
          bankrupt_player_events.event(target_players[self.turn-1],bankrupt_player_events.events[int(target_event)])
-
          if target_players[self.turn-1].bankrupt == True:
             return 
-      ###end new 
       if target_players[self.turn-1].in_jail == True:
          target_players[self.turn-1].time_jailed += 1
       has_rolled = False
       end_turn = False
       attempt_escape = False
       ###Events
-      player_events =  PlayerEvents(self,has_rolled) 
+      player_events = PlayerEvents(self,has_rolled) 
       player_events.arg[1] = has_rolled #? 
-      jailed_player_events =  JailedPlayerEvents(self) 
+      jailed_player_events = JailedPlayerEvents(self) 
       ###Start Turn
       while end_turn == False:
          ###Jailed Player Events
@@ -158,11 +151,12 @@ class Game:
             ###redisplay if given bad input
             print("\t\tInvalid choice, try again\n")
             target_event = player_events.display_event_options()
-         ###Player Menu Quit #new  
-         if target_players[self.turn-1].bankrupt == True: 
-            return
-         ###end Player Menu Quit #new
-         if int(target_event) == 0 and has_rolled == False:
+         ###Player Menu Quit 
+         if target_players[self.turn-1].bankrupt == True:
+            has_rolled = True 
+            return 
+         ###end Player Menu Quit
+         elif int(target_event) == 0 and has_rolled == False:
             has_rolled = True
             player_events.arg[1] = has_rolled 
          elif int(target_event) == 0 and has_rolled == True:
@@ -190,13 +184,11 @@ class Game:
          self.turn += 1
       else:
          target_players[self.turn-1].same_values_rolled += 1
-         print("\n\t\tPlayer",self.turn,"goes again")
+         print("\n\t\tPlayer",target_players[self.turn-1].player_number(),"goes again")
          
       print("")
       
       if self.turn > len(target_players): # reset self.turns, start next self.round
          self.end_round_check(target_players)   
    #end take_turn
-#end class
-
-      
+#end class   
