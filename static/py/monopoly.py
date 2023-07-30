@@ -25,16 +25,17 @@ class Monopoly:
       monopoly_game = Game()
       
       main_menu = MainMenuEvents()  # new
-      ###New
+      #Main Menu Events
       while start_game == False:
          choice = main_menu.display_event_options(initial_players)
          # main_event.event() uses unpacking to modify data
          start_game, initial_players, exit_menu = main_menu.event(main_menu.events[int(choice)], start_game, initial_players, exit_menu)
          if exit_menu == True:
             return False
-      ###End New
-      print("\nStarting Game... ")   
-         
+      ###End Main Menu Events
+      print("\nStarting Game... ")
+      monopoly_game.all_players.clear()   
+   
       for i in range(1,initial_players+1): # initialize dynamic players list
          monopoly_game.all_players.append(Players(monopoly_game.starting_total, i))
          # print("\tInitialize Player",i)
