@@ -2,27 +2,29 @@ Each card has a common theme (within their Community Chest and Chance designatio
 (format is "'image-description': 'card-theme' \n\t '- card-text'" except in the case of subgroups of Chance movement cards, in which the cards are subdivided by movement type.)
 
 *** For some context, the name of the Monopoly man is Rich Uncle Pennybags. His name is used in the image names below.
-GOJF: Get Out of Jail Free
+*** GOJF: Get Out of Jail Free
+
 
 First, the custom card attributes currently coded into the Community Chest/Chance json file(s) are kept as generic as possible (although their associated descriptions should be specific) and are as follows:
-Static (simple implementation)
+* Static (simple implementation)
 	- payStaticAmount : int
 	- collectStaticAmount : int
 
-Rates (best practice requires an outside source to acquire the number of players/houses/hotels, value of dice roll, or other necessary component for implementation.)
+* Rates (best practice requires an outside source to acquire the number of players/houses/hotels, value of dice roll, or other necessary component for implementation.)
 	- payPlayerRateAmount : int
 	- collectPlayerRateAmount : int
 	- payHouseRateAmount : int
 	- payHotelRateAmount : int
 	- cardRentMultiplier : int
 
-Movement (implementation not yet determined for this project)
-	- moveTo : int (index) of board location, starting from GO = 0
-	- moveTo : signed int, which is only used for the GO BACK THREE SPACES card
+* Movement (implementation not yet determined for this project)
+	- moveTo : int (index) of board location, starting from GO = 0 (requires player.move_location() to be called)
+	- moveTo : signed int, which is only used for the GO BACK THREE SPACES card (requires game.move() to be called)
 	- moveToNearest: string containing type of deed to move to, at which point calculations can be made to determine nearest of that type
 
-Get Out of Jail Free (GOJF; can be sold for custom price, traded for any other tradeable card, or used to GOJF, all encompassed by this bool)
+* Get Out of Jail Free (GOJF; can be sold for custom price, traded for any other tradeable card, or used to GOJF, all encompassed by this bool)
 	- isGOJF : true
+
 
 Community Chest:
 [
