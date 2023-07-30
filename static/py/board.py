@@ -1,39 +1,60 @@
 ###############################################################
 # board.py
 ###############################################################
-
-from tiles import Tile
-
+from tiles import *
+from board_tiles import *
+from cards import *
+import json
 # from deeds import Deed ⚠
 # from bank import Bank ⚠
 
 ###############################################################
-
 class Board:
-	
+   
+      # --Data--
+	tile = []
+	community_chest = []
+	chance = []
+ 
+	# --Constructor--
 	def __init__(self):
-		
-		self.tiles = []
+		# Load JSON here, use your own link if outside working directory 💬
+		with open('tiles.json', 'r') as rf:
+			for tiles in json.load(rf):
+				if tiles['type'] == "street":
+					self.tile.append(StreetBoardTiles(tiles))
+				elif tiles['type'] == "railroad":
+					self.tile.append(RailRoadBoardTiles(tiles))
+				elif tiles['type'] == "utility":
+					self.tile.append(UtilityBoardTiles(tiles))
+				else: #tiles['type'] == "special":
+					self.tile.append(SpecialBoardTiles(tiles))
 
-		# Load JSON here 💬
+		with open('community_chest.json', 'r') as rf:
+			for cards in json.load(rf):
+				self.community_chest.append(Cards(cards))
 
-		for t in range(40):
-			self.tiles.append(Tile(t))
-			# Bank.deeds.append(Deed(t)) ⚠
-			'''
-				Will need Tile and Deed 
-				to accept a dictionary as an argument
-				to initialize their members
-			'''
+		with open('chance.json', 'r') as rf:
+			for cards in json.load(rf):
+				self.chance.append(Cards(cards))
+    
+	# location(tile_index : int) : str
+	def location(self,tile_index):
+		return str(self.tile[tile_index].name)
+				
+		# # Quick test function
+		# def print_board(self):
+		# 	for t in self.tiles:
+		# 		print("\tTile.tile_id: ", t.tile_id)
 
-	# Quick test function
-	def print_board(self):
-		for t in self.tiles:
-			print("\tTile.tile_id: ", t.tile_id)
 
-
-	# May need later when rendering front-end elements
-	def render_board():
-		pass
+		# # May need later when rendering front-end elements
+		# def render_board():
+		# 	pass
 
 ###############################################################
+
+
+# owner(current_players : Player) : str  
+# def owner(current_players)  
+    
