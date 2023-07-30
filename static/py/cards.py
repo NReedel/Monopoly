@@ -2,28 +2,81 @@
 # cards.py
 ###############################################################
 
+###
+# *Name:    Alicyn Knapp, Chris Schneider
+# *Credit:  PennWest Projects! (discord server)
+# *Purpose: Define Monopoly card attributes and actions
+###
+
+from asyncio.windows_events import NULL
 from enum import Enum
 
 ###############################################################
 
 class CardType(Enum):
-    CHANCE       = 1
-    COMMUNITY	 = 2
-    NONE		 = 3
+    CHANCE = 1
+    CHEST = 2
+    NONE = 3
 
 ###############################################################
 
-class Card():
+class Cards:
+	def __init__(self, card):
+		''' All cards are initialized with json in board.py constructor '''
 
-	# Will need to add a dictionary parameter for JSON initialization ⚠
-	def __init__(self, index):
+		self.index = card['index']
 
-		self.card_id = index
-		self.type = CardType.NONE
-		self.card_text = ""
+		# initialize with enum based on type
+		if card['type'] == "Chance":
+			self.type = CardType.CHANCE
+		elif card['type'] == "Community Chest":
+			self.type = CardType.CHEST
+		else:
+			self.type = CardType.NONE
+			
+		self.title = card['title']
+		self.image = card['image']
+		self.description = card['description']
 
-		self.event = None  			# ⚠
-		self.is_ownable = False		# Get out of jail free card
+		# pay a flat amount of money to the bank
+		if (card.get('payStaticAmount') != None):
+			self.event = "payStaticAmount"
+			self.pay_money = card[self.event]
+		# collect a flat amount of money from the bank
+		elif (card.get('collectStaticAmount') != None):
+			self.event = "collectStaticAmount"
+			self.collect_money = card[self.event]
+		# pay money to each player
+		elif (card.get('payPlayerRateAmount') != None):
+			self.event = "payPlayerRateAmount"
+			self.pay_player_rate = card[self.event]
+		# collect money from each player
+		elif (card.get('collectPlayerRateAmount') != None):
+			self.event = "collectPlayerRateAmount"
+			self.collect_player_rate = card[self.event]
+		# pay money per owned house and hotel to the bank
+		elif (card.get('payHouseRateAmount') != None and
+			  card.get('payHotelRateAmount') != None):
+			self.event = "payBuildingRateAmount"
+			self.payHouseRate = card['payHouseRateAmount']
+			self.payHotelRate = card['payHotelRateAmount']
+		# move to the specified tile OR move backwards three spaces
+		elif (card.get('moveTo') != None):
+			if (card.get('moveTo') >= 0):
+				self.event = "move"
+				self.move_to = card['moveTo']
+			else:
+				self.event = "reverseMove"
+				self.reverse_move = card['moveTo']
+		# move to the nearest specified tile and pay a specified rent rate
+		elif (card.get('cardRentMultiplier') != None and
+			  card.get('moveToNearest') != None):
+			self.event = "moveToNearest"
+			self.tile_type = card['moveToNearest']
+			self.card_rent_multiplier = card['cardRentMultiplier']
+		# receive a GOJF card
+		elif (card.get('isGOJF') != None):
+			self.is_ownable = card['isGOJF']
 
 
 	def render_html():
