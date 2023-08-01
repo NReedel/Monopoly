@@ -21,7 +21,7 @@ import json
 
 class Game:
    ###--Global Data--
-   starting_total = int(500)
+   starting_total = int(2500)
    bail = int(50)
    monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
    payment = int(0) # maybe
@@ -52,10 +52,11 @@ class Game:
       # print("\t\tplayer",player.player_number(),"roll =",self.game_dice.print_roll()) # add roll total
       next_location = player.current_location()
       next_location  += (spaces_moving)
+      
       if next_location >= 40:
          player.receive_money(200)
          next_location = next_location % 40
-      # board.location(next_location)
+         
       player.move_location(next_location, self.board.location(next_location)) # new
       print("")
 
@@ -127,8 +128,8 @@ class Game:
       end_turn = False
       attempt_escape = False
       ###Events
-      player_events = PlayerEvents(self,has_rolled) 
-      player_events.arg[1] = has_rolled #? 
+      player_events = PlayerEvents(self) 
+      # player_events.arg[1] = has_rolled #? 
       jailed_player_events = JailedPlayerEvents(self) 
       ###Start Turn
       while end_turn == False:
@@ -148,21 +149,23 @@ class Game:
                ###jailed_player_events.event returns True if player stays in jail
                target_players[self.turn-1].in_jail = jailed_player_events.event(target_players[self.turn-1],jailed_player_events.events[int(target_event)])
          ###Player Events
-         target_event = player_events.display_event_options() 
+         target_event = player_events.display_event_options(has_rolled) 
          while int(target_event) < 0 or len(player_events.events) <= int(target_event):
             ###redisplay if given bad input
             print("\t\tInvalid choice, try again\n")
-            target_event = player_events.display_event_options()
+            target_event = player_events.display_event_options(has_rolled)
          ###Player Menu Quit 
          if target_players[self.turn-1].bankrupt == True:
-            has_rolled = True 
+            has_rolled = True
             return 
          ###end Player Menu Quit
          elif int(target_event) == 0 and has_rolled == False:
             has_rolled = True
             player_events.arg[1] = has_rolled 
          elif int(target_event) == 0 and has_rolled == True:
-            end_turn = True         
+            end_turn = True
+         else:
+            pass         
             
          if end_turn  == False:
             print("")
@@ -191,8 +194,11 @@ class Game:
       print("")
       
       if self.turn > len(target_players): # reset self.turns, start next self.round
-         self.end_round_check(target_players)   
+         self.end_round_check(target_players)
+ 
    #end take_turn
+   
+
 #end class   
 
       
