@@ -4,13 +4,17 @@
 from tiles import *
 from board_tiles import *
 import json
+
 # from deeds import Deed ⚠
 # from bank import Bank ⚠
 
 ###############################################################
+
+
+
 class Board:
    
-      # --Data--
+   # --Data--
 	tile = []
 	# community_chest
 	# chance
@@ -22,17 +26,23 @@ class Board:
 			# with open('tiles.json', 'r') as rf:
 			for tiles in json.load(rf):
 				if tiles['type'] == "street":
-					self.tile.append(StreetBoardTiles(tiles))
+					self.tile.append(PropertyStreet(tiles))
 				elif tiles['type'] == "railroad":
-					self.tile.append(RailRoadBoardTiles(tiles))
+					self.tile.append(PropertyRailroad(tiles))
 				elif tiles['type'] == "utility":
-					self.tile.append(UtilityBoardTiles(tiles))
+					self.tile.append(PropertyUtility(tiles))
 				else: #tiles['type'] == "special":
-					self.tile.append(SpecialBoardTiles(tiles))
+					if(tiles['special'] == "card"):
+						self.tile.append(TileCard(tiles))      
+					if(tiles['special'] == "tax"):
+						self.tile.append(TileTax(tiles))
+					if(tiles['special'] == "corner"):
+						self.tile.append(TileCorner(tiles))
+
     
 	# location(tile_index : int) : str
 	def location(self,tile_index):
-		return str(self.tile[tile_index].name)
+		return str(self.tile[tile_index].tile_name)
 				
 		# # Quick test function
 		# def print_board(self):
