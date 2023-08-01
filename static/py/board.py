@@ -2,7 +2,7 @@
 # board.py
 ###############################################################
 from tiles import *
-from board_tiles import *
+
 import json
 
 # from deeds import Deed ⚠
