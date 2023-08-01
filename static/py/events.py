@@ -34,7 +34,6 @@ Events
 #--Imports--
 from players import *
 # from monopoly import *
-import copy
 
 class Events:
    #--Global Data--
@@ -44,7 +43,7 @@ class Events:
    
    #--Constuctor--
    def __init__(self,*args):
-      self.argc = len(args) 
+      self.argc = len(args)
       if len(args) > 0:
          for i in range(len(args)):
             self.arg.append(args[i]) 
@@ -55,18 +54,20 @@ class Events:
    def event(self): # event() : void
       return
 
-   
-class PlayerEvents(Events): # partial completion # add boundry while loop 
+class PlayerEvents(Events): # partial completion 
    #--Argumets--
    # arg[0] = self from game 
-   # arg[1] = bool(has_rolled) from game 
-   
+
    #--Global Data--
    events = ["roll","build","sell","mortgage","redeem","trade","menu"]
     
    #--Method Implementations--
-   # display_event_options(self) : string
-   def display_event_options(self):
+   def reset(self):
+      self.__init__()
+         
+   # display_event_options(self, bankrupt : bool) : string
+   def display_event_options(self, bankrupt):
+
       if self.arg[0].all_players[self.arg[0].turn-1].bankrupt == False: 
          print("\t\tSelect players action:")  
       
@@ -210,6 +211,7 @@ class MenuPlayerEvents(Events):
          print()
          return
       if event == "rules":
+         # Load file here, use your own link 💬
          rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt' #vary by user
          with open(rules_file_path, 'r') as file:
             # Read the contents of the file
@@ -222,6 +224,7 @@ class MenuPlayerEvents(Events):
 class BankruptPlayerEvents(Events): #incomplete
    #--Global Data--
    events = ["give up","sell","mortgage","trade","menu"]
+   
    #--Method Implementations--
    # display_event_options(self) : string
    def display_event_options(self):
@@ -325,11 +328,9 @@ class MainMenuEvents(Events): # near complete
    
    # event(self, event : string, start_game : bool, initial_players : int, exit_menu : bool)) : tuple<T>
    def event(self, event, start_game, initial_players, exit_menu):
-    
       if event == "start game": # "start_game"
          #start_game = main_menu.event(main_menu.events[int(choice)])
          start_game = True
-       
       if event == "players": # "number of players"
          #initial_players = main_menu.event(main_menu.events[int(choice)])
          initial_players = 0     
@@ -340,15 +341,14 @@ class MainMenuEvents(Events): # near complete
                print("Invalid quantiy, try again")
                
       if event == "rules": # "rules"
+         # Load file here, use your own link 💬
          rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt' #vary by user
-       
          with open(rules_file_path, 'r') as file:
             # Read the contents of the file
             file_contents = file.read()
             # Print the contents of the file
             print(file_contents)
-         
-       blank = input("\npress enter to exit\n")
+         blank = input("\npress enter to exit\n")
          
       if event == "settings": # "settings" # for house rules, might be front-end 
          pass
