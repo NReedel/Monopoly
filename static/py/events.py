@@ -65,13 +65,13 @@ class PlayerEvents(Events): # partial completion
    def reset(self):
       self.__init__()
          
-   # display_event_options(self, bankrupt : bool) : string
-   def display_event_options(self, bankrupt):
+   # display_event_options(self, has_rolled) : string
+   def display_event_options(self, has_rolled):
 
       if self.arg[0].all_players[self.arg[0].turn-1].bankrupt == False: 
          print("\t\tSelect players action:")  
       
-         if self.arg[1] == True: 
+         if has_rolled == True: 
             print("\t\t   0) pass turn")
          else: 
             print("\t\t   0)",self.events[0])
