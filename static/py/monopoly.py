@@ -31,6 +31,7 @@ class Monopoly:
          # main_event.event() uses unpacking to modify data
          start_game, initial_players, exit_menu = main_menu.event(main_menu.events[int(choice)], start_game, initial_players, exit_menu)
          if exit_menu == True:
+            del monopoly_game 
             return False
       ###End Main Menu Events
       print("\nStarting Game... ")
@@ -59,7 +60,7 @@ class Monopoly:
                end_game = True
                print("\tPlayer", monopoly_game.all_players[0].player_number(),"wins!\n")
                print("Game Over\n") 
-               
+      del monopoly_game         
       return True 
 
    #--Main Executable--
