@@ -149,11 +149,12 @@ class Game:
                ###jailed_player_events.event returns True if player stays in jail
                target_players[self.turn-1].in_jail = jailed_player_events.event(target_players[self.turn-1],jailed_player_events.events[int(target_event)])
          ###Player Events
-         target_event = player_events.display_event_options(has_rolled) 
-         while int(target_event) < 0 or len(player_events.events) <= int(target_event):
-            ###redisplay if given bad input
-            print("\t\tInvalid choice, try again\n")
-            target_event = player_events.display_event_options(has_rolled)
+         if target_players[self.turn-1].bankrupt == False:
+            target_event = player_events.display_event_options(has_rolled) 
+            while int(target_event) < 0 or len(player_events.events) <= int(target_event):
+               ###redisplay if given bad input
+               print("\t\tInvalid choice, try again\n")
+               target_event = player_events.display_event_options(has_rolled)
          ###Player Menu Quit 
          if target_players[self.turn-1].bankrupt == True:
             has_rolled = True
