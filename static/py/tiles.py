@@ -67,7 +67,7 @@ class TileProperty(Tile):
 
         super().__init__(tile)
 
-        self.property_cost = 0
+        self.property_cost = tile['price']
         self.mortgage_value = 0
         self.is_mortgaged = False
         self.rent_base = 0
@@ -83,6 +83,12 @@ class TileProperty(Tile):
         self.hotels = int(0)
         self.tile_type = tile['type']  # "street", "railroad", "utility"
         self.monopoly_type = Monopoly.NONE
+        
+    # avaliable_deed(self) : bool
+    def avaliable_deed(self): # new
+      if self.owned_by == "bank":
+         return True
+      return False
 
 
 class PropertyStreet(TileProperty):
@@ -143,6 +149,7 @@ class TileSpecial(Tile):
         super(TileSpecial, self).__init__(tile)
         self.fname_icon = ""
         self.owned_by = "none"
+        self.tile_type = tile['type']  # "special"
         self.special_tile = tile['special'] # "corner" or "card" or"tax"
 
 # Chance and Community Chest
