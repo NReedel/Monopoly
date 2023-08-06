@@ -33,7 +33,6 @@ Events
  
 #--Imports--
 from players import *
-# from monopoly import *
 
 class Events:
    #--Global Data--
@@ -53,8 +52,19 @@ class Events:
       return 
    def event(self): # event() : void
       return
+   def update(self,*argument):
+      self.arg = argument
+      
 
 class PlayerEvents(Events): # partial completion 
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)   
+      self.argc = len(args)
+      if len(args) > 0:
+         for i in range(len(args)):
+            self.arg.append(args[i]) 
+   
    #--Argumets--
    # arg[0] = self from game 
 
@@ -62,9 +72,6 @@ class PlayerEvents(Events): # partial completion
    events = ["roll","build","sell","mortgage","redeem","trade","menu"]
     
    #--Method Implementations--
-   def reset(self):
-      self.__init__()
-         
    # display_event_options(self, has_rolled) : string
    def display_event_options(self, has_rolled):
 
@@ -88,9 +95,10 @@ class PlayerEvents(Events): # partial completion
    
    # event(self player : Players, event : string) : void
    def event(self,player,event = ""):
+      current_player = self.arg[0].all_players[self.arg[0].turn-1]
       if event == "roll":
          self.arg[0].game_dice.roll()
-         print("\t\tplayer",player.player_number(),"roll =",self.arg[0].game_dice.print_roll()) # add roll total
+         print("\t\tplayer",player.id,"roll =",self.arg[0].game_dice.print_roll()) # add roll total
          # needs if condition for alt moves
          self.arg[0].move(player, self.arg[0].game_dice.total_rolled()) 
       if event == "build":
@@ -137,14 +145,21 @@ class PlayerEvents(Events): # partial completion
       if event == "trade":
       
       '''   
-      if event == "menu": 
-         menu = MenuPlayerEvents()
+      if event == "menu":
+         menu = MenuPlayerEvents() # ADD UPDATE!
          choice = menu.display_event_options()
+         while int(choice) < 0 or int(choice) >= len(menu.events):
+            print("\t\tInvalid choice, try again\n")
+            choice = menu.display_event_options()
          menu.event(player,menu.events[int(choice)])
          if player.bankrupt == True:
             return
          
 class JailedPlayerEvents(Events):
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)
+      
    #--Argumets--
    # arg[0] = self from game, used for bail and player
    
@@ -175,18 +190,23 @@ class JailedPlayerEvents(Events):
       if event == "pay jail fee":   
          player.pay_money(self.arg[0].bail)
          player.time_jailed = 0
-         print("\t\tPlayer",player.player_number(),"is now out of jail\n")
+         print("\t\tPlayer",player.id,"is now out of jail\n")
          return False #player.in_jail == False
       
       if event == "jail free card":
          player.jail_free_card -= 1
          player.time_jailed = 0
-         print("\t\tPlayer",player.player_number(),"is now out of jail\n")
+         print("\t\tPlayer",player.id,"is now out of jail\n")
          return False #player.in_jail == False
       
       return True
 
 class MenuPlayerEvents(Events):
+   
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)   
+
    #--Global Data--
    events = ["leave game","return to game","rules"]
     
@@ -222,6 +242,10 @@ class MenuPlayerEvents(Events):
          return
             
 class BankruptPlayerEvents(Events): #incomplete
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)     
+   
    #--Global Data--
    events = ["give up","sell","mortgage","trade","menu"]
    
@@ -247,34 +271,59 @@ class BankruptPlayerEvents(Events): #incomplete
       if event == "menu"
       '''   
 class AvaliablePropertyEvents(Events): # near complete
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)   
+      self.argc = len(args)
+      if len(args) > 0:
+         for i in range(len(args)):
+            self.arg.append(args[i]) 
+            
+   #--Argumets--
+   # arg[0] = self from game, used for bank and all_players
    
    #--Global Data--
    events = ["purchase","auction"]
     
    #--Method Implementations--
    # display_event_options(self) : string
-   def display_event_options(self):
+   def display_event_options(self,property_cost):
       print("\t\tSelect players action:")
       for i in range(0,len(self.events)):
          num = str(i)+")"
-         print("\t\t  ",num,self.events[i])
-      target_event = input("\n\t\tchoice -> ")       
+         if i == 0:
+            print("\t\t  ",num,self.events[i],"for",str("$")+str(property_cost))
+         else: 
+            print("\t\t  ",num,self.events[i])
+      target_event = input("\n\t\tchoice -> ")
+      print()       
       return target_event
       
-   # event(self, player : Players, event : string) : void
-   def event(self,player,event = ""): # new
-      if event == "purchase":#needs testing
-         """
-         buy deed from bank
-         """
-         return
+   # event(self, event : string) : void
+   def event(self, event ):
+      bank = self.arg[0].bank
+      current_tile = self.arg[0].board.tile
+      all_players = self.arg[0].all_players
+      current_player = all_players[self.arg[0].turn-1]
+      
+      # player_deeds.deep_copy(current_player.deeds)
+      # bank_deeds = bank.deeds 
+      if event == "purchase":
+         ### buy deed from bank
+         self.arg[0].transfer_payment(current_player, self.arg[0].bank, current_tile[current_player.current_location()].property_cost)
+         self.arg[0].transfer_deed(bank, current_player, current_player.current_location())
+         
       if event == "auction": #needs testing
          auction = AuctionPropertyEvents()
-         auction_deed = self.arg[0].bank.deeds[player.current_location()] # copys current locations deed
-         self.arg[0].bank.deeds.pop(player.current_location()) #remove deed
+         auction_deed = self.arg[0].bank.deeds[current_player.current_location()] # copys current locations deed
+         self.arg[0].bank.deeds.pop(current_player.current_location()) #remove deed
          auction.display_event_options(auction_deed,self.arg[0].all_players, self.arg[0].turn)
 
 class AuctionPropertyEvents(Events): #incomplete
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)  
+         
    #--Global Data--
    events = ["bid","forfeit"]
     
@@ -297,6 +346,10 @@ class AuctionPropertyEvents(Events): #incomplete
       return
    
 class CardEvents(Events): #incomplete
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)  
+         
    #--Global Data--
    events = ["take a chance"]
     
@@ -310,6 +363,10 @@ class CardEvents(Events): #incomplete
       return
 
 class MainMenuEvents(Events): # near complete
+   #--Constructor--
+   def __init__(self, ):
+      super().__init__()  
+      
    #--Global Data--
    events = ["start game","players","rules","settings","exit"] 
    
@@ -366,6 +423,9 @@ class MainMenuEvents(Events): # near complete
    '''
       
 class BuildBuildingEvents(Events): #incomplete
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)  
    
    # display_event_options(self,player : players) : string
    def display_event_options(self,player): 
@@ -386,6 +446,9 @@ class BuildBuildingEvents(Events): #incomplete
 
    
 class SellBuildingEvents(Events): #incomplete
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)  
 
    # display_event_options(self,player : players) : string
    def display_event_options(self,player): 
@@ -407,6 +470,10 @@ class SellBuildingEvents(Events): #incomplete
 
        
 class MortgagePropertyEvents(Events): #incomplete
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)  
+      
    # display_event_options(self,player : players) : string
    def display_event_options(self,player): 
       print("\t\tSelect property to mortgage:")
@@ -426,6 +493,10 @@ class MortgagePropertyEvents(Events): #incomplete
       return   
 
 class RedeemPropertyEvents(Events): #incomplete
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)  
+      
    # display_event_options(self,player : players) : string
    def display_event_options(self,player): 
       print("\t\tSelect property to redeem:")
@@ -445,6 +516,10 @@ class RedeemPropertyEvents(Events): #incomplete
       return   
   
 class TradeEvents(Events): #incomplete
+   #--Constructor--
+   def __init__(self, *args):
+      super().__init__(*args)  
+         
    # display_event_options(self,player : players) : list 
    def display_event_options(self,player): #incomplete
       print("\t\tSelect property to trade:")
