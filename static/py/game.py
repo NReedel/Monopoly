@@ -15,6 +15,7 @@ from tiles import *
 from bank import *
 from events import *
 from board import *
+from deeds import *
 # from enum import Enum
 import random
 import json
