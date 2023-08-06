@@ -18,13 +18,12 @@ class Monopoly:
    # run() : bool
    def run():
       ###Data
-      start_game = bool(False) # new
+      start_game = bool(False) 
       end_game = bool(False)
       exit_menu = bool(False)
       initial_players = int(2)
       monopoly_game = Game()
-      
-      main_menu = MainMenuEvents()  # new
+      main_menu = MainMenuEvents()  
       #Main Menu Events
       while start_game == False:
          choice = main_menu.display_event_options(initial_players)
@@ -36,10 +35,11 @@ class Monopoly:
       ###End Main Menu Events
       print("\nStarting Game... ")
       monopoly_game.all_players.clear()   
-   
       for i in range(1,initial_players+1): # initialize dynamic players list
-         monopoly_game.all_players.append(Players(monopoly_game.starting_total, i))
-         # print("\tInitialize Player",i)
+         player = Players(monopoly_game.starting_total, str(i))
+         monopoly_game.all_players.append(player)
+         del player
+         # print("\tinitializing player",i)
       
       ###Start Game
       print("\nRound ",monopoly_game.round,"\n")
@@ -49,8 +49,9 @@ class Monopoly:
          if monopoly_game.all_players[monopoly_game.turn-1].bankrupt == True: 
             ###Remove Player
             if monopoly_game.all_players[monopoly_game.turn-1].in_debt():
-               print("\n\t\tplayer",monopoly_game.all_players[monopoly_game.turn-1].player_number(),"is bankrupt.")
-            print("\t\tplayer",monopoly_game.all_players[monopoly_game.turn-1].player_number()," is now out of the game.")
+               print("\n\t\tplayer",monopoly_game.all_players[monopoly_game.turn-1].id,"is bankrupt.")
+            print("\t\tplayer",monopoly_game.all_players[monopoly_game.turn-1].id," is now out of the game.")
+            monopoly_game.all_players[monopoly_game.turn-1].deeds.clear()
             monopoly_game.all_players.pop(monopoly_game.turn-1)
             print("\n\tCurrently",len(monopoly_game.all_players),"player(s) remaining\n")
             # monopoly_game.turn += 1
@@ -58,9 +59,10 @@ class Monopoly:
             if len(monopoly_game.all_players) == 1:
                ###End Game    
                end_game = True
-               print("\tPlayer", monopoly_game.all_players[0].player_number(),"wins!\n")
-               print("Game Over\n") 
-      del monopoly_game         
+               print("\tPlayer", monopoly_game.all_players[0].id,"wins!\n")
+               monopoly_game.all_players[0].deeds.clear()
+               print("Game Over\n")
+      del monopoly_game          
       return True 
 
    #--Main Executable--
