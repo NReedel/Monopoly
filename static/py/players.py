@@ -1,4 +1,4 @@
- # players.py
+# players.py
 
 ###
 # *Name:      Nate Reedel
@@ -15,31 +15,29 @@ class Players:
    # --Global Data--
    # nickname : string # represents username of player in monopoly
    # character : string # represents the figure a player uses in game
-   id = str(0) # -id : int
+   id = str(0) # -id : str
    __money = int(0) # -__money : int
    __location = int(0) # -__location : int
-   location_name = "Go" # location 
+   location_name = "go" # location_name : str
    has_rolled = False
    same_values_rolled = int(0) # doublesrolled : int
 
    in_jail = False  # +in_Jail : bool 
    time_jailed = int(0) # +time_jailded : int 
    jail_free_card = int(0) # +jail_free_card : int
-   # deeds = ["Reading Railroad","Baltic Ave","Boardwalk"] # 
    deeds = [] # +deeds : list <Deeds>
-   # owned_mortgages = [] # +owned_mortgages : list <Deeds> #maybe?
    total_houses = int(0) # +total_houses : int
    total_buildings = int(0) # +total_buildings : int
    bankrupt = False # +bankrupt : bool
    
    #--Contstructor--
-   def __init__(self,startingTotal = 0, id_number = 0):
+   def __init__(self,startingTotal = 0, id_number = 0): 
       self.__money = startingTotal
       self.id = id_number
       
    #--Method Implementations--
-   # player_assets(self) : void
-   def player_status(self): 
+   # player_assets(self, tiles) : void
+   def player_status(self,tiles): 
       ###List Player Assets (static stats)
       # print("player number = "self.id)
       # print("player character = "self.character)
@@ -54,8 +52,19 @@ class Players:
       # if self.jail_free_card > 0:
       print("\t\tjail free cards =",self.jail_free_card)
       print("\t\tproperties:",len(self.deeds))
+      tile_status = "" # (m),houses[n],hotel[n]
       for i in range(0,len(self.deeds)):
-         print("\t\t   -",self.deeds[i].name) #needs modification
+
+         owned_tile = tiles[self.deeds[i].index]
+         if(owned_tile.is_mortgaged == True):
+            tile_status = tile_status + "(m) "
+         if(owned_tile.houses > 1) and (owned_tile.hotels < 1) :
+            tile_status = tile_status + " h = " + str(owned_tile.houses) + " "
+         if(owned_tile.hotels > 0) :
+            tile_status = tile_status + " H = " + str(owned_tile.hotels) + " "               
+         print("\t\t   -",self.deeds[i].name,tile_status)
+         tile_status = ""
+         
       # print("\t\tmortgages :",len(self.owned_mortgages)) #maybe
       # for i in range(0,len(self.owned_mortgages)):
       #    print("\t\t   -",self.owned_mortgages[i])  #needs modification
@@ -63,14 +72,10 @@ class Players:
       print("\t\ttotal hotels =",self.total_buildings)
       # print("\t\tbankrupt =",self.bankrupt)
       # print("\t\t")
-      print("\t\t-----------------------------") 
-      
-   # # player_number(self) : int
-   # def player_number(self):
-   #    return int(self.id)
+      print("\t\t-----------------------------")    
    
    # move_location(next_location : int, location_text) : void
-   def move_location(self,next_location, location_text): # new
+   def move_location(self,next_location, location_text): 
       # print("move to location number",next_location)
       self.__location = next_location
       self.location_name = location_text
@@ -117,25 +122,70 @@ class Players:
    def add_property(self,deed):
       copy_list = []
       copy_list = copy.deepcopy(self.deeds)
+      self.deeds.clear()
       copy_list.append(deed)
+      print("copy_list")
+      for i in range(len(copy_list)):
+         print("\t",i,copy_list[i].name)   
       self.deeds = copy.deepcopy(copy_list)
-      copy_list.clear()
-      # self.deeds.append(deed)
+      print("\ncurrent_deeds")
+      for i in range(len(self.deeds)):
+         print("\t",i,self.deeds[i].name) 
+      del copy_list
       
-      print("\t\tplayer",self.id,"received",deed.name)
-      
-   # remove_property(property : int, reciever : string ) : # maybe
+   # remove_property(property : int, reciever : string ) : void
    def remove_property(self,index):
       for i in range(len(self.deeds)):
          if index == self.deeds[i].index:
             target_deed = self.deeds[i]
             self.deeds.pop(i)
             return target_deed
-         
-   # mortgage_property() : void 
-   # unmortgage_propety() : void
-   # develop_building(property : int) : void
-   # deconstruct_building(property : int) : void
+
+   #property_cost (index : int) : int
+   def property_cost(self,index): # needs adjustment for houses and property collection
+      for i in range(len(self.deeds)):
+         if index == self.deeds[i].index:
+            target_deed = self.deeds[i]
+            return int(target_deed.rent)     
+   
+   # mortgageable_property_list(self, tiles : list<tiles>) : list <deeds> # must refrence deed tile
+   def mortgageable_property_list(self, tiles): 
+      mortgageable_property = []
+      for i in range(len(self.deeds)):
+         owned_tile = tiles[self.deeds[i].index]
+         if owned_tile.is_mortgaged == False and owned_tile.houses == 0 and owned_tile.hotels == 0:
+            mortgageable_property.append(self.deeds[i])
+            
+      return mortgageable_property
+   
+   # unmortgageable_property_list(self, tiles : list<tiles>) : list <deeds>
+   def unmortgageable_property_list(self, tiles): 
+      unmortgageable_property = []
+      for i in range(len(self.deeds)):
+         if tiles[self.deeds[i].index].is_mortgaged == True:
+            unmortgageable_property.append(self.deeds[i])
+            
+      return unmortgageable_property
+   
+   
+   # build(target_tile : tiles) : void
+      # add building to target_tile
+      
+   # sell(target_tile : tiles) : void
+      # remove building from target_tile
+   
+   # buildable_property_list(self,board_tiles: list <tiles>) : dict <deeds> 
+      # return dict of buildable properties with current houses and hotels
+      
+   # sellable_property_list(self,board_tiles: list <tiles>) : dict <deeds> 
+      # return dict of buildable properties with current houses and hotels
+   
+   ## target_deed(self, index : int) : Deed
+   # def target_deed(self, index): # maybe
+   #    for i in range(len(self.deeds)):
+   #       if self.deeds[i].index == index:
+   #          return self.deeds[i]
+   #    return 
    
 
 
