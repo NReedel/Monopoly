@@ -46,7 +46,7 @@ class Tile:
 
         self.tile_id = tile['index']
         self.tile_name = tile['name']
-        
+        self.owned_by = "none"    # "player number", "bank", "none"        
         self.event_on_land = None   # ⚠⚠⚠
         self.occupants = []         # list of player ids
         
@@ -71,14 +71,8 @@ class TileProperty(Tile):
         self.mortgage_value = 0
         self.is_mortgaged = False
         self.rent_base = 0
-
-        self.owned_by = "bank"    # player id, "bank", "none"
         self.set_num_owned = 0
         self.set_num_total = 0
-        
-        
-
-        # note: bank class needs identifier for owner to work 
         self.houses = int(0)
         self.hotels = int(0)
         self.tile_type = tile['type']  # "street", "railroad", "utility"
@@ -148,7 +142,6 @@ class TileSpecial(Tile):
     def __init__ (self,tile):
         super(TileSpecial, self).__init__(tile)
         self.fname_icon = ""
-        self.owned_by = "none"
         self.tile_type = tile['type']  # "special"
         self.special_tile = tile['special'] # "corner" or "card" or"tax"
 
