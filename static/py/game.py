@@ -11,14 +11,11 @@
 #--Imports--
 from dice import *
 from players import *
-from tiles import *
 from bank import *
 from events import *
 from board import *
-# from enum import Enum
 import random
 import copy
-# import json
 
 class Game:
    ###--Global Data--
@@ -32,72 +29,97 @@ class Game:
    all_players = []
    bank = Bank()
    board = Board()
-   # for i in range(len(all_players)):
-   #    all_players[i].location_name = str(board.tile[0].tile_name)
    # Events
    player_events = PlayerEvents()
    jailed_player_events = JailedPlayerEvents()
    bankrupt_player_events = BankruptPlayerEvents()
-   
+
    ###--Constructor--
-   def __init__(self):
+   def __init__(self,):
       # Load Json here, use your own link 💬
       with open('/mnt/c/Users/Nreed/Code/All_Code/Monopoly/static/Json/tiles.json', 'r') as rf:
-      # with open('tiles.json', 'r') as rf:
+         
          for tiles in json.load(rf):
+            
             if tiles['type'] == "street":
                self.bank.deeds.append(DeedStreet(tiles))
+               self.board.tile[tiles['index']].owned_by = "bank" 
+               
             if tiles['type'] == "railroad":
                self.bank.deeds.append(DeedRailroad(tiles))
+               self.board.tile[tiles['index']].owned_by = "bank"
+               
             if tiles['type'] == "utility":
                self.bank.deeds.append(DeedUtility(tiles))
+               self.board.tile[tiles['index']].owned_by = "bank"
 
    ###--Method Implementations--
    # move(self,Player : Players,  spaces_moving: int) : void
    def move(self,player,spaces_moving): 
       next_location = player.current_location() + (spaces_moving)
+      
       if next_location >= 40:
          player.receive_money(200)
          next_location = next_location % 40
          
       player.move_location(next_location, self.board.location(next_location)) 
       print("")
-      # new
-      if self.board.tile[next_location].tile_type != "special" and self.board.tile[next_location].owned_by == "bank" : # not a special tile
-         print("\t\tthis property can be bought\n")
-         if self.board.tile[next_location].avaliable_deed() == True:
-         # AvaliablePropertyEvents
+      
+      if self.board.tile[next_location].tile_type != "special": # not a special tile
+
+         if self.board.tile[next_location].avaliable_deed() == True : # purchasable
+            print("\t\tthis property can be bought\n")
             avaliable_property_events = AvaliablePropertyEvents(self)
-            target_event = avaliable_property_events.display_event_options(self.board.tile[next_location].property_cost)
-            avaliable_property_events.event(avaliable_property_events.events[int(target_event)])
+            cost = self.board.tile[next_location].property_cost
+            can_buy = False
+            if cost <= player.current_money():
+               can_buy = True
+            target_event = avaliable_property_events.display_event_options(cost, player.current_money())
             
-         # AuctionPropertyEvents 
-         # else:
-            # pay rent
-         del avaliable_property_events
-         print()
-      # end new
+            while ((int(target_event) < 0 or len(avaliable_property_events.events)) <= int(target_event) and can_buy == True) or (can_buy == False and (int(target_event) >= len(avaliable_property_events.events) or int(target_event) < 1)):
+               print("\t\tinvalid choce, try again\n")
+               target_event = avaliable_property_events.display_event_options(cost, player.current_money())
+               
+            avaliable_property_events.event(avaliable_property_events.events[int(target_event)])
+            del avaliable_property_events
+      
+         if self.board.tile[next_location].owned_by == player.id and self.board.tile[next_location].owned_by == "bank" : # self owned
+            print("\t\tyou own this property\n")
+   
+         if self.board.tile[next_location].owned_by != player.id and self.board.tile[next_location].owned_by == "bank": # pay rent
+            print("\t\tyou landed on another players property\n")
+            owner_number = int(self.board.tile[next_location].owned_by)
+            self.transfer_payment(player,self.all_players[owner_number-1],self.all_players[owner_number-1].property_cost(next_location))
+            print("")  
+            
+      else: # special tile
+         return      
       
    # transfer_payment(payer : T, recipient :  T, paymnet : int) : void
-   def transfer_payment(self,payer, recipient, payment): # new
+   def transfer_payment(self,payer, recipient, payment): 
       payer.pay_money(payment)
       recipient.receive_money(payment)
 
-   # transfer_deed(owner: T, recipient :  T) : void
-   def transfer_deed(self,owner, recipient, location): # new
-      # owner_deeds = copy.deepcopy(owner.deeds) # maybe
+      
+   # transfer_deed(owner: T, recipient :  T, location : int) : void
+   def transfer_deed(self,owner, recipient, location): 
+      owner_deeds = copy.deepcopy(owner.deeds) # maybe
       recipient_deeds = copy.deepcopy(recipient.deeds)
-      target_deed = owner.remove_property(location)
-      # if recipient.id != "bank":
-      # recipient.add_property(target_deed)
+      
+      for i in range(len(owner_deeds)-1):
+         if location == owner_deeds[i].index:
+            target_deed = owner_deeds[i]
+            owner_deeds.pop(i)
+            i = len(owner_deeds)-1 # error
+
       recipient_deeds.append(target_deed)
       recipient.deeds = copy.deepcopy(recipient_deeds)
-      # self.all_players[self.turn-1].deeds.append(target_deed)
-      print("\t\t\""+str(target_deed.name)+"\"","received")
+      print("\t\t\""+str(target_deed.name)+"\"","received\n")
       self.board.tile[location].owned_by = recipient.id
-      del target_deed
-      del recipient_deeds
-
+      # print("\t\towner =",self.board.tile[location].owned_by)
+      # del owner_deeds
+      # del recipient_deeds
+      
    # jailed_move_attempt(self, player : Players) : void
    def jailed_move_attempt(self,player): 
       
@@ -144,7 +166,7 @@ class Game:
    def take_turn(self,target_players = []):
       print("\tPlayer",target_players[self.turn-1].id, ":") 
       ###List Target_players Status 
-      target_players[self.turn-1].player_status()
+      target_players[self.turn-1].player_status(self.board.tile)  
       
       while target_players[self.turn-1].in_debt() == True: 
          ###Bakrupt Player Events 
@@ -186,7 +208,7 @@ class Game:
                ###jailed_player_events.event returns True if player stays in jail
                target_players[self.turn-1].in_jail = self.jailed_player_events.event(target_players[self.turn-1],self.jailed_player_events.events[int(target_event)])
          ###Player Events
-         if target_players[self.turn-1].bankrupt == False: # new
+         if target_players[self.turn-1].bankrupt == False: 
             target_event = self.player_events.display_event_options(has_rolled) 
             while int(target_event) < 0 or len(self.player_events.events) <= int(target_event):
                ###redisplay if given bad input
@@ -224,7 +246,6 @@ class Game:
                return
            
       ###End Of Turn
-      
       if(self.game_dice.rolled_same_values() == False or attempt_escape == True):   
          self.turn += 1
       else:
