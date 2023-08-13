@@ -38,6 +38,7 @@ class Monopoly:
       for i in range(1,initial_players+1): # initialize dynamic players list
          player = Players(monopoly_game.starting_total, str(i))
          monopoly_game.all_players.append(player)
+         starting_pos = monopoly_game.all_players[i-1].current_location()
          del player
          # print("\tinitializing player",i)
       
