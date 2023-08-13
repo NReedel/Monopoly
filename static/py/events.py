@@ -16,16 +16,16 @@ Events
 ├── PlayerEvents
 ├── JailedPlayerEvents
 ├── MenuPlayerEvents   
-├── BankruptPlayerEvents
-├── AvaliablePropertyEvents
-├── AuctionPropertyEvents
-├── CardEvents 
+├── BankruptPlayerEvents  # incomplete
+├── AvaliablePropertyEvents  
+├── AuctionPropertyEvents # incomplete
+├── CardEvents # incomplete
 ├── MainMenuEvents
-├── BuildBuildingEvents 
-├── SellBuildingEvents        
+├── BuildBuildingEvents # incomplete
+├── SellBuildingEvents  # incomplete  
 ├── MortgagePropertyEvents
 ├── RedeemPropertyEvents         
-├── TradeEvents
+├── TradeEvents # incomplete
 
 '''
 ###############################################################
@@ -74,7 +74,7 @@ class PlayerEvents(Events): # partial completion
    #--Method Implementations--
    # display_event_options(self, has_rolled) : string
    def display_event_options(self, has_rolled):
-
+      
       if self.arg[0].all_players[self.arg[0].turn-1].bankrupt == False: 
          print("\t\tSelect players action:")  
       
@@ -84,8 +84,7 @@ class PlayerEvents(Events): # partial completion
             print("\t\t   0)",self.events[0])
             
          for i in range(1,len(self.events)):
-            num = str(i)
-            num = num + ")"
+            num = str(i) + ")"
             print("\t\t  ",num,self.events[i])
          target_event = input("\n\t\tchoice -> ")      
          return target_event
@@ -96,23 +95,25 @@ class PlayerEvents(Events): # partial completion
    # event(self player : Players, event : string) : void
    def event(self,player,event = ""):
       current_player = self.arg[0].all_players[self.arg[0].turn-1]
+      
       if event == "roll":
          self.arg[0].game_dice.roll()
          print("\t\tplayer",player.id,"roll =",self.arg[0].game_dice.print_roll()) # add roll total
          # needs if condition for alt moves
          self.arg[0].move(player, self.arg[0].game_dice.total_rolled()) 
-      if event == "build":
-         build = BuildBuildingEvents()
-         choice = build.display_event_options(player)
          
-         if choice != -1 :
+      if event == "build":
+         build = BuildBuildingEvents(self.arg[0])
+         choice = build.display_event_options(player)
+         # while int(choice) < -1 or int(choice) > possible len(player.mortgageable_property_list()):
+         if str(choice) != -1 :
             sell.event(player,choice)   
          else: 
             print()
             return
          
       if event == "sell":
-         sell = SellBuildingEvents()
+         sell = SellBuildingEvents(self.arg[0])
          choice = sell.display_event_options(player)
          
          if choice != -1 :
@@ -121,25 +122,32 @@ class PlayerEvents(Events): # partial completion
             print()
             return
             
-      if event == "mortgage":
-         mortgage = MortgagePropertyEvents()
-         choice = mortgage.display_event_options(player)
-         
-         if choice != -1 :
-            mortgage.event(player,choice)   
-         else: 
+      if event == "mortgage": 
+         choice = 0
+         while choice != -1:
+            mortgage = MortgagePropertyEvents(self.arg[0])
+            choice = mortgage.display_event_options(player)
             print()
-            return   
-         
-      if event == "redeem":
-         redeem = RedeemPropertyEvents()
-         choice = redeem.display_event_options(player)
-         
-         if choice != -1 :
-            redeem.event(player,choice)   
-         else: 
+            
+            if choice != -1 :
+               mortgage.event(choice)
+               mortgage.update(self.arg[0])
+               
+         # mortgage.update(self.arg[0])
+
+      if event == "redeem": 
+         choice = 0
+         while choice != -1:
+            redeem = RedeemPropertyEvents(self.arg[0])
+            choice = redeem.display_event_options(player) 
             print()
-            return   
+
+            if choice != -1 :
+               redeem.event(choice)
+               redeem.update(self.arg[0])
+
+         
+            # error doesn't update proper     
                  
       '''     
       if event == "trade":
@@ -254,8 +262,7 @@ class BankruptPlayerEvents(Events): #incomplete
    def display_event_options(self):
       print("\t\tSelect in dept players action:")  
       for i in range(0,len(self.events)):
-         num = str(i)
-         num = num + ")"
+         num = str(i) + ")"
          print("\t\t  ",num,self.events[i])      
       target_event = input("\n\t\tchoice -> ")      
       return target_event
@@ -287,38 +294,40 @@ class AvaliablePropertyEvents(Events): # near complete
     
    #--Method Implementations--
    # display_event_options(self) : string
-   def display_event_options(self,property_cost):
+   def display_event_options(self,property_cost, player_money):
       print("\t\tSelect players action:")
       for i in range(0,len(self.events)):
          num = str(i)+")"
-         if i == 0:
+         if i == 0 and player_money >= property_cost:
             print("\t\t  ",num,self.events[i],"for",str("$")+str(property_cost))
-         else: 
+         elif i == 1: 
             print("\t\t  ",num,self.events[i])
       target_event = input("\n\t\tchoice -> ")
       print()       
-      return target_event
+      return str(target_event)
       
    # event(self, event : string) : void
    def event(self, event ):
       bank = self.arg[0].bank
       current_tile = self.arg[0].board.tile
       all_players = self.arg[0].all_players
-      current_player = all_players[self.arg[0].turn-1]
-      
+      current_player = (all_players[self.arg[0].turn-1])
+      current_tile = self.arg[0].board.tile[current_player.current_location()]
       # player_deeds.deep_copy(current_player.deeds)
       # bank_deeds = bank.deeds 
       if event == "purchase":
          ### buy deed from bank
-         self.arg[0].transfer_payment(current_player, self.arg[0].bank, current_tile[current_player.current_location()].property_cost)
+         self.arg[0].transfer_payment(current_player, self.arg[0].bank, current_tile.property_cost)
          self.arg[0].transfer_deed(bank, current_player, current_player.current_location())
+        
          
       if event == "auction": #needs testing
-         auction = AuctionPropertyEvents()
+         auction = AuctionPropertyEvents(self.arg[0])
          auction_deed = self.arg[0].bank.deeds[current_player.current_location()] # copys current locations deed
          self.arg[0].bank.deeds.pop(current_player.current_location()) #remove deed
          auction.display_event_options(auction_deed,self.arg[0].all_players, self.arg[0].turn)
-
+         del auction
+         
 class AuctionPropertyEvents(Events): #incomplete
    #--Constructor--
    def __init__(self, *args):
@@ -334,7 +343,7 @@ class AuctionPropertyEvents(Events): #incomplete
       current_bidder = starting_bider
       biding_players = all_players 
       while len(biding_players) > 1:
-         print("current bid: ",current_bid)
+         print("\t\tcurrent bid: ",current_bid)
          for i in range(len(self.events)):
             num = str(i) + ")"
             print("\t\t  ",num,self.events[i]) 
@@ -469,51 +478,72 @@ class SellBuildingEvents(Events): #incomplete
       return
 
        
-class MortgagePropertyEvents(Events): #incomplete
+class MortgagePropertyEvents(Events): 
    #--Constructor--
    def __init__(self, *args):
       super().__init__(*args)  
       
-   # display_event_options(self,player : players) : string
+   # display_event_options(self,player : players) : int
    def display_event_options(self,player): 
-      print("\t\tSelect property to mortgage:")
-      '''   
-      for i in range(0,len(player.owned_deeds)):  
-         self.events.append(player.owned_deeds[i]) #change to player.owned_deeds.name
-         num = str(i)
-         num = num + ")"   
-         print("\t\t  ",num,self.events[i])
-      '''
-      print("\t\t  ",str(-1)+")","cancel mortgage")
-      target_event = input("\n\t\tchoice -> ")     
-      return int(target_event)
    
-   # event(self,player : Player, event : int) : void
-   def event(self, player, event):
-      return   
+      board = self.arg[0].board
+      # mortgageable_properties
+      self.events = copy.deepcopy(player.mortgageable_property_list(board.tile))
+      print("\t\tSelect property to mortgage:")
+      
+      print("\t\t ",str(-1)+")","cancel mortgage")
+      for i in range(0,len(self.events)):
+          # self.events.append(self.events[i].name) #change to player.owned_deeds.name
+          num = str(i) + ")" 
+          print("\t\t  ",num,self.events[i].name)          
+
+      target_event = input("\n\t\tchoice -> ")
+      if int(target_event) == -1:
+         return -1
+      target_deed = self.events[int(target_event)]
+      payment = target_deed.mortgage_value # mortgage_value
+      bank = self.arg[0].bank
+      print("\n\t\t"+self.events[int(target_event)].name,"is mortgaged")      
+      self.arg[0].transfer_payment(bank,player,payment)      
+      return self.events[int(target_event)].index
+   
+   # event(self, event : int) : void
+   def event(self,event): 
+      board = self.arg[0].board
+      board.tile[event].is_mortgaged = True
 
 class RedeemPropertyEvents(Events): #incomplete
+   
    #--Constructor--
    def __init__(self, *args):
       super().__init__(*args)  
       
-   # display_event_options(self,player : players) : string
+   # display_event_options(self,player : players) : int
    def display_event_options(self,player): 
+      board = self.arg[0].board
+      self.events = copy.deepcopy(player.unmortgageable_property_list(board.tile))
       print("\t\tSelect property to redeem:")
-      '''     
-      for i in range(0,len(player.owned_deeds)):  
-         self.events.append(player.owned_deeds[i]) #change to player.owned_deeds.name
-         num = str(i)
-         num = num + ")"   
-         print("\t\t  ",num,self.events[i])
-      '''
-      print("\t\t  ",str(-1)+")","cancel redemption")   
-      target_event = input("\n\t\tchoice -> ")     
-      return int(target_event)
+      print("\t\t ",str(-1)+")","cancel redemption")
+      
+      for i in range(0,len(self.events)):
+          # self.events.append(self.events[i].name) #change to player.owned_deeds.name
+          num = str(i) + ")"  
+          print("\t\t  ",num,self.events[i].name)      
+          
+      target_event = input("\n\t\tchoice -> ")
+      if int(target_event) == -1:
+         return -1      
+      target_deed = self.events[int(target_event)]
+      payment = target_deed.unmortgage_value # unmortgage_value
+      bank = self.arg[0].bank
+      print("\n\t\t"+self.events[int(target_event)].name,"is unmortgaged")
+      self.arg[0].transfer_payment(player,bank,payment)     
+      return self.events[int(target_event)].index
    
-   # event(self,player : Player, event : int) : void
-   def event(self, player, event = 0):
-      return   
+   # event(self,event : int) : void
+   def event(self,event): 
+      board = self.arg[0].board
+      board.tile[event].is_mortgaged = False
   
 class TradeEvents(Events): #incomplete
    #--Constructor--
