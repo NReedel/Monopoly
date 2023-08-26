@@ -103,25 +103,25 @@ class PlayerEvents(Events): # partial completion
          self.arg[0].move(player, self.arg[0].game_dice.total_rolled()) 
          
       if event == "build":
-         build = BuildBuildingEvents(self.arg[0])
-         choice = build.display_event_options(player)
-         # while int(choice) < -1 or int(choice) > possible len(player.mortgageable_property_list()):
-         if str(choice) != -1 :
-            sell.event(player,choice)   
-         else: 
-            print()
-            return
+         choice = 0
+         while choice != -1:
+            build = BuildBuildingEvents(self.arg[0])
+            choice = build.display_event_options(player)
+            
+            if choice != -1 :
+               build.event(player, choice)
+               build.update(self.arg[0])
          
       if event == "sell":
-         sell = SellBuildingEvents(self.arg[0])
-         choice = sell.display_event_options(player)
-         
-         if choice != -1 :
-            sell.event(player,choice)   
-         else: 
-            print()
-            return
+         choice = 0
+         while choice != -1:
+            sell = SellBuildingEvents(self.arg[0])
+            choice = sell.display_event_options(player)
             
+            if choice != -1 :
+               sell.event(player, choice)
+               sell.update(self.arg[0])        
+      
       if event == "mortgage": 
          choice = 0
          while choice != -1:
@@ -239,6 +239,7 @@ class MenuPlayerEvents(Events):
          print()
          return
       if event == "rules":
+         print() 
          # Load file here, use your own link 💬
          rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt' #vary by user
          with open(rules_file_path, 'r') as file:
@@ -337,10 +338,10 @@ class AuctionPropertyEvents(Events): #incomplete
    events = ["bid","forfeit"]
     
    #--Method Implementations--
-   # display_event_options(self,auctioned_deed : Deed, all_players : Players, starting_bider : int) : string 
-   def display_event_options(self,auctioned_deed, all_players, starting_bider): #incomplete
+   # display_event_options(self,auctioned_deed : Deed, all_players : Players, starting_bidder : int) : string 
+   def display_event_options(self,auctioned_deed, all_players, starting_bidder): #incomplete
       current_bid = 0
-      current_bidder = starting_bider
+      current_bidder = starting_bidder
       biding_players = all_players 
       while len(biding_players) > 1:
          print("\t\tcurrent bid: ",current_bid)
@@ -354,22 +355,22 @@ class AuctionPropertyEvents(Events): #incomplete
    def event(self, player, event):
       return
    
-class CardEvents(Events): #incomplete
-   #--Constructor--
-   def __init__(self, *args):
-      super().__init__(*args)  
+# class CardEvents(Events): #incomplete
+#    #--Constructor--
+#    def __init__(self, *args):
+#       super().__init__(*args)  
          
-   #--Global Data--
-   events = ["take a chance"]
+#    #--Global Data--
+#    events = ["take a chance"]
     
-   #--Method Implementations--
-   # display_event_options(self) : string
-   def display_event_options(self):
-      return
+#    #--Method Implementations--
+#    # display_event_options(self) : string
+#    def display_event_options(self):
+#       return
       
-   # event(self, player : Players, event : string) : void
-   def event(self,player,event = ""):
-      return
+#    # event(self, player : Players, event : string) : void
+#    def event(self,player,event = ""):
+#       return
 
 class MainMenuEvents(Events): # near complete
    #--Constructor--
@@ -408,6 +409,7 @@ class MainMenuEvents(Events): # near complete
                
       if event == "rules": # "rules"
          # Load file here, use your own link 💬
+         print() 
          rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt' #vary by user
          with open(rules_file_path, 'r') as file:
             # Read the contents of the file
@@ -431,52 +433,113 @@ class MainMenuEvents(Events): # near complete
       if event == "exit":
    '''
       
-class BuildBuildingEvents(Events): #incomplete
+class BuildBuildingEvents(Events): 
    #--Constructor--
    def __init__(self, *args):
       super().__init__(*args)  
    
-   # display_event_options(self,player : players) : string
+   # display_event_options(self,player : players) : int
    def display_event_options(self,player): 
-      print("\t\tSelect property to build on:")
-      '''
-      for i in range(0,len(player.owned_deeds)):
-         if player.owned_deeds[i].monopoly == True: #not actual code   
-            self.events.append(player.owned_deeds[i]) #change to player.owned_deeds.name
-            num = str(i) + ")"
-            print("\t\t  ",num,self.events[i])
-      '''
-      print("\t\t  ",str(-1)+")","cancel build")
-      target_event = input("\n\t\tchoice -> ")     
-      return int(target_event)
+      board = self.arg[0].board
+      # buildable_properties
+      self.events = copy.deepcopy(player.buildable_property_list(board.tile))
+      can_afford = False
+      while can_afford == False:
+         print("\t\tSelect property to build:")
+         print("\t\t ",str(-1)+")","cancel building")
+         for i in range(0,len(self.events)):
+            h = "h ="
+            development = board.tile[self.events[i].index].houses 
+            if(board.tile[self.events[i].index].hotels > 0):
+               h = "H ="
+               development = board.tile[self.events[i].index].hotels
+            # self.events.append(self.events[i].name) #change to player.owned_deeds.name
+            num = str(i) + ") " # + str(self.events[i].index)
+            print("\t\t  ",num,self.events[i].name,h,development)          
+
+         target_event = input("\n\t\tchoice -> ")
+         print()
+         if int(target_event) == -1:
+            return -1
+         target_deed = self.events[int(target_event)]
+         if board.tile[self.events[int(target_event)].index].houses < 4 and player.current_money() >= target_deed.house_cost:
+            payment = target_deed.house_cost
+            can_afford = True
+         elif board.tile[self.events[int(target_event)].index].houses == 4  and player.current_money() >= target_deed.hotel_cost:
+            payment = target_deed.hotel_cost
+            can_afford = True
+         else:
+            print("\t\tcan't afford the selection, try again\n")
+
+      bank = self.arg[0].bank
+      # print("\n\t\t"+self.events[int(target_event)].name,"building =",self.events[int(target_event)].name)      
+      self.arg[0].transfer_payment(player,bank,payment) 
+      return self.events[int(target_event)].index
    
-   # event(self,player : Player, event : int) : void
-   # def event(self, player, event = 0):
+   # event(self,event : int) : void
+   def event(self,player,event):
+      board = self.arg[0].board
+      if board.tile[event].houses < 4:
+         board.tile[event].houses += 1
+         player.total_houses += 1
+         print("\t\t"+board.tile[event].tile_name,"h =",board.tile[event].houses,"\n")  
+      else:
+         board.tile[event].houses = 0
+         board.tile[event].hotels += 1
+         player.total_hotels += 1
+         print("\t\t"+board.tile[event].tile_name,"H =",board.tile[event].hotels,"\n")  
 
    
-class SellBuildingEvents(Events): #incomplete
+class SellBuildingEvents(Events): 
    #--Constructor--
    def __init__(self, *args):
       super().__init__(*args)  
 
-   # display_event_options(self,player : players) : string
+   # display_event_options(self,player : players) : int
    def display_event_options(self,player): 
-      print("\t\tSelect building to sell:")
-      '''
-      for i in range(0,len(player.owned_deeds)):
-         if player.owned_deeds[i].has_building == True: #not actual code
-            self.events.append(player.owned_deeds[i]) #change to player.owned_deeds.name
-            num = str(i) + ")"   
-            print("\t\t  ",num,self.events[i])
-      ''' 
-      print("\t\t  ",str(-1)+")","cancel sale")
-      target_event = input("\n\t\tchoice -> ")     
-      return int(target_event)
+      board = self.arg[0].board
+      # buildable_properties
+      self.events = copy.deepcopy(player.sellable_property_list(board.tile))
+      print("\t\tSelect property to sell:")
+      print("\t\t ",str(-1)+")","cancel selling")
+      for i in range(0,len(self.events)):
+          h = "h ="
+          development = board.tile[self.events[i].index].houses 
+          
+          if(board.tile[self.events[i].index].hotels > 0):
+            h = "H ="
+            development = board.tile[self.events[i].index].hotels
+            
+          num = str(i) + ") " # + str(self.events[i].index)
+          print("\t\t  ",num,self.events[i].name,h,development)          
+
+      target_event = input("\n\t\tchoice -> ")
+      print()
+      if int(target_event) == -1:
+         return -1
+      target_deed = self.events[int(target_event)]
+      if board.tile[self.events[int(target_event)].index].hotels == 1:
+         payment = int(target_deed.hotel_cost / 2)
+      else:
+         payment = int(target_deed.house_cost / 2)        
+      bank = self.arg[0].bank
+      # print("\n\t\t"+self.events[int(target_event)].name,"building =",self.events[int(target_event)].name)      
+      self.arg[0].transfer_payment(bank,player,payment) 
+      return self.events[int(target_event)].index
    
-   # event(self,player : Players, event : int) : void
+   # event(self, event : int) : void
    def event(self,player, event): 
-      return
-
+      board = self.arg[0].board
+      if board.tile[event].hotels == 1:
+         board.tile[event].hotels = 0
+         player.total_hotels -= 1 
+         board.tile[event].houses = 4
+         player.total_houses += 4 
+      else:
+         board.tile[event].houses -= 1
+         player.total_houses -= 1 
+         #print("\t\t"+board.tile[event].tile_name,"H =",board.tile[event].hotels,"\n") 
+      print("\t\t"+board.tile[event].tile_name,"h =",board.tile[event].houses,"\n") 
        
 class MortgagePropertyEvents(Events): 
    #--Constructor--
