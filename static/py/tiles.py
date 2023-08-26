@@ -75,11 +75,12 @@ class TileProperty(Tile):
         self.set_num_total = 0
         self.houses = int(0)
         self.hotels = int(0)
+        self.tile_class = tile['css']['class'] # color
         self.tile_type = tile['type']  # "street", "railroad", "utility"
         self.monopoly_type = Monopoly.NONE
         
     # avaliable_deed(self) : bool
-    def avaliable_deed(self): # new
+    def avaliable_deed(self): 
       if self.owned_by == "bank":
          return True
       return False
@@ -90,7 +91,8 @@ class PropertyStreet(TileProperty):
     def __init__ (self,tile):
     
         super(PropertyStreet, self).__init__(tile)
-        self.tile_color = ""    # need to standardize color format, ie. hex
+        self.has_monopoly  = False
+        self.tile_color = ""  
         self.cost_house = 0
         self.num_houses = 0
         self.num_hotels = 0
@@ -106,6 +108,7 @@ class PropertySpecial(TileProperty):
     def __init__ (self,tile):
         super(PropertySpecial, self).__init__(tile)
         self.fname_icon = ""
+        self.multiplier = 1
         
 
 
