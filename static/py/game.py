@@ -38,20 +38,24 @@ class Game:
    def __init__(self,):
       # Load Json here, use your own link 💬
       with open('/mnt/c/Users/Nreed/Code/All_Code/Monopoly/static/Json/tiles.json', 'r') as rf:
-         
+      # with open('tiles.json', 'r') as rf:
          for tiles in json.load(rf):
-            
             if tiles['type'] == "street":
                self.bank.deeds.append(DeedStreet(tiles))
                self.board.tile[tiles['index']].owned_by = "bank" 
-               
             if tiles['type'] == "railroad":
                self.bank.deeds.append(DeedRailroad(tiles))
                self.board.tile[tiles['index']].owned_by = "bank"
-               
             if tiles['type'] == "utility":
                self.bank.deeds.append(DeedUtility(tiles))
                self.board.tile[tiles['index']].owned_by = "bank"
+         
+         self.board.tile_check(self.all_players) 
+   
+   # def transfer_all(self): 
+   #    starting_deeds_size = len(self.bank.deeds) # 
+   #    for i in range(0,starting_deeds_size):
+   #       self.transfer_deed(self.bank,self.all_players[0],self.bank.deeds[i].index)
 
    ###--Method Implementations--
    # move(self,Player : Players,  spaces_moving: int) : void
@@ -61,16 +65,16 @@ class Game:
       if next_location >= 40:
          player.receive_money(200)
          next_location = next_location % 40
-         
+   
       player.move_location(next_location, self.board.location(next_location)) 
       print("")
-      
-      if self.board.tile[next_location].tile_type != "special": # not a special tile
-
-         if self.board.tile[next_location].avaliable_deed() == True : # purchasable
+      current_tile = self.board.tile[next_location]
+      if self.board.tile[next_location].tile_type != "special": # tile with deed
+         
+         if current_tile.avaliable_deed() == True : # purchasable
             print("\t\tthis property can be bought\n")
             avaliable_property_events = AvaliablePropertyEvents(self)
-            cost = self.board.tile[next_location].property_cost
+            cost = current_tile.property_cost
             can_buy = False
             if cost <= player.current_money():
                can_buy = True
@@ -82,20 +86,47 @@ class Game:
                
             avaliable_property_events.event(avaliable_property_events.events[int(target_event)])
             del avaliable_property_events
-      
-         if self.board.tile[next_location].owned_by == player.id and self.board.tile[next_location].owned_by == "bank" : # self owned
+         elif current_tile.is_mortgaged == True: #mortgaged property
+            print("\t\tproperty is mortgaged\n")
+            return
+         elif current_tile.owned_by == player.id: # self owned
             print("\t\tyou own this property\n")
-   
-         if self.board.tile[next_location].owned_by != player.id and self.board.tile[next_location].owned_by == "bank": # pay rent
-            print("\t\tyou landed on another players property\n")
-            owner_number = int(self.board.tile[next_location].owned_by)
-            self.transfer_payment(player,self.all_players[owner_number-1],self.all_players[owner_number-1].property_cost(next_location))
-            print("")  
+         elif current_tile.owned_by != player.id and current_tile.owned_by != "bank": # pay rent
+            print("\t\tyou landed on another player's property\n")
+            owner_number = int(current_tile.owned_by)
+            rent_type = 0 # rent # default
+            ### street tiles
+            if current_tile.tile_type == "street":
+               if current_tile.has_monopoly == True:
+                  rent_type = 1 # monopoly_rent
+               if current_tile.houses > 0:
+                  rent_type =  self.board.tiles[next_location].houses + 1 # rent_house_
+               if current_tile.hotels > 0:
+                  rent_type = 6 # rent_hotel_
+            ### utilites
+            if current_tile.tile_type  == "utilities":      
+               if current_tile.multiplier == 2:
+                  rent_type = 1
+            ### railroad
+            if current_tile.tile_type == "railroad":
+               if current_tile.multiplier == 2:
+                  rent_type = 1
+               elif current_tile.multiplier == 3:
+                  rent_type = 2
+               elif current_tile.multiplier == 4:
+                  rent_type = 3
+            current_deed = self.all_players[owner_number-1].target_deed(next_location)
+            payment = current_deed.current_rent(rent_type)
+            #   options = ["r", "m_r", "r_h_1", "r_h_2","r_h_3","r_h_4","r_H"]
+            self.transfer_payment(player,self.all_players[owner_number-1],payment)
+
+            print("")     
             
       else: # special tile
+         # print("\t\tspecial property\n")
          return      
       
-   # transfer_payment(payer : T, recipient :  T, paymnet : int) : void
+   # # transfer_payment(payer : T, recipient :  T, paymnet : int) : void
    def transfer_payment(self,payer, recipient, payment): 
       payer.pay_money(payment)
       recipient.receive_money(payment)
@@ -105,20 +136,19 @@ class Game:
    def transfer_deed(self,owner, recipient, location): 
       owner_deeds = copy.deepcopy(owner.deeds) # maybe
       recipient_deeds = copy.deepcopy(recipient.deeds)
-      
-      for i in range(len(owner_deeds)-1):
+
+      for i in range(0,len(owner_deeds)): 
+         
          if location == owner_deeds[i].index:
             target_deed = owner_deeds[i]
-            owner_deeds.pop(i)
-            i = len(owner_deeds)-1 # error
+            i = len(owner_deeds)
 
       recipient_deeds.append(target_deed)
       recipient.deeds = copy.deepcopy(recipient_deeds)
       print("\t\t\""+str(target_deed.name)+"\"","received\n")
       self.board.tile[location].owned_by = recipient.id
-      # print("\t\towner =",self.board.tile[location].owned_by)
-      # del owner_deeds
-      # del recipient_deeds
+      self.board.tile_check(self.all_players)
+
       
    # jailed_move_attempt(self, player : Players) : void
    def jailed_move_attempt(self,player): 
