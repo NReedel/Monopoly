@@ -13,20 +13,6 @@ from enum import Enum
 # Enumerated Monopoly Class 🔎
 ###############################################################
 
-class Monopoly(Enum):
-    # monopoly_type # new
-    BROWN       = 1
-    CYAN        = 2
-    MAGENTA     = 3
-    ORANGE      = 4
-    RED         = 5
-    YELLOW      = 6
-    GREEN       = 7
-    BLUE        = 8
-    RAIL        = 9
-    UTILITY     = 10
-    NONE        = 11
-
 class Players:
    
    # --Global Data--
@@ -74,11 +60,11 @@ class Players:
          owned_tile = tiles[self.deeds[i].index]
          if(owned_tile.is_mortgaged == True):
             tile_status += "(m) "
-         if(owned_tile.tile_type == "street" and owned_tile.has_monopoly == True): # new
+         if(owned_tile.tile_type == "street" and owned_tile.has_monopoly == True): 
             tile_status += "(M) "  
-         if(owned_tile.tile_type == "railroad"):# new # needs update 
+         if(owned_tile.tile_type == "railroad"):
             tile_status += "(*"+str(owned_tile.multiplier)+")" 
-         if(owned_tile.tile_type == "utility"): # new # needs update    
+         if(owned_tile.tile_type == "utility"):  
             tile_status += "(*"+str(owned_tile.multiplier)+")" 
          if(owned_tile.tile_type == "street" and owned_tile.houses > 0 and owned_tile.hotels < 1) :
             tile_status += "h = " + str(owned_tile.houses) + " "
@@ -237,7 +223,7 @@ class Players:
       return sellable_property
    
    ## target_deed(self, index : int) : Deed
-   def target_deed(self, index): # new
+   def target_deed(self, index): 
       for i in range(len(self.deeds)):
          if self.deeds[i].index == index:
             return self.deeds[i]
