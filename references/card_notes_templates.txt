@@ -15,16 +15,17 @@ First, the custom card attributes currently coded into the Community Chest/Chanc
 	- collectPlayerRateAmount : int
 	- payHouseRateAmount : int
 	- payHotelRateAmount : int
-	- cardRentMultiplier : int
+	- **cardRentMultiplier : int
 
-* Movement (implementation not yet determined for this project)
+* Movement (certain implementation requirements specified per attribute)
 	- moveTo : int (index) of board location, starting from GO = 0 (requires player.move_location() to be called)
 	- moveTo : signed int, which is only used for the GO BACK THREE SPACES card (requires game.move() to be called)
-	- moveToNearest: string containing type of deed to move to, at which point calculations can be made to determine nearest of that type
+	- **moveToNearest: string containing type of deed to move to, at which point calculations can be made to determine nearest of that type (requires player location and index of nearest tile type)
 
 * Get Out of Jail Free (GOJF; can be sold for custom price, traded for any other tradeable card, or used to GOJF, all encompassed by this bool)
 	- isGOJF : true
 
+** moveToNearest and cardrentMultiplier are always paired with each other **
 
 Community Chest:
 [
