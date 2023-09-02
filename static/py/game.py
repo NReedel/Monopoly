@@ -14,6 +14,7 @@ from players import *
 from bank import *
 from events import *
 from board import *
+from deeds import *
 import random
 import copy
 
@@ -22,7 +23,6 @@ class Game:
    starting_total = int(2500)
    bail = int(50)
    monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
-   payment = int(0) # maybe
    game_dice = Dice(2,6)
    turn = int(1)
    round = int(1)
@@ -37,6 +37,7 @@ class Game:
    ###--Constructor--
    def __init__(self,):
       # Load Json here, use your own link 💬
+      ### 
       with open('/mnt/c/Users/Nreed/Code/All_Code/Monopoly/static/Json/tiles.json', 'r') as rf:
       # with open('tiles.json', 'r') as rf:
          for tiles in json.load(rf):
@@ -94,36 +95,42 @@ class Game:
          elif current_tile.owned_by != player.id and current_tile.owned_by != "bank": # pay rent
             print("\t\tyou landed on another player's property\n")
             owner_number = int(current_tile.owned_by)
-            rent_type = 0 # rent # default
-            ### street tiles
+            option_type = ""
+            rent_value = 0 # rent # default
+            ### street
             if current_tile.tile_type == "street":
+               option_type = "StreetOption."
+               options = ["R", "M_R", "R_H_1", "R_H_2","R_H_3","R_H_4","R_H"]
                if current_tile.has_monopoly == True:
-                  rent_type = 1 # monopoly_rent
+                  rent_value = 1 # monopoly_rent
                if current_tile.houses > 0:
-                  rent_type =  self.board.tiles[next_location].houses + 1 # rent_house_
+                  rent_value =  self.board.tiles[next_location].houses + 1 # rent_house_
                if current_tile.hotels > 0:
-                  rent_type = 6 # rent_hotel_
-            ### utilites
-            if current_tile.tile_type  == "utilities":      
-               if current_tile.multiplier == 2:
-                  rent_type = 1
+                  rent_value = 6 # rent_hotel_
             ### railroad
             if current_tile.tile_type == "railroad":
+               option_type = "RailroadOption."
+               options = ["R", "R_2", "R_3", "R_4"]
                if current_tile.multiplier == 2:
-                  rent_type = 1
+                  rent_value = 1
                elif current_tile.multiplier == 3:
-                  rent_type = 2
+                  rent_value = 2
                elif current_tile.multiplier == 4:
-                  rent_type = 3
+                  rent_value = 3
+            ### utilites
+            if current_tile.tile_type  == "utilities": 
+               option_type = "UtilityOption."
+               options = ["R_M_1", "R_M_2"]
+               if current_tile.multiplier == 2:
+                  rent_value = 1
+
             current_deed = self.all_players[owner_number-1].target_deed(next_location)
-            payment = current_deed.current_rent(rent_type)
-            #   options = ["r", "m_r", "r_h_1", "r_h_2","r_h_3","r_h_4","r_H"]
+            payment = current_deed.current_rent(option_type+options[rent_value])
             self.transfer_payment(player,self.all_players[owner_number-1],payment)
 
             print("")     
             
       else: # special tile
-         # print("\t\tspecial property\n")
          return      
       
    # # transfer_payment(payer : T, recipient :  T, paymnet : int) : void
@@ -205,7 +212,6 @@ class Game:
          target_event = self.bankrupt_player_events.display_event_options()
          
          while int(target_event) < 0 or len(self.bankrupt_player_events.events) <= int(target_event):
-            ###redisplay if given bad input
             print("\t\tInvalid choice, try again\n")
             target_event = self.bankrupt_player_events.display_event_options()
             
@@ -289,7 +295,6 @@ class Game:
  
    # end take_turn
    
-
 # end class   
 
       
