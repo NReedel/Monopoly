@@ -90,7 +90,7 @@
 		"title": "type",
 		"image": "thumbs-up-pennybags.svg",
 		"description": "BANK PAYS YOU DIVIDEND OF $50.",
-		"collectStaticAmount": 50
+		"receiveStaticAmount": 50
 	},
 	{
 		"index": 10,
@@ -99,7 +99,7 @@
 		"title": "type",
 		"image": "thumbs-up-pennybags.svg",
 		"description": "YOUR BUILDING LOAN MATURES. COLLECT $150.",
-		"collectStaticAmount": 150
+		"receiveStaticAmount": 150
 	},
 	{
 		"index": 11,
