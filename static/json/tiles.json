@@ -4,6 +4,7 @@
     "name": "Go",
     "type": "special",
     "special": "corner",
+    "corner": "go",
     "css": {
       "class": "tile corner"
     },
@@ -63,6 +64,7 @@
     "name": "Community Chest",
     "type": "special",
     "special": "card",
+    "card": "chest",
     "css": {
       "class": "tile card"
     },
@@ -205,6 +207,7 @@
     "name": "Chance",
     "type": "special",
     "special": "card",
+    "card": "chance",
     "css": {
       "class": "tile card"
     },
@@ -296,6 +299,7 @@
     "name": "Jail",
     "type": "special",
     "special": "corner",
+    "corner": "jail",
     "css": {
       "class": "tile corner"
     },
@@ -516,6 +520,7 @@
     "name": "Community Chest",
     "type": "special",
     "special": "card",
+    "card": "chest",
     "css": {
       "class": "tile card"
     },
@@ -607,6 +612,7 @@
     "name": "Free Parking",
     "type": "special",
     "special": "corner",
+    "corner": "parking",
     "css": {
       "class": "tile corner"
     },
@@ -666,6 +672,7 @@
     "name": "Chance",
     "type": "special",
     "special": "card",
+    "card": "chance",
     "css": {
       "class": "tile card"
     },
@@ -918,6 +925,7 @@
     "name": "Go To Jail",
     "type": "special",
     "special": "corner",
+    "corner": "arrested",
     "css": {
       "class": "tile corner"
     },
@@ -1013,6 +1021,7 @@
     "name": "Community Chest",
     "type": "special",
     "special": "card",
+    "card": "chest",
     "css": {
       "class": "tile card"
     },
@@ -1095,6 +1104,7 @@
     "name": "Chance",
     "type": "special",
     "special": "card",
+    "card": "chance",
     "css": {
       "class": "tile card"
     },
