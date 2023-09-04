@@ -6,7 +6,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "Just when you think you can't go another step, you finish that foot race - and raise money for your local hospital! ADVANCE TO GO. COLLECT $200.",
-		"moveTo": 0
+		"moveToIndex": 0
 	},
 	{
 		"index": 1,
@@ -133,7 +133,7 @@
 		"title": "type",
 		"image": "jailed-pennybags.svg",
 		"description": "Blasting music late at night? Your neighbors do not approve. GO TO JAIL. GO DIRECTLY TO JAIL. DO NOT PASS GO. DO NOT COLLECT $200.",
-		"moveTo": 10
+		"moveToIndex": 10
 	},
 	{
 		"index": 15,
