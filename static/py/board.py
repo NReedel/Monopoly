@@ -6,7 +6,10 @@ from cards import *
 from deck import *
 import json
 
+
 ###############################################################
+
+
 
 class Board:
    
@@ -18,7 +21,7 @@ class Board:
 	# --Constructor--
 	def __init__(self):
 		# Load JSON here, use your own link 💬
-		with open('/mnt/c/Users/Nreed/Code/All_Code/Monopoly/static/Json/tiles.json', 'r') as rf:
+		with open('tiles.json', 'r') as rf:
 			# with open('tiles.json', 'r') as rf:
 			for tiles in json.load(rf):
 				if tiles['type'] == "street":
@@ -35,11 +38,11 @@ class Board:
 					if(tiles['special'] == "corner"):
 						self.tile.append(TileCorner(tiles))
       
-		with open('/mnt/c/Users/Nreed/Code/All_Code/Monopoly/static/Json/community_chest.json', 'r') as rf:
+		with open('community_chest.json', 'r') as rf:
 			for cards in json.load(rf):
 				self.community_chest.deck.append(Cards(cards))  
     
-		with open('/mnt/c/Users/Nreed/Code/All_Code/Monopoly/static/Json/chance.json', 'r') as rf:
+		with open('chance.json', 'r') as rf:
 			for cards in json.load(rf):
 				self.chance.deck.append(Cards(cards))
     
@@ -60,21 +63,21 @@ class Board:
 			for i in range(0,len(self.tile)): 
 				
 				if self.tile[i].tile_type == "street":
-					if str(self.tile[i].monopoly_type) == "Monopoly.BROWN":
+					if self.tile[i].monopoly_type.value == 1: # "Monopoly.BROWN"
 						monopoly_owner_groupings[0].append(self.tile[i].owned_by)
-					if str(self.tile[i].monopoly_type) == "Monopoly.CYAN":
+					if self.tile[i].monopoly_type.value == 2: # "Monopoly.CYAN"
 						monopoly_owner_groupings[1].append(self.tile[i].owned_by)
-					if str(self.tile[i].monopoly_type) == "Monopoly.MAGENTA":
+					if self.tile[i].monopoly_type.value == 3: # "Monopoly.MAGENTA"
 						monopoly_owner_groupings[2].append(self.tile[i].owned_by)
-					if str(self.tile[i].monopoly_type) == "Monopoly.ORANGE":
+					if self.tile[i].monopoly_type.value == 4: # "Monopoly.ORANGE"
 						monopoly_owner_groupings[3].append(self.tile[i].owned_by)
-					if str(self.tile[i].monopoly_type) == "Monopoly.RED":
+					if self.tile[i].monopoly_type.value == 5: # "Monopoly.RED"
 						monopoly_owner_groupings[4].append(self.tile[i].owned_by)  
-					if str(self.tile[i].monopoly_type) == "Monopoly.YELLOW":
+					if self.tile[i].monopoly_type.value == 6: # "Monopoly.YELLOW"
 						monopoly_owner_groupings[5].append(self.tile[i].owned_by)
-					if str(self.tile[i].monopoly_type) == "Monopoly.GREEN":
+					if self.tile[i].monopoly_type.value == 7: # "Monopoly.GREEN"
 						monopoly_owner_groupings[6].append(self.tile[i].owned_by)
-					if str(self.tile[i].monopoly_type) == "Monopoly.BLUE":
+					if self.tile[i].monopoly_type.value == 8: # "Monopoly.BLUE"
 						monopoly_owner_groupings[7].append(self.tile[i].owned_by)
 						
 				if self.tile[i].tile_type == "railroad":
@@ -86,20 +89,14 @@ class Board:
 			for i in range(0,len(monopoly_owner_groupings)):
 				
 				if len(monopoly_owner_groupings[i]) == 2 and (monopoly_owner_groupings[i][0] == monopoly_owner_groupings[i][1]):
-					# has_monopoly[i] = True
 					for j in range(0,len(monopoly_property_index[i])):
 						self.tile[monopoly_property_index[i][j]].has_monopoly = True
-						# print("\t"+str(monopoly_property_index[i][j]),"= true")
 				elif len(monopoly_owner_groupings[i]) == 3 and (monopoly_owner_groupings[i][0] == monopoly_owner_groupings[i][1] and monopoly_owner_groupings[i][1] == monopoly_owner_groupings[i][2]):
-					# has_monopoly[i] = True
 					for j in range(0,len(monopoly_property_index[i])):
 						self.tile[monopoly_property_index[i][j]].has_monopoly = True
-						# print("\t"+str(monopoly_property_index[i][j]),"= true")
 				else:
-					# has_monopoly[i] = False
 					for j in range(0,len(monopoly_property_index[i])):
 						self.tile[monopoly_property_index[i][j]].has_monopoly = False
-						# print("\t"+str(monopoly_property_index[i][j]),"= false")
    		#### apply multipliers to railroad and utilities
 			multiplier = 0
 			for i in range(0, len(all_players)): 
