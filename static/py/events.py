@@ -30,9 +30,9 @@ Events
 '''
 ###############################################################
 # current_player = self.arg[0].all_players[self.arg[0].turn-1] # alt
- 
-#--Imports--
-from players import *
+
+# Imports
+import copy
 
 class Events:
    #--Global Data--
@@ -241,7 +241,7 @@ class MenuPlayerEvents(Events):
       if event == "rules":
          print() 
          # Load file here, use your own link 💬
-         rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt' #vary by user
+         rules_file_path = 'rules.txt' 
          with open(rules_file_path, 'r') as file:
             # Read the contents of the file
             file_contents = file.read()
@@ -354,20 +354,24 @@ class AuctionPropertyEvents(Events): #incomplete
    # event(self, players : Players, event : int) : void
    def event(self, player, event):
       return
-   
+
+# !!! Cards have no user-based input, 
+#       but there may be some house rules otherwise 
+#       so this will be left here for now
+# !!!   
 # class CardEvents(Events): #incomplete
 #    #--Constructor--
 #    def __init__(self, *args):
 #       super().__init__(*args)  
-         
+#        
 #    #--Global Data--
 #    events = ["take a chance"]
-    
+#   
 #    #--Method Implementations--
 #    # display_event_options(self) : string
 #    def display_event_options(self):
 #       return
-      
+#     
 #    # event(self, player : Players, event : string) : void
 #    def event(self,player,event = ""):
 #       return
@@ -410,7 +414,7 @@ class MainMenuEvents(Events): # near complete
       if event == "rules": # "rules"
          # Load file here, use your own link 💬
          print() 
-         rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt' #vary by user
+         rules_file_path = 'rules.txt' #vary by user
          with open(rules_file_path, 'r') as file:
             # Read the contents of the file
             file_contents = file.read()
