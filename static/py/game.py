@@ -9,7 +9,6 @@
 ###
 
 #--Imports--
-from tkinter import CURRENT
 from dice import *
 from players import *
 from tiles import *
@@ -149,9 +148,68 @@ class Game:
              player.pay_money(current_tile.tax_amount)
          # card tiles
          elif current_tile.card_type == "chance":
-             pass
-         elif current_tile.card_type == "chest":
-             pass
+             chance_card = self.board.chance.draw_card()
+
+             match chance_card.event_name:
+
+                 case "payStaticAmount":
+                     new_player_balance = chance_card.card_event.pay_money(player.current_money())
+                     player.set_balance(new_player_balance)
+
+                 case "receiveStaticAmount":
+                     new_player_balance = chance_card.card_event.receive_money(player.current_money())
+                     player.set_balance(new_player_balance)
+
+                 case "payPlayerRateAmount":
+                     new_player_balance = chance_card.card_event.pay_money(player.current_money(), len(self.all_players))
+                     player.set_balance(new_player_balance)
+                     # pay all other players using card_events.receive_owed_amount()
+
+                 case "receivePlayerRateAmount":
+                     new_player_balance = chance_card.card_event.receive_money(player.current_money(), len(self.all_players))
+                     player.set_balance(new_player_balance)
+                     # receive money from all other players using card_events.pay_owed_amount()
+
+                 case "payBuildingRateAmount":
+                     new_player_balance = chance_card.card_event.pay_money(player.current_money(), player.total_houses, player.total_hotels)
+                     player.set_balance(new_player_balance)
+
+                 # !!! ALL MOVE_TO ALGORITHMS BELOW CANNOT INCLUDE A RECURSIVE CALL TO GAME.MOVE()
+                 # !!! ALL OWNED/NOT OWNED ISSUES UPON ARRIVING AT THE NEW LOCATION MUST BE HANDLED HERE
+                 case "moveToIndex":
+                     new_player_location = chance_card.card_event.move_to_index()
+                     player.move_location(new_player_location, self.board.location(new_player_location))
+                     # the usual if owned, if not owned property algorithms
+
+                 case "moveToNearest":
+                     if (chance_card.isMoveToUtility):
+                         new_player_location = chance_card.card_event.move_to_nearest_utility(player.current_location())
+                         player.move_location(new_player_location, self.board.location(new_player_location))
+                         # if owned, pay current owner using card_events.pay_card_rent() and dice roll
+                         # if not owned, offer the player the chance to buy the property
+                     elif (chance_card.isMoveToRailroad):
+                         new_player_location = chance_card.card_event.move_to_nearest_railroad(player.current_location()) 
+                         player.move_location(new_player_location, self.board.location(new_player_location))
+                         # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
+                         # if not owned, offer the player the chance to buy the property
+                     else:
+                         print("Invalid moveToNearest card type in card class; neither Railroad nor Utility")
+
+                 case "moveSpaces":
+                     new_player_location = chance_card.card_event.move_spaces(player.current_location())
+                     player.move_location(new_player_location, self.board.location(new_player_location))
+                     # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
+                     # if not owned, offer the player the chance to buy the property
+
+                 case "isGOJF":
+                     player.jail_free_card = chance_card.card_event.give_card(player.jail_free_card)
+                 
+                 case _:
+                     print(f"No event with the name {chance_card.event_name} found.")
+                  
+         elif (current_tile.card_type == "chest"):
+             chest_card = self.board.community_chest.draw_card()
+             # card events will get put into a method somewhere in game and duplicated here later
 
          return      
       
