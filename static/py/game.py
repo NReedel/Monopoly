@@ -15,7 +15,7 @@ from bank import *
 from events import *
 from board import *
 from deeds import *
-import random
+import json
 import copy
 
 class Game:
@@ -29,7 +29,6 @@ class Game:
    all_players = []
    bank = Bank()
    board = Board()
-   # Events
    player_events = PlayerEvents()
    jailed_player_events = JailedPlayerEvents()
    bankrupt_player_events = BankruptPlayerEvents()
@@ -38,8 +37,7 @@ class Game:
    def __init__(self,):
       # Load Json here, use your own link 💬
       ### 
-      with open('/mnt/c/Users/Nreed/Code/All_Code/Monopoly/static/Json/tiles.json', 'r') as rf:
-      # with open('tiles.json', 'r') as rf:
+      with open('tiles.json', 'r') as rf:
          for tiles in json.load(rf):
             if tiles['type'] == "street":
                self.bank.deeds.append(DeedStreet(tiles))
@@ -52,13 +50,15 @@ class Game:
                self.board.tile[tiles['index']].owned_by = "bank"
          
          self.board.tile_check(self.all_players) 
-   
-   # def transfer_all(self): 
-   #    starting_deeds_size = len(self.bank.deeds) # 
-   #    for i in range(0,starting_deeds_size):
-   #       self.transfer_deed(self.bank,self.all_players[0],self.bank.deeds[i].index)
 
    ###--Method Implementations--
+   
+   # transfer(self) : void
+   def transfer_all(self): 
+      starting_deeds_size = len(self.bank.deeds) # 
+      for i in range(0,starting_deeds_size):
+         self.transfer_deed(self.bank,self.all_players[0],self.bank.deeds[i].index)
+   
    # move(self,Player : Players,  spaces_moving: int) : void
    def move(self,player,spaces_moving): 
       next_location = player.current_location() + (spaces_moving)
@@ -95,12 +95,10 @@ class Game:
          elif current_tile.owned_by != player.id and current_tile.owned_by != "bank": # pay rent
             print("\t\tyou landed on another player's property\n")
             owner_number = int(current_tile.owned_by)
-            option_type = ""
-            rent_value = 0 # rent # default
+            rent_value = 0 # index for options
             ### street
             if current_tile.tile_type == "street":
-               option_type = "StreetOption."
-               options = ["R", "M_R", "R_H_1", "R_H_2","R_H_3","R_H_4","R_H"]
+               # options = ["R", "M_R", "R_H_1", "R_H_2","R_H_3","R_H_4","R_H"]
                if current_tile.has_monopoly == True:
                   rent_value = 1 # monopoly_rent
                if current_tile.houses > 0:
@@ -109,8 +107,7 @@ class Game:
                   rent_value = 6 # rent_hotel_
             ### railroad
             if current_tile.tile_type == "railroad":
-               option_type = "RailroadOption."
-               options = ["R", "R_2", "R_3", "R_4"]
+               #options = ["R", "R_2", "R_3", "R_4"]
                if current_tile.multiplier == 2:
                   rent_value = 1
                elif current_tile.multiplier == 3:
@@ -119,19 +116,94 @@ class Game:
                   rent_value = 3
             ### utilites
             if current_tile.tile_type  == "utilities": 
-               option_type = "UtilityOption."
-               options = ["R_M_1", "R_M_2"]
+               # options = ["R_M_1", "R_M_2"]
                if current_tile.multiplier == 2:
                   rent_value = 1
 
             current_deed = self.all_players[owner_number-1].target_deed(next_location)
-            payment = current_deed.current_rent(option_type+options[rent_value])
+            payment = current_deed.current_rent(rent_value)
             self.transfer_payment(player,self.all_players[owner_number-1],payment)
 
             print("")     
             
-      else: # special tile
-         return      
+      else: # landing on special tile
+         # corner tiles (GO, Just Visiting, Go To Jail, Free Parking)
+         if current_tile.corner_type == "go":
+             pass
+         elif current_tile.corner_type == "jail":
+             pass
+         elif current_tile.corner_type == "parking":
+             pass
+         elif current_tile.corner_type == "arrested":   # Go To Jail
+             player.go_to_jail()
+         # tax tiles
+         elif current_tile.special_type == "tax":
+             player.pay_money(current_tile.tax_amount)
+         # card tiles
+         elif current_tile.card_type == "chance":
+             chance_card = self.board.chance.draw_card()
+
+             match chance_card.event_name:
+
+                 case "payStaticAmount":
+                     new_player_balance = chance_card.card_event.pay_money(player.current_money())
+                     player.set_balance(new_player_balance)
+
+                 case "receiveStaticAmount":
+                     new_player_balance = chance_card.card_event.receive_money(player.current_money())
+                     player.set_balance(new_player_balance)
+
+                 case "payPlayerRateAmount":
+                     new_player_balance = chance_card.card_event.pay_money(player.current_money(), len(self.all_players))
+                     player.set_balance(new_player_balance)
+                     # pay all other players using card_events.receive_owed_amount()
+
+                 case "receivePlayerRateAmount":
+                     new_player_balance = chance_card.card_event.receive_money(player.current_money(), len(self.all_players))
+                     player.set_balance(new_player_balance)
+                     # receive money from all other players using card_events.pay_owed_amount()
+
+                 case "payBuildingRateAmount":
+                     new_player_balance = chance_card.card_event.pay_money(player.current_money(), player.total_houses, player.total_hotels)
+                     player.set_balance(new_player_balance)
+
+                 # !!! ALL MOVE_TO ALGORITHMS BELOW CANNOT INCLUDE A RECURSIVE CALL TO GAME.MOVE()
+                 # !!! ALL OWNED/NOT OWNED ISSUES UPON ARRIVING AT THE NEW LOCATION MUST BE HANDLED HERE
+                 case "moveToIndex":
+                     new_player_location = chance_card.card_event.move_to_index()
+                     player.move_location(new_player_location, self.board.location(new_player_location))
+                     # the usual if owned, if not owned property algorithms
+
+                 case "moveToNearest":
+                     if (chance_card.isMoveToUtility):
+                         new_player_location = chance_card.card_event.move_to_nearest_utility(player.current_location())
+                         player.move_location(new_player_location, self.board.location(new_player_location))
+                         # if owned, pay current owner using card_events.pay_card_rent() and dice roll
+                         # if not owned, offer the player the chance to buy the property
+                     elif (chance_card.isMoveToRailroad):
+                         new_player_location = chance_card.card_event.move_to_nearest_railroad(player.current_location()) 
+                         player.move_location(new_player_location, self.board.location(new_player_location))
+                         # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
+                         # if not owned, offer the player the chance to buy the property
+                     else:
+                         print("Invalid moveToNearest card type in card class; neither Railroad nor Utility")
+
+                 case "moveSpaces":
+                     new_player_location = chance_card.card_event.move_spaces(player.current_location())
+                     player.move_location(new_player_location, self.board.location(new_player_location))
+                     # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
+                     # if not owned, offer the player the chance to buy the property
+
+                 case "isGOJF":
+                     player.jail_free_card = chance_card.card_event.give_card(player.jail_free_card)
+                 
+                 case _:
+                     print(f"No event with the name {chance_card.event_name} found.")
+                  
+         elif (current_tile.card_type == "chest"):
+             chest_card = self.board.community_chest.draw_card()
+             # card events will get put into a method somewhere in game and duplicated here later
+         return
       
    # # transfer_payment(payer : T, recipient :  T, paymnet : int) : void
    def transfer_payment(self,payer, recipient, payment): 
