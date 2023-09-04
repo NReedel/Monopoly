@@ -1,0 +1,184 @@
+Special Tiles:
+
+  {
+    "index": 0,
+    "name": "Go",
+    "type": "special",
+    "special": "corner",
+    "css": {
+      "class": "tile corner"
+    },
+    "render": {
+      "top": {
+        "type": "text",
+        "content": "Collect $200 as you pass"
+      },
+      "middle": {
+        "type": "img",
+        "content": "go.svg"
+      },
+      "bottom": {
+        "type": "img",
+        "content": "go-arrow.svg"
+      }
+    }
+  },
+  {
+    "index": 2,
+    "name": "Community Chest",
+    "type": "special",
+    "special": "card",
+    "css": {
+      "class": "tile card"
+    },
+    "render": {
+      "top": {
+        "type": "var",
+        "content": "name"
+      },
+      "bottom": {
+        "type": "img",
+        "content": "community-chest.svg"
+      }
+    }
+  },
+  {
+    "index": 4,
+    "name": "Income Tax",
+    "type": "special",
+    "special": "tax",
+    "price": 200,
+    "css": {
+      "class": "tile tax"
+    },
+    "render": {
+      "top": {
+        "type": "var",
+        "content": "name"
+      },
+      "middle": {
+        "type": "img",
+        "content": "income-tax.svg"
+      },
+      "bottom": {
+        "type": "text",
+        "content": "Pay $200"
+      }
+    }
+  },
+  {
+    "index": 7,
+    "name": "Chance",
+    "type": "special",
+    "special": "card",
+    "css": {
+      "class": "tile card"
+    },
+    "render": {
+      "top": {
+        "type": "var",
+        "content": "name"
+      },
+      "bottom": {
+        "type": "img",
+        "content": "chance.svg"
+      }
+    }
+  },
+
+
+Properties:
+
+  {
+    "index": 12,
+    "name": "Electric Company",
+    "type":  "utility",
+    "price": 150,
+    "css": {
+      "class": "property utility"
+    },
+    "render": {
+      "top": {
+        "type": "var",
+        "content": "name"
+      },
+      "middle": {
+        "type": "img",
+        "image": "electric-company.svg"
+      },
+      "bottom": {
+        "type": "var",
+        "content": "price"
+      }
+    },
+    "description": "If one Utility is owned, rent is 4 times the amount shown on dice. If both Utilities are owned, rent is 10 times the amount shown on dice.",
+    "deed": {
+      "mortgageValue": 75,
+      "unmortgageValue": 83,
+      "rentMultiplier1": 4,
+      "rentMultiplier2": 10
+    }
+  },
+  {
+    "index": 5,
+    "name": "Reading Railroad",
+    "type": "railroad",
+    "price": 200,
+    "css": {
+      "class": "property railroad"
+    },
+    "render": {
+      "top": {
+        "type": "var",
+        "content": "name"
+      },
+      "middle": {
+        "type": "img",
+        "image": "railroad.svg"
+      },
+    },
+    "deed": {
+      "rent": 25,
+      "rent2": 50,
+      "rent3": 100,
+      "rent4": 200,
+      "mortgageValue": 100,
+      "unmortgageValue": 110
+    }
+  },
+  {
+    "index": 39,
+    "name": "Boardwalk",
+    "type": "street",
+    "price": 400,
+    "css": {
+      "class": "property prop-cobalt-blue"
+    },
+    "render": {
+      "top": {
+        "type": "color",
+        "content": "#0047ab"
+      },
+      "middle": {
+        "type": "var",
+        "content": "name"
+      },
+      "bottom": {
+        "type": "var",
+        "content": "price"
+      }
+    },
+    "deed": {
+      "rent": 50,
+      "monopolyRent": 100,
+      "rentHouse1": 200,
+      "rentHouse2": 600,
+      "rentHouse3": 1400,
+      "rentHouse4": 1700,
+      "rentHotel": 2000,
+      "mortgageValue": 200,
+      "unmortgageValue": 220,
+      "houseCost": 200,
+      "hotelCost": 200
+    }
+  }
