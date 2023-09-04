@@ -13,7 +13,6 @@ from enum import Enum
 # Enumerated Monopoly Class 🔎
 ###############################################################
 
-
 class Players:
    
    # --Global Data--
@@ -127,6 +126,7 @@ class Players:
       print("\t\tplayer",self.id,"is now in jail")
       self.jail_counter = 0
 
+
    # buy_property(deed : deeds) : void
    def add_property(self,deed):
       copy_list = []
@@ -229,7 +229,5 @@ class Players:
          if self.deeds[i].index == index:
             return self.deeds[i]
       return 
-   
+ 
 
-
-   

@@ -42,12 +42,22 @@ class Events:
    
    #--Constuctor--
    def __init__(self,*args):
+
       self.argc = len(args)
+      # self.arg = 0 # argument count, check for built in one
+      self.argc = len(args) 
+      
       if len(args) > 0:
          for i in range(len(args)):
             self.arg.append(args[i]) 
                  
+
+
    #--Method Implementation--
+   def display_event_options(self): 
+      return 
+   def event(self): # event() : void
+      return
    def display_event_options(self): 
       return 
    def event(self): # event() : void
@@ -168,9 +178,13 @@ class JailedPlayerEvents(Events):
    def __init__(self, *args):
       super().__init__(*args)
       
+
    #--Argumets--
    # arg[0] = self from game, used for bail and player
    
+
+class JailedPlayerEvents(Events): # partial completion
+  
    #--Global Data--
    events = ["roll doubles","pay jail fee","jail free card"]
    

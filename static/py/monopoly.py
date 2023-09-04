@@ -53,6 +53,8 @@ class Monopoly:
                print("\n\t\tplayer",monopoly_game.all_players[monopoly_game.turn-1].id,"is bankrupt.")
             print("\t\tplayer",monopoly_game.all_players[monopoly_game.turn-1].id," is now out of the game.")
             monopoly_game.all_players[monopoly_game.turn-1].deeds.clear()
+               print("\t\tplayer",monopoly_game.turn,"is bankrupt.")
+            print("\t\tplayer",monopoly_game.turn," is now out of the game.")
             monopoly_game.all_players.pop(monopoly_game.turn-1)
             print("\n\tCurrently",len(monopoly_game.all_players),"player(s) remaining\n")
             monopoly_game.end_round_check(monopoly_game.all_players)
