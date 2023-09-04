@@ -6,9 +6,7 @@
 # *Purpose: Define Monopoly deed attributes and actions
 ###
 
-
 from enum import Enum
-
 
 class Deeds:
     # -- Constructor --
