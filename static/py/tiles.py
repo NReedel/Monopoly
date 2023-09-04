@@ -44,13 +44,11 @@ Tile
 class Tile:
 	
     def __init__ (self, tile):
-
         self.tile_id = tile['index']
         self.tile_name = tile['name']
         self.owned_by = "none"    # "player number", "bank", "none"        
         self.event_on_land = None   # ⚠⚠⚠
         self.occupants = []         # list of player ids
-        
         self.fname_bg = ""      # option for later dynamic rendering
         self.css_class = ""     # used later for web app
 	
@@ -88,6 +86,7 @@ class TileProperty(Tile):
 class PropertyStreet(TileProperty):
 
     def __init__ (self,tile):
+    
         super(PropertyStreet, self).__init__(tile)
         self.has_monopoly  = False 
         self.tile_color = ""    # need to standardize color format, ie. hex
@@ -121,7 +120,6 @@ class PropertySpecial(TileProperty):
         self.multiplier = 1
         
 class PropertyRailroad(PropertySpecial):
-
     def __init__ (self,tile):
         super(PropertyRailroad, self).__init__(tile)
         self.monopoly_type = Monopoly.RAIL # new
@@ -157,19 +155,18 @@ class TileSpecial(Tile):
 class TileCard(TileSpecial):
     def __init__ (self,tile):
         super(TileCard, self).__init__(tile)
-
+        self.card_type = tile['card']  # "chest" or "chance"
 
 # Income and Luxury Tax
 class TileTax(TileSpecial):
     def __init__ (self,tile):
         super(TileTax, self).__init__(tile)
-        self.tax_amount = 0
-
+        self.tax_amount = tile['price']
 
 # Will need updating later ⚠⚠⚠
 class TileCorner(TileSpecial):
     def __init__ (self,tile):
         super(TileCorner, self).__init__(tile)
-
+        self.corner_type = tile['corner']  # "go" or "jail" or "parking" or "arrested" (go to jail)
 
 ###############################################################
