@@ -11,54 +11,240 @@
 #--Imports--
 from dice import *
 from players import *
-from tiles import *
+from bank import *
+from events import *
+from board import *
+from deeds import *
+import json
+import copy
 
-# from enum import Enum
-import random
 class Game:
-   #--Global Data--
-   starting_total = int(500)
+   ###--Global Data--
+   starting_total = int(2500)
    bail = int(50)
    monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
    payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
+
    game_dice = Dice(2,6)
    turn = int(1)
    round = int(1)
-   starting_player_count = int(0)
    all_players = []
    bank = Bank()
+   board = Board()
+   player_events = PlayerEvents()
+   jailed_player_events = JailedPlayerEvents()
+   bankrupt_player_events = BankruptPlayerEvents()
 
-   # #--Method Implementations--
-   # move(self,Player : Players) : void
-   def move(self,player): 
+   ###--Constructor--
+   def __init__(self,):
+      # Load Json here, use your own link 💬
+      ### 
+      with open('tiles.json', 'r') as rf:
+         for tiles in json.load(rf):
+            if tiles['type'] == "street":
+               self.bank.deeds.append(DeedStreet(tiles))
+               self.board.tile[tiles['index']].owned_by = "bank" 
+            if tiles['type'] == "railroad":
+               self.bank.deeds.append(DeedRailroad(tiles))
+               self.board.tile[tiles['index']].owned_by = "bank"
+            if tiles['type'] == "utility":
+               self.bank.deeds.append(DeedUtility(tiles))
+               self.board.tile[tiles['index']].owned_by = "bank"
+         
+         self.board.tile_check(self.all_players) 
+
+   ###--Method Implementations--
+   
+   # transfer(self) : void
+   def transfer_all(self): 
+      starting_deeds_size = len(self.bank.deeds) # 
+      for i in range(0,starting_deeds_size):
+         self.transfer_deed(self.bank,self.all_players[0],self.bank.deeds[i].index)
+   
+   # move(self,Player : Players,  spaces_moving: int) : void
+   def move(self,player,spaces_moving): 
+      next_location = player.current_location() + (spaces_moving)
       
-      self.game_dice.roll()
-      print("\t\tplayer",player.player_number(),"rolled =",self.game_dice.print_roll()) # add roll total
-      next_location = player.current_location()
-      next_location  += (self.game_dice.total_rolled())
       if next_location >= 40:
          player.receive_money(200)
          next_location = next_location % 40
-      player.move_location(next_location) 
+   
+      player.move_location(next_location, self.board.location(next_location)) 
       print("")
+      current_tile = self.board.tile[next_location]
+      if self.board.tile[next_location].tile_type != "special": # tile with deed
+         
+         if current_tile.avaliable_deed() == True : # purchasable
+            print("\t\tthis property can be bought\n")
+            avaliable_property_events = AvaliablePropertyEvents(self)
+            cost = current_tile.property_cost
+            can_buy = False
+            if cost <= player.current_money():
+               can_buy = True
+            target_event = avaliable_property_events.display_event_options(cost, player.current_money())
+            
+            while ((int(target_event) < 0 or len(avaliable_property_events.events)) <= int(target_event) and can_buy == True) or (can_buy == False and (int(target_event) >= len(avaliable_property_events.events) or int(target_event) < 1)):
+               print("\t\tinvalid choce, try again\n")
+               target_event = avaliable_property_events.display_event_options(cost, player.current_money())
+               
+            avaliable_property_events.event(avaliable_property_events.events[int(target_event)])
+            del avaliable_property_events
+         elif current_tile.is_mortgaged == True: #mortgaged property
+            print("\t\tproperty is mortgaged\n")
+            return
+         elif current_tile.owned_by == player.id: # self owned
+            print("\t\tyou own this property\n")
+         elif current_tile.owned_by != player.id and current_tile.owned_by != "bank": # pay rent
+            print("\t\tyou landed on another player's property\n")
+            owner_number = int(current_tile.owned_by)
+            rent_value = 0 # index for options
+            ### street
+            if current_tile.tile_type == "street":
+               # options = ["R", "M_R", "R_H_1", "R_H_2","R_H_3","R_H_4","R_H"]
+               if current_tile.has_monopoly == True:
+                  rent_value = 1 # monopoly_rent
+               if current_tile.houses > 0:
+                  rent_value =  self.board.tiles[next_location].houses + 1 # rent_house_
+               if current_tile.hotels > 0:
+                  rent_value = 6 # rent_hotel_
+            ### railroad
+            if current_tile.tile_type == "railroad":
+               #options = ["R", "R_2", "R_3", "R_4"]
+               if current_tile.multiplier == 2:
+                  rent_value = 1
+               elif current_tile.multiplier == 3:
+                  rent_value = 2
+               elif current_tile.multiplier == 4:
+                  rent_value = 3
+            ### utilites
+            if current_tile.tile_type  == "utilities": 
+               # options = ["R_M_1", "R_M_2"]
+               if current_tile.multiplier == 2:
+                  rent_value = 1
+
+            current_deed = self.all_players[owner_number-1].target_deed(next_location)
+            payment = current_deed.current_rent(rent_value)
+            self.transfer_payment(player,self.all_players[owner_number-1],payment)
+
+            print("")     
+            
+      else: # landing on special tile
+         # corner tiles (GO, Just Visiting, Go To Jail, Free Parking)
+         if current_tile.corner_type == "go":
+             pass
+         elif current_tile.corner_type == "jail":
+             pass
+         elif current_tile.corner_type == "parking":
+             pass
+         elif current_tile.corner_type == "arrested":   # Go To Jail
+             player.go_to_jail()
+         # tax tiles
+         elif current_tile.special_type == "tax":
+             player.pay_money(current_tile.tax_amount)
+         # card tiles
+         elif current_tile.card_type == "chance":
+             chance_card = self.board.chance.draw_card()
+
+             match chance_card.event_name:
+
+                 case "payStaticAmount":
+                     new_player_balance = chance_card.card_event.pay_money(player.current_money())
+                     player.set_balance(new_player_balance)
+
+                 case "receiveStaticAmount":
+                     new_player_balance = chance_card.card_event.receive_money(player.current_money())
+                     player.set_balance(new_player_balance)
+
+                 case "payPlayerRateAmount":
+                     new_player_balance = chance_card.card_event.pay_money(player.current_money(), len(self.all_players))
+                     player.set_balance(new_player_balance)
+                     # pay all other players using card_events.receive_owed_amount()
+
+                 case "receivePlayerRateAmount":
+                     new_player_balance = chance_card.card_event.receive_money(player.current_money(), len(self.all_players))
+                     player.set_balance(new_player_balance)
+                     # receive money from all other players using card_events.pay_owed_amount()
+
+                 case "payBuildingRateAmount":
+                     new_player_balance = chance_card.card_event.pay_money(player.current_money(), player.total_houses, player.total_hotels)
+                     player.set_balance(new_player_balance)
+
+                 # !!! ALL MOVE_TO ALGORITHMS BELOW CANNOT INCLUDE A RECURSIVE CALL TO GAME.MOVE()
+                 # !!! ALL OWNED/NOT OWNED ISSUES UPON ARRIVING AT THE NEW LOCATION MUST BE HANDLED HERE
+                 case "moveToIndex":
+                     new_player_location = chance_card.card_event.move_to_index()
+                     player.move_location(new_player_location, self.board.location(new_player_location))
+                     # the usual if owned, if not owned property algorithms
+
+                 case "moveToNearest":
+                     if (chance_card.isMoveToUtility):
+                         new_player_location = chance_card.card_event.move_to_nearest_utility(player.current_location())
+                         player.move_location(new_player_location, self.board.location(new_player_location))
+                         # if owned, pay current owner using card_events.pay_card_rent() and dice roll
+                         # if not owned, offer the player the chance to buy the property
+                     elif (chance_card.isMoveToRailroad):
+                         new_player_location = chance_card.card_event.move_to_nearest_railroad(player.current_location()) 
+                         player.move_location(new_player_location, self.board.location(new_player_location))
+                         # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
+                         # if not owned, offer the player the chance to buy the property
+                     else:
+                         print("Invalid moveToNearest card type in card class; neither Railroad nor Utility")
+
+                 case "moveSpaces":
+                     new_player_location = chance_card.card_event.move_spaces(player.current_location())
+                     player.move_location(new_player_location, self.board.location(new_player_location))
+                     # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
+                     # if not owned, offer the player the chance to buy the property
+
+                 case "isGOJF":
+                     player.jail_free_card = chance_card.card_event.give_card(player.jail_free_card)
+                 
+                 case _:
+                     print(f"No event with the name {chance_card.event_name} found.")
+                  
+         elif (current_tile.card_type == "chest"):
+             chest_card = self.board.community_chest.draw_card()
+             # card events will get put into a method somewhere in game and duplicated here later
+         return
+      
+   # # transfer_payment(payer : T, recipient :  T, paymnet : int) : void
+   def transfer_payment(self,payer, recipient, payment): 
+      payer.pay_money(payment)
+      recipient.receive_money(payment)
 
       
-   #make_payment(Payer : T, Recipient :  T, paymnet : int) : void
+   # transfer_deed(owner: T, recipient :  T, location : int) : void
+   def transfer_deed(self,owner, recipient, location): 
+      owner_deeds = copy.deepcopy(owner.deeds) # maybe
+      recipient_deeds = copy.deepcopy(recipient.deeds)
 
+      for i in range(0,len(owner_deeds)): 
+         
+         if location == owner_deeds[i].index:
+            target_deed = owner_deeds[i]
+            i = len(owner_deeds)
+
+      recipient_deeds.append(target_deed)
+      recipient.deeds = copy.deepcopy(recipient_deeds)
+      print("\t\t\""+str(target_deed.name)+"\"","received\n")
+      self.board.tile[location].owned_by = recipient.id
+      self.board.tile_check(self.all_players)
+
+      
    # jailed_move_attempt(self, player : Players) : void
    def jailed_move_attempt(self,player): 
       
       self.game_dice.roll()
-      print("\t\tplayer",player.player_number(),"rolled =",self.game_dice.print_roll())
+      print("\t\tplayer",player.id,"roll =",self.game_dice.print_roll())
       
       if self.game_dice.rolled_same_values() == True or player.time_jailed == 3:
          
-         if player.time_jailed == 3 and Dice.rolled_same_values() == False:
-            player.time_jailed == 0
+         if player.time_jailed == 3 and self.game_dice.rolled_same_values() == False:
+            player.time_jailed = 0
             global bail
-            player.pay_money(bail)    
+            player.pay_money(self.bail)    
             
-         print("\t\tplayer",player.player_number(),"is now out of jail")
+         print("\t\tplayer",player.id,"is now out of jail")
          next_location = player.current_location()
          next_location += self.game_dice.total_rolled()
          
@@ -69,48 +255,11 @@ class Game:
          player.move_location(next_location) # move
          print("")  
          return False # in_jail = False
+      
       else:
-         print("\t\tplayer",player.player_number(),"remains in jail")
+         print("\t\tplayer",player.id,"remains in jail")
          print("")  
          return True # in_jail = True
-   
-
-      
-   # player_event(self player : Players, event : string) : void
-   def player_event(self,player,event = ""):
-      
-      if event == "roll":
-         self.move(player)
-         
-      # if event == "build":
-      # if event == "sell":
-      # if event == "mortgage":
-      # if event == "redeem":
-      # if event == "trade"
-      # if event == "menue":
-   
-      
-   # jailed_player_event(player : Players, event : string) : bool
-   def jailed_player_event(self,player,event=""):
-      
-      if event == "roll doubles":
-         return True # attempt_escape == True
-      
-      if event == "pay jail fee":   
-         player.pay_money(self.bail)
-         player.time_jailed == 0
-         print("\t\tPlayer",player.player_number(),"is now out of jail\n")
-         return False #player.in_jail == False
-      
-      if event == "jail free card":
-         player.jail_free_card -= 1
-         player.time_jailed == 0
-         print("\t\tPlayer",player.player_number(),"is now out of jail\n")
-         return False #player.in_jail == False
-      
-      return True
-
-   # player_landed_on(player_location : int)
 
    # end_round_check(RemainingPlayers : list<Players>) : void
    def end_round_check(self,remainingPlayers = []):
@@ -118,7 +267,6 @@ class Game:
       if self.turn > len(remainingPlayers): # reset turns, start next round
          self.turn = self.turn % len(remainingPlayers) 
          self.round += 1
-         print("")
          print("Round ",self.round)
          print("")
                   
@@ -127,91 +275,78 @@ class Game:
 
    # take_self.turn(Target_players : list<Players>) : void
    def take_turn(self,target_players = []):
-      print("\tPlayer",self.turn, ":") 
+      print("\tPlayer",target_players[self.turn-1].id, ":") 
       ###List Target_players Status 
-      target_players[self.turn-1].player_status() 
-      if target_players[self.turn-1].in_debt() == True: # if Target_players is in dept
-         print("\t\tplayer",target_players[self.turn-1].player_number(),"is in dept at $",target_players[self.turn-1].current_money())
-         give_up = "y"
-         # give_up = input("\tWould the Target_players like to continue y/n? ")
-         if give_up == "y":
-            target_players[self.turn-1].bankrupt = True
+      target_players[self.turn-1].player_status(self.board.tile)  
+      
+      while target_players[self.turn-1].in_debt() == True: 
+         ###Bakrupt Player Events 
+         self.bankrupt_player_events.update(self)
+         print("\t\tplayer",target_players[self.turn-1].id,"is in dept at","$"+str(target_players[self.turn-1].current_money()),"\n")
+         target_event = self.bankrupt_player_events.display_event_options()
+         
+         while int(target_event) < 0 or len(self.bankrupt_player_events.events) <= int(target_event):
+            print("\t\tInvalid choice, try again\n")
+            target_event = self.bankrupt_player_events.display_event_options()
+            
+         self.bankrupt_player_events.event(target_players[self.turn-1],self.bankrupt_player_events.events[int(target_event)])
+         if target_players[self.turn-1].bankrupt == True:
             return 
-      # while Target_players[self.turn-1].in_dept() == True: 
+         
       if target_players[self.turn-1].in_jail == True:
          target_players[self.turn-1].time_jailed += 1
-      ###List Target_players Events (dynamic actions) 
+      self.player_events.update(self)
+      self.jailed_player_events.update(self)
       has_rolled = False
       end_turn = False
       attempt_escape = False
-      ###start self.turn
+      ###Start Turn
       while end_turn == False:
-         ###jailed player events
+         ###Jailed Player Events
          if target_players[self.turn-1].in_jail == True and has_rolled == False: 
-            global bail
-            print("\t\tSelect Jailed player action:")
-            print("\t\t   0)",self.jailed_player_events[0])
-            print("\t\t   1)",self.jailed_player_events[1],"$",self.bail) # needs if statment for being broke
-            if target_players[self.turn-1].jail_free_card > 0: 
-               print("\t\t   2)", self.jailed_player_events[2])
-            target_event = input("\t\tchoice -> ")
-            
-            while int(target_event) < 0 or len(self.jailed_player_events) <= int(target_event) or int(target_event == 2) and target_players[self.turn-1].jail_free_card == 0:
-               print("\t\tInvalid choice, try again")
-               print("\t\t\nSelect Jailed Target_players action:")
-               if has_rolled == False: 
-                  print("\t\t   0)",self.jailed_player_events[0])
-               print("\t\t   1)",self.jailed_player_events[1],"$",bail) # needs if statment for being broke
-               if target_players[self.turn-1].jail_free_card > 0: 
-                  print("\t\t   2)", self.jailed_player_events[2])
-               target_event = input("\t\tchoice -> ")
-               
+            target_event = self.jailed_player_events.display_event_options(target_players[self.turn-1]) 
+            while int(target_event) < 0 or len(self.jailed_player_events.events) <= int(target_event) or int(target_event == 2) and target_players[self.turn-1].jail_free_card == 0:
+               ###redisplay if given bad input
+               print("\t\tInvalid choice, try again\n")
+               target_event = self.jailed_player_events.display_event_options(target_players[self.turn-1])
             print("")
             
             if int(target_event) == 0:
-               ###jailed_player_event reself.turns True automatically
-               attempt_escape = self.jailed_player_event(target_players[self.turn-1],self.jailed_player_events[int(target_event)])
+               ###jailed_player_events.event returns True automatically
+               attempt_escape = self.jailed_player_events.event(target_players[self.turn-1],self.jailed_player_events.events[int(target_event)])
             else:
-               ###jailed_player_event reself.turns True if Target_players stays in jail
-               target_players[self.turn-1].in_jail= self.jailed_player_event(target_players[self.turn-1],self.jailed_player_events[int(target_event)])
-         
-         ###player events     
-         print("\t\tSelect players action:")  
-         
-         if has_rolled == True: 
-            print("\t\t   0) pass turn")
-         else: 
-            print("\t\t   0)",self.player_events[0])
-         ###more events to come!   
-         target_event = input("\t\tchoice -> ")
-         while int(target_event) < 0 or len(self.player_events) < int(target_event):
-            ###redisplay if given bad input
-            print("\t\tInvalid choice, try again")
-            print("\n\t\tSelect players action:")
-            
-            if has_rolled == True: 
-               print("\t\t   0) pass turn")
-            else: 
-               print("\t\t   0)",self.player_events[0])
-                  
-            target_event = input("\t\tchoice -> ")
-            
+               ###jailed_player_events.event returns True if player stays in jail
+               target_players[self.turn-1].in_jail = self.jailed_player_events.event(target_players[self.turn-1],self.jailed_player_events.events[int(target_event)])
+         ###Player Events
+         if target_players[self.turn-1].bankrupt == False: 
+            target_event = self.player_events.display_event_options(has_rolled) 
+            while int(target_event) < 0 or len(self.player_events.events) <= int(target_event):
+               ###redisplay if given bad input
+               print("\t\tInvalid choice, try again\n")
+               target_event = self.player_events.display_event_options(has_rolled)
+         ###Player Menu Quit 
+         if target_players[self.turn-1].bankrupt == True:
+            has_rolled = True
+            end_turn = True
+            return 
+         ###end Player Menu Quit
          if int(target_event) == 0 and has_rolled == False:
             has_rolled = True
          elif int(target_event) == 0 and has_rolled == True:
-            end_turn = True         
+            end_turn = True
+         else:
+            pass         
             
          if end_turn  == False:
             print("")
-            
             if (attempt_escape == True and int(target_event) != 0) or attempt_escape == False:   
-               self.player_event(target_players[self.turn-1],self.player_events[int(target_event)])
-
+               self.player_events.event(target_players[self.turn-1],self.player_events.events[int(target_event)]) 
             if attempt_escape == True and int(target_event) == 0:
                print("\t\tattempt jail escape")
                target_players[self.turn-1].in_jail = self.jailed_move_attempt(target_players[self.turn-1])
                has_rolled = True
-            elif self.game_dice.rolled_same_values() == True and target_players[self.turn-1].same_values_rolled == 2 and self.player_events[int(target_event)] == "roll":   
+               
+            elif self.game_dice.rolled_same_values() == True and target_players[self.turn-1].same_values_rolled == 2 and self.player_events.events[int(target_event)] == "roll":   
                print("\t\tsame values rolled =",target_players[self.turn-1].same_values_rolled+1)
                target_players[self.turn-1].go_to_jail()
                print("")
@@ -219,32 +354,21 @@ class Game:
                self.turn += 1
                self.end_round_check(target_players)
                return
-      ###end of self.turn
+           
+      ###End Of Turn
       if(self.game_dice.rolled_same_values() == False or attempt_escape == True):   
          self.turn += 1
       else:
          target_players[self.turn-1].same_values_rolled += 1
-         print("\n\t\tPlayer",self.turn,"goes again")
+         print("\n\t\tPlayer",target_players[self.turn-1].id,"goes again")
          
+      print("")
+      
       if self.turn > len(target_players): # reset self.turns, start next self.round
-         ##(not part of actual code)
-         # payment = 300      
-         # Target_players[self.turn-2].pay_money(payment)
-         # Target_players[0].receive_money(payment)
-         # payment = 0
-         ##(end not part of actual code)  
-         ###(not part of actual code)      
-         # payment = int(300)
-         # Target_players[self.turn-2].set_balance(int(Target_players[self.turn-2].current_money()) - int(payment))
-         # print("\t\tplayer",Target_players[self.turn-2].player_number(),"payed",payment)
-         # Target_players[0].set_balance(int(Target_players[0].current_money()) + int(payment))
-         # print("\t\tplayer",Target_players[0].player_number(),"payed",payment)
-         # print()
-         ###(end not part of actual code)
-         self.end_round_check(target_players)   
-      else:
-         print("")
-   #end take_turn
-#end class
+         self.end_round_check(target_players)
+ 
+   # end take_turn
+   
+# end class   
 
       
