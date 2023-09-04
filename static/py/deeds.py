@@ -41,26 +41,25 @@ class DeedStreet(Deeds):
         self.house_cost = tile['deed']['houseCost']
         self.hotel_cost = tile['deed']['hotelCost']
 
-
-    #def current_rent(self, options_index : int) : int 
+    #def current_rent(self, choice : int) : int 
     def current_rent(self, choice):
         # options = ["r", "m_r", "r_h_1", "r_h_2","r_h_3","r_h_4","r_H"]
         # choice = options[options_index]
         # print(choice)
         # print(self.StreetOption.MR)
-        if(choice == str(self.StreetOption.R)):
+        if(choice == self.StreetOption.R.value):
             return self.rent
-        if(choice == str(self.StreetOption.M_R)):
+        if(choice == self.StreetOption.M_R.value):
             return self.monopoly_rent
-        if(choice == str(self.StreetOption.R_H_1)):
+        if(choice == self.StreetOption.R_H_1.value):
             return self.rent_house_one
-        if(choice == str(self.StreetOption.R_H_2)):
+        if(choice == self.StreetOption.R_H_2.value):
             return self.rent_house_two
-        if(choice == str(self.StreetOption.R_H_3)):
+        if(choice == self.StreetOption.R_H_3.value):
             return self.rent_house_three
-        if(choice == str(self.StreetOption.R_H_4)):
+        if(choice == self.StreetOption.R_H_4.value):
             return self.rent_house_four
-        if(choice == str(self.StreetOption.R_H)):
+        if(choice == self.StreetOption.R_H.value):
             return self.rent_hotel
         return 0
 
@@ -80,21 +79,22 @@ class DeedRailroad(Deeds):
         self.rent_three = tile['deed']['rent3']
         self.rent_four = tile['deed']['rent4']
         
-    #def current_rent(self, options_index : int) : int 
+    #def current_rent(self, choice : int) : int 
     def current_rent(self, choice):
         # options = ["r", "r_2", "r_3", "r_4"]
         # choice = options[options_index]
-        if(choice == str(self.RailroadOption.R)):
+        if(choice == self.RailroadOption.R.value):
             return self.rent
-        if(choice == str(self.RailroadOption.R_2)):
+        if(choice == self.RailroadOption.R_2.value):
             return self.rent_two
-        if(choice == str(self.RailroadOption.R_3)):
+        if(choice == self.RailroadOption.R_3.value):
             return self.rent_three
-        if(choice == str(self.RailroadOption.R_4)):
+        if(choice == self.RailroadOption.R_4.value):
             return self.rent_four
         return 0
 
 class DeedUtility(Deeds):
+    
     class UtilityOption(Enum): # new
         R_M_1 = 0
         R_M_2 = 1
@@ -105,12 +105,12 @@ class DeedUtility(Deeds):
         self.rent_multiplier_one = tile['deed']['rentMultiplier1']
         self.rent_multiplier_two = tile['deed']['rentMultiplier2']
     
-    #def current_rent(self, options_index : int) : int 
+    #def current_rent(self, choice : int) : int 
     def current_rent(self, choice):
         # options = ["r_m_1", "r_m_2"]
         # choice = options[options_index]
-        if(choice == str(self.UtilityOption.R_M_1)):
+        if(choice == self.UtilityOption.R_M_1.value):
             return self.rent_multiplier_one
-        if(choice == str(self.UtilityOption.R_M_2)):
+        if(choice == self.UtilityOption.R_M_2.value):
             return self.rent_multiplier_two
         return 0
