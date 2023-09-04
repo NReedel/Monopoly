@@ -36,7 +36,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "TAKE A TRIP TO READING RAILROAD. IF YOU PASS GO, COLLECT $200.",
-		"moveTo": 5
+		"moveToIndex": 5
 	},
 	{
 		"index": 4,
@@ -45,7 +45,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "ADVANCE TO ST. CHARLES PLACE. IF YOU PASS GO, COLLECT $200.",
-		"moveTo": 11
+		"moveToIndex": 11
 	},
 	{
 		"index": 5,
@@ -54,7 +54,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "ADVANCE TO ILLINOIS AVENUE. IF YOU PASS GO, COLLECT $200.",
-		"moveTo": 24
+		"moveToIndex": 24
 	},
 	{
 		"index": 6,
@@ -63,7 +63,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "ADVANCE TO BOARDWALK.",
-		"moveTo": 39
+		"moveToIndex": 39
 	},
 	{
 		"index": 7,
@@ -72,7 +72,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "ADVANCE TO GO. COLLECT $200.",
-		"moveTo": 0
+		"moveToIndex": 0
 	},
 	{
 		"index": 8,
@@ -81,7 +81,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "GO BACK THREE SPACES",
-		"moveTo": -3
+		"moveSpaces": -3
 	},
 	{
 		"index": 9,
@@ -136,7 +136,7 @@
 		"title": "type",
 		"image": "jailed-pennybags.svg",
 		"description": "GO TO JAIL. GO DIRECTLY TO JAIL. DO NOT PASS GO. DO NOT COLLECT $200.",
-		"moveTo": 10
+		"moveToIndex": 10
 	},
 	{
 		"index": 15,
