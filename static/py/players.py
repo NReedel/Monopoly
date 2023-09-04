@@ -13,6 +13,7 @@ from enum import Enum
 # Enumerated Monopoly Class 🔎
 ###############################################################
 
+
 class Players:
    
    # --Global Data--
@@ -62,9 +63,9 @@ class Players:
             tile_status += "(m) "
          if(owned_tile.tile_type == "street" and owned_tile.has_monopoly == True): 
             tile_status += "(M) "  
-         if(owned_tile.tile_type == "railroad"):
+         if(owned_tile.tile_type == "railroad"):  
             tile_status += "(*"+str(owned_tile.multiplier)+")" 
-         if(owned_tile.tile_type == "utility"):  
+         if(owned_tile.tile_type == "utility"):      
             tile_status += "(*"+str(owned_tile.multiplier)+")" 
          if(owned_tile.tile_type == "street" and owned_tile.houses > 0 and owned_tile.hotels < 1) :
             tile_status += "h = " + str(owned_tile.houses) + " "
@@ -149,13 +150,13 @@ class Players:
             self.deeds.pop(i)
             return target_deed
    
-   # mortgageable_property_list(self, tiles : list<tiles>) : list <deeds> # must refrence deed tile
+   # mortgageable_property_list(self, tiles : list<tiles>) : list <deeds> 
    def mortgageable_property_list(self, tiles): 
       mortgageable_property = []
       for i in range(len(self.deeds)):
-         owned_tile = tiles[tiles[self.deeds[i].index].index]
+         owned_tile = tiles[self.deeds[i].index]
          if owned_tile.is_mortgaged == False and owned_tile.houses == 0 and owned_tile.hotels == 0:
-            mortgageable_property.append(tiles[self.deeds[i].index])
+            mortgageable_property.append(self.deeds[i])
             
       return mortgageable_property
    
@@ -163,8 +164,8 @@ class Players:
    def unmortgageable_property_list(self, tiles): 
       unmortgageable_property = []
       for i in range(len(self.deeds)):
-         if tiles[tiles[self.deeds[i].index].index].is_mortgaged == True:
-            unmortgageable_property.append(tiles[self.deeds[i].index])
+         if tiles[self.deeds[i].index].is_mortgaged == True:
+            unmortgageable_property.append(self.deeds[i])
             
       return unmortgageable_property
    
@@ -174,40 +175,40 @@ class Players:
       max_groups_value =  (2, 3, 3, 3, 3, 3, 3, 2) # add
       buildable_property = [] # 
       for i in range(0,len(self.deeds)):
-         if str(str(tiles[self.deeds[i].index].monopoly_type)) == "Monopoly.BROWN":
+         if tiles[self.deeds[i].index].monopoly_type.value == 1:  # "Monopoly.BROWN"
             monopoly_properties_owned[0] += 1
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.CYAN":
+         if tiles[self.deeds[i].index].monopoly_type.value == 2: # "Monopoly.CYAN"
             monopoly_properties_owned[1] += 1            
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.MAGENTA":
+         if tiles[self.deeds[i].index].monopoly_type.value == 3: # "Monopoly.MAGENTA"
             monopoly_properties_owned[2] += 1 
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.ORANGE":
+         if tiles[self.deeds[i].index].monopoly_type.value == 4: # "Monopoly.ORANGE"
             monopoly_properties_owned[3] += 1
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.RED":
+         if tiles[self.deeds[i].index].monopoly_type.value == 5: # "Monopoly.RED"
             monopoly_properties_owned[4] += 1
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.YELLOW":
+         if tiles[self.deeds[i].index].monopoly_type.value == 6: # "Monopoly.YELLOW"
             monopoly_properties_owned[5] += 1
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.GREEN":
+         if tiles[self.deeds[i].index].monopoly_type.value == 7: # "Monopoly.GREEN"
             monopoly_properties_owned[6] += 1
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.BLUE":
+         if tiles[self.deeds[i].index].monopoly_type.value == 8: #"Monopoly.BLUE":
             monopoly_properties_owned[7] += 1
                         
       for i in range(0,len(self.deeds)):
          
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.BROWN" and monopoly_properties_owned[0] == max_groups_value[0]:
+         if tiles[self.deeds[i].index].monopoly_type.value == 1 and monopoly_properties_owned[0] == max_groups_value[0]:
             buildable_property.append(self.deeds[i])
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.CYAN" and monopoly_properties_owned[1] == max_groups_value[1]:
+         if tiles[self.deeds[i].index].monopoly_type.value == 2 and monopoly_properties_owned[1] == max_groups_value[1]:
             buildable_property.append(self.deeds[i])
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.MAGENTA" and monopoly_properties_owned[2] == max_groups_value[2]:
+         if tiles[self.deeds[i].index].monopoly_type.value == 3 and monopoly_properties_owned[2] == max_groups_value[2]:
             buildable_property.append(self.deeds[i])
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.ORANGE" and monopoly_properties_owned[3] == max_groups_value[3]:
+         if tiles[self.deeds[i].index].monopoly_type.value == 4 and monopoly_properties_owned[3] == max_groups_value[3]:
             buildable_property.append(self.deeds[i])
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.RED" and monopoly_properties_owned[4] == max_groups_value[4]:
+         if tiles[self.deeds[i].index].monopoly_type.value == 5 and monopoly_properties_owned[4] == max_groups_value[4]:
             buildable_property.append(self.deeds[i])
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.YELLOW" and monopoly_properties_owned[5] == max_groups_value[5]:
+         if tiles[self.deeds[i].index].monopoly_type.value == 6 and monopoly_properties_owned[5] == max_groups_value[5]:
             buildable_property.append(self.deeds[i])
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.GREEN" and monopoly_properties_owned[6] == max_groups_value[6]:
+         if tiles[self.deeds[i].index].monopoly_type.value == 7 and monopoly_properties_owned[6] == max_groups_value[6]:
             buildable_property.append(self.deeds[i])
-         if str(tiles[self.deeds[i].index].monopoly_type) == "Monopoly.BLUE" and monopoly_properties_owned[7] == max_groups_value[7]:
+         if tiles[self.deeds[i].index].monopoly_type.value == 8 and monopoly_properties_owned[7] == max_groups_value[7]:
             buildable_property.append(self.deeds[i])
 
       return buildable_property
