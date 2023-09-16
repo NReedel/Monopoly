@@ -177,38 +177,39 @@ class Players:
       for i in range(0,len(self.deeds)):
          if tiles[self.deeds[i].index].monopoly_type.value == 1:  # "Monopoly.BROWN"
             monopoly_properties_owned[0] += 1
-         if tiles[self.deeds[i].index].monopoly_type.value == 2: # "Monopoly.CYAN"
+         elif tiles[self.deeds[i].index].monopoly_type.value == 2: # "Monopoly.CYAN"
             monopoly_properties_owned[1] += 1            
-         if tiles[self.deeds[i].index].monopoly_type.value == 3: # "Monopoly.MAGENTA"
+         elif tiles[self.deeds[i].index].monopoly_type.value == 3: # "Monopoly.MAGENTA"
             monopoly_properties_owned[2] += 1 
-         if tiles[self.deeds[i].index].monopoly_type.value == 4: # "Monopoly.ORANGE"
+         elif tiles[self.deeds[i].index].monopoly_type.value == 4: # "Monopoly.ORANGE"
             monopoly_properties_owned[3] += 1
-         if tiles[self.deeds[i].index].monopoly_type.value == 5: # "Monopoly.RED"
+         elif tiles[self.deeds[i].index].monopoly_type.value == 5: # "Monopoly.RED"
             monopoly_properties_owned[4] += 1
-         if tiles[self.deeds[i].index].monopoly_type.value == 6: # "Monopoly.YELLOW"
+         elif tiles[self.deeds[i].index].monopoly_type.value == 6: # "Monopoly.YELLOW"
             monopoly_properties_owned[5] += 1
-         if tiles[self.deeds[i].index].monopoly_type.value == 7: # "Monopoly.GREEN"
+         elif tiles[self.deeds[i].index].monopoly_type.value == 7: # "Monopoly.GREEN"
             monopoly_properties_owned[6] += 1
-         if tiles[self.deeds[i].index].monopoly_type.value == 8: #"Monopoly.BLUE":
+         elif tiles[self.deeds[i].index].monopoly_type.value == 8: #"Monopoly.BLUE":
             monopoly_properties_owned[7] += 1
                         
-      for i in range(0,len(self.deeds)):
-         
-         if tiles[self.deeds[i].index].monopoly_type.value == 1 and monopoly_properties_owned[0] == max_groups_value[0]:
+      for i in range(0,len(self.deeds)): # new
+         if tiles[self.deeds[i].index].hotels > 0: 
+            pass
+         elif tiles[self.deeds[i].index].monopoly_type.value == 1 and monopoly_properties_owned[0] == max_groups_value[0]:
             buildable_property.append(self.deeds[i])
-         if tiles[self.deeds[i].index].monopoly_type.value == 2 and monopoly_properties_owned[1] == max_groups_value[1]:
+         elif tiles[self.deeds[i].index].monopoly_type.value == 2 and monopoly_properties_owned[1] == max_groups_value[1]:
             buildable_property.append(self.deeds[i])
-         if tiles[self.deeds[i].index].monopoly_type.value == 3 and monopoly_properties_owned[2] == max_groups_value[2]:
+         elif tiles[self.deeds[i].index].monopoly_type.value == 3 and monopoly_properties_owned[2] == max_groups_value[2]:
             buildable_property.append(self.deeds[i])
-         if tiles[self.deeds[i].index].monopoly_type.value == 4 and monopoly_properties_owned[3] == max_groups_value[3]:
+         elif tiles[self.deeds[i].index].monopoly_type.value == 4 and monopoly_properties_owned[3] == max_groups_value[3]:
             buildable_property.append(self.deeds[i])
-         if tiles[self.deeds[i].index].monopoly_type.value == 5 and monopoly_properties_owned[4] == max_groups_value[4]:
+         elif tiles[self.deeds[i].index].monopoly_type.value == 5 and monopoly_properties_owned[4] == max_groups_value[4]:
             buildable_property.append(self.deeds[i])
-         if tiles[self.deeds[i].index].monopoly_type.value == 6 and monopoly_properties_owned[5] == max_groups_value[5]:
+         elif tiles[self.deeds[i].index].monopoly_type.value == 6 and monopoly_properties_owned[5] == max_groups_value[5]:
             buildable_property.append(self.deeds[i])
-         if tiles[self.deeds[i].index].monopoly_type.value == 7 and monopoly_properties_owned[6] == max_groups_value[6]:
+         elif tiles[self.deeds[i].index].monopoly_type.value == 7 and monopoly_properties_owned[6] == max_groups_value[6]:
             buildable_property.append(self.deeds[i])
-         if tiles[self.deeds[i].index].monopoly_type.value == 8 and monopoly_properties_owned[7] == max_groups_value[7]:
+         elif tiles[self.deeds[i].index].monopoly_type.value == 8 and monopoly_properties_owned[7] == max_groups_value[7]:
             buildable_property.append(self.deeds[i])
 
       return buildable_property
@@ -230,4 +231,3 @@ class Players:
             return self.deeds[i]
       return 
  
-
