@@ -38,6 +38,8 @@ class Cards:
 			self.type = CardType.CHEST
 		else:
 			self.type = CardType.NONE
+
+		self.subtype = card['subtype']
 			
 		self.title = card['title']
 		self.image = card['image']
