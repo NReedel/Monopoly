@@ -463,7 +463,7 @@ class BuildBuildingEvents(Events):
       self.events = copy.deepcopy(player.buildable_property_list(board.tile))
       can_afford = False
       while can_afford == False:
-         target_event = "-2"
+         target_event = "-2" 
          while int(target_event) >= len(self.events) or int(target_event) < (-1):
             print("\t\tSelect property to build:")
             print("\t\t ",str(-1)+")","cancel building")
@@ -473,7 +473,6 @@ class BuildBuildingEvents(Events):
                if(board.tile[self.events[i].index].hotels > 0):
                   h = "H ="
                   development = board.tile[self.events[i].index].hotels
-               # self.events.append(self.events[i].name) #change to player.owned_deeds.name
                num = str(i) + ") " # + str(self.events[i].index)
                print("\t\t  ",num,self.events[i].name,h,development)          
             target_event = input("\n\t\tchoice -> ")
@@ -510,7 +509,6 @@ class BuildBuildingEvents(Events):
          player.total_hotels += 1
          print("\t\t"+board.tile[event].tile_name,"H =",board.tile[event].hotels,"\n")  
 
-   
 class SellBuildingEvents(Events): 
    #--Constructor--
    def __init__(self, *args):
@@ -537,7 +535,7 @@ class SellBuildingEvents(Events):
             print("\t\t  ",num,self.events[i].name,h,development)          
          target_event = input("\n\t\tchoice -> ")
          if int(target_event) >= len(self.events) or int(target_event) < (-1):
-            print("\t\tinvalid choice, try again\n") 
+            print("\t\tinvalid choice, try again\n")
       print()
       if int(target_event) == -1:
          return -1
@@ -546,8 +544,7 @@ class SellBuildingEvents(Events):
          payment = int(target_deed.hotel_cost / 2)
       else:
          payment = int(target_deed.house_cost / 2)        
-      bank = self.arg[0].bank
-      # print("\n\t\t"+self.events[int(target_event)].name,"building =",self.events[int(target_event)].name)      
+      bank = self.arg[0].bank  
       self.arg[0].transfer_payment(bank,player,payment) 
       return self.events[int(target_event)].index
    
