@@ -1,0 +1,32 @@
+{# IN: title #}
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- FAVICON -->
+	<link rel="icon" type="image/x-icon" 
+		  href="{{ url_for('static', filename='./img/favicon.ico') }}">
+
+	<!-- GOOGLE FONTS -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Miriam+Libre:wght@400;700&display=swap" rel="stylesheet">
+
+	<!-- SMACSS -->
+	<!-- http://smacss.com/book/ -->
+	<link rel="stylesheet" href="{{ url_for('static', filename='./css/animation.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='./css/base.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='./css/layout.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='./css/media.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='./css/module.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='./css/state.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='./css/theme.css') }}">
+
+	<!-- JS -->
+	<script type="text/javascript" 
+			src="{{ url_for('static', filename='./js/scripts.js') }}" defer></script>
+
+	<!-- TITLE -->
+	<title>{{ title }}</title>
+	
+</head>

@@ -9,14 +9,15 @@
 ###
 
 #--Imports--
-from dice import *
-from players import *
-from bank import *
-from events import *
-from board import *
-from deeds import *
+from . import dice
+from . import players
+from . import bank
+from . import events
+from . import board
+from . import deeds
 import json
 import copy
+import os
 
 class Game:
    ###--Global Data--
@@ -25,30 +26,28 @@ class Game:
    monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
    payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
 
-   game_dice = Dice(2,6)
+   game_dice = dice.Dice(2,6)
    turn = int(1)
    round = int(1)
    all_players = []
-   bank = Bank()
-   board = Board()
-   player_events = PlayerEvents()
-   jailed_player_events = JailedPlayerEvents()
-   bankrupt_player_events = BankruptPlayerEvents()
+   bank = bank.Bank()
+   board = board.Board()
+   player_events = events.PlayerEvents()
+   jailed_player_events = events.JailedPlayerEvents()
+   bankrupt_player_events = events.BankruptPlayerEvents()
 
    ###--Constructor--
    def __init__(self,):
-      # Load Json here, use your own link 💬
-      ### 
-      with open('../json/tiles.json', 'r') as rf:
+      with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'json', 'tiles.json'), 'r') as rf:
          for tiles in json.load(rf):
             if tiles['type'] == "street":
-               self.bank.deeds.append(DeedStreet(tiles))
+               self.bank.deeds.append(deeds.DeedStreet(tiles))
                self.board.tile[tiles['index']].owned_by = "bank" 
             if tiles['type'] == "railroad":
-               self.bank.deeds.append(DeedRailroad(tiles))
+               self.bank.deeds.append(deeds.DeedRailroad(tiles))
                self.board.tile[tiles['index']].owned_by = "bank"
             if tiles['type'] == "utility":
-               self.bank.deeds.append(DeedUtility(tiles))
+               self.bank.deeds.append(deeds.DeedUtility(tiles))
                self.board.tile[tiles['index']].owned_by = "bank"
          
          self.board.tile_check(self.all_players) 
@@ -373,6 +372,4 @@ class Game:
  
    # end take_turn
    
-# end class   
-
-      
+# end class

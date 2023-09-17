@@ -2,44 +2,45 @@
 # board.py
 ###############################################################
 
-from tiles import *
-from cards import *
-from deck import *
+from . import tiles
+from . import cards
+from . import deck
 import json
+import os
 
 ###############################################################
 
 class Board:
    
 	tile = []
-	community_chest = Deck()
-	chance = Deck()
+	community_chest = deck.Deck()
+	chance = deck.Deck()
  
 	# --Constructor--
 	def __init__(self):
-		with open('../json/tiles.json', 'r') as rf:
-			for tiles in json.load(rf):
-				if tiles['type'] == "street":
-					self.tile.append(PropertyStreet(tiles))
-				elif tiles['type'] == "railroad":
-					self.tile.append(PropertyRailroad(tiles))
-				elif tiles['type'] == "utility":
-					self.tile.append(PropertyUtility(tiles))
+		with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'json', 'tiles.json'), 'r') as rf:
+			for t in json.load(rf):
+				if t['type'] == "street":
+					self.tile.append(tiles.PropertyStreet(t))
+				elif t['type'] == "railroad":
+					self.tile.append(tiles.PropertyRailroad(t))
+				elif t['type'] == "utility":
+					self.tile.append(tiles.PropertyUtility(t))
 				else: #tiles['type'] == "special":
-					if(tiles['special'] == "card"):
-						self.tile.append(TileCard(tiles))      
-					if(tiles['special'] == "tax"):
-						self.tile.append(TileTax(tiles))
-					if(tiles['special'] == "corner"):
-						self.tile.append(TileCorner(tiles))
+					if(t['special'] == "card"):
+						self.tile.append(tiles.TileCard(t))      
+					if(t['special'] == "tax"):
+						self.tile.append(tiles.TileTax(t))
+					if(t['special'] == "corner"):
+						self.tile.append(tiles.TileCorner(t))
       
-		with open('../json/community_chest.json', 'r') as rf:
-			for cards in json.load(rf):
-				self.community_chest.deck.append(Cards(cards))  
+		with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'json', 'community_chest.json'), 'r') as rf:
+			for c in json.load(rf):
+				self.community_chest.deck.append(cards.Cards(c))  
     
-		with open('../json/chance.json', 'r') as rf:
-			for cards in json.load(rf):
-				self.chance.deck.append(Cards(cards))
+		with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'json', 'chance.json'), 'r') as rf:
+			for c in json.load(rf):
+				self.chance.deck.append(cards.Cards(c))
     
 		self.chance.shuffle()
 		self.community_chest.shuffle()
@@ -115,22 +116,4 @@ class Board:
 					self.tile[28].multiplier = multiplier		
 				multiplier = 0      
 
-		# # Quick test function
-		# def print_board(self):
-		# 	for t in self.tiles:
-		# 		print("\tTile.tile_id: ", t.tile_id)
-
-
-		# # May need later when rendering front-end elements
-		# def render_board():
-		# 	pass
-
 ###############################################################
-
-
-# owner(current_players : Player) : str  
-# def owner(current_players)  
-    
-   
-   
-   

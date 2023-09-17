@@ -1,5 +1,5 @@
 ###############################################################
-# cards.py
+# card_events.py
 ###############################################################
 
 ###
@@ -58,14 +58,11 @@ class CardEvents:
 ├── StaticMoneyEvents
 │   ├── PayStaticAmount
 │   └── ReceiveStaticAmount
-
 '''
 class StaticMoneyEvents(CardEvents):
     def __init__(self, event_name, event_value):
         super().__init__(event_name)
         self.static_money_amount = event_value
-        # NEEDS ACTION ATTRIBUTE
-        
 
 class PayStaticAmount(StaticMoneyEvents):
     def __init__(self, event_name, event_value):
@@ -75,7 +72,7 @@ class PayStaticAmount(StaticMoneyEvents):
     # pay_money(self, current_balance : int) : int
     def pay_money(self, current_balance):
         ''' Takes player's current balance and returns the subtraction of the money paid '''
-        self.print_event_action(self.action, self.static_money_amount)
+        self.print_event_action(self.action_text, self.static_money_amount)
         return current_balance - self.static_money_amount
 
 
@@ -137,6 +134,7 @@ class PayBuildingRateAmount(PayRateAmount):
     def pay_money(self, current_balance, house_count, hotel_count):
         ''' Takes player's current balance and number of players and returns the subtraction of their total amount paid '''
         self.total_money_paid = (self.rate_money_amount * house_count) + (self.second_rate_money_amount * hotel_count)
+        # second_rate_money_amount undefined ⚠⚠⚠
         self.print_event_action(self.action_text, self.total_money_paid)
         return current_balance - self.total_money_paid
 

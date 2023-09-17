@@ -7,7 +7,7 @@
 #
 
 import json
-from deeds import *
+from . import deeds
 
 
 class Bank:

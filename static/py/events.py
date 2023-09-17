@@ -34,6 +34,8 @@ Events
 # Imports
 import copy
 
+###############################################################
+
 class Events:
    #--Global Data--
    argc = int(0)
@@ -49,8 +51,7 @@ class Events:
       
       if len(args) > 0:
          for i in range(len(args)):
-            self.arg.append(args[i]) 
-                 
+            self.arg.append(args[i])
 
 
    #--Method Implementation--
@@ -156,9 +157,8 @@ class PlayerEvents(Events): # partial completion
                redeem.event(choice)
                redeem.update(self.arg[0])
 
-         
             # error doesn't update proper     
-                 
+
       '''     
       if event == "trade":
       
@@ -178,8 +178,7 @@ class JailedPlayerEvents(Events):
    def __init__(self, *args):
       super().__init__(*args)
       
-
-   #--Argumets--
+   #--Arguments--
    # arg[0] = self from game, used for bail and player
    
 
