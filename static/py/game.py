@@ -75,19 +75,19 @@ class Game:
          
          if current_tile.avaliable_deed() == True : # purchasable
             print("\t\tthis property can be bought\n")
-            avaliable_property_events = AvaliablePropertyEvents(self)
+            available_property_events = events.AvailablePropertyEvents(self)
             cost = current_tile.property_cost
             can_buy = False
             if cost <= player.current_money():
                can_buy = True
-            target_event = avaliable_property_events.display_event_options(cost, player.current_money())
+            target_event = available_property_events.display_event_options(cost, player.current_money())
             
-            while ((int(target_event) < 0 or len(avaliable_property_events.events)) <= int(target_event) and can_buy == True) or (can_buy == False and (int(target_event) >= len(avaliable_property_events.events) or int(target_event) < 1)):
+            while ((int(target_event) < 0 or len(available_property_events.events)) <= int(target_event) and can_buy == True) or (can_buy == False and (int(target_event) >= len(available_property_events.events) or int(target_event) < 1)):
                print("\t\tinvalid choce, try again\n")
-               target_event = avaliable_property_events.display_event_options(cost, player.current_money())
+               target_event = available_property_events.display_event_options(cost, player.current_money())
                
-            avaliable_property_events.event(avaliable_property_events.events[int(target_event)])
-            del avaliable_property_events
+            available_property_events.event(available_property_events.events[int(target_event)])
+            del available_property_events
 
          elif current_tile.is_mortgaged == True: #mortgaged property
             print("\t\tproperty is mortgaged\n")

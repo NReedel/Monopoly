@@ -133,7 +133,7 @@ class PayBuildingRateAmount(PayRateAmount):
     # pay_money(self, current_balance : int, house_count : int, hotel_count : int) : int
     def pay_money(self, current_balance, house_count, hotel_count):
         ''' Takes player's current balance and number of players and returns the subtraction of their total amount paid '''
-        self.total_money_paid = (self.rate_money_amount * house_count) + (self.second_rate_money_amount * hotel_count)
+        self.total_money_paid = (self.rate_money_amount * house_count) + (self.hotel_rate_money_amount * hotel_count)
         # second_rate_money_amount undefined ⚠⚠⚠
         self.print_event_action(self.action_text, self.total_money_paid)
         return current_balance - self.total_money_paid
@@ -160,7 +160,6 @@ class ReceivePlayerRateAmount(ReceiveRateAmount):
     def pay_owed_amount(self, other_player_balance):
         ''' Takes balance of players who are paying money and returns the subtraction of their paid rate '''
         return other_player_balance - self.rate_money_amount
-
 
 '''
 ├── MovePlayerEvents

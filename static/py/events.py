@@ -291,7 +291,7 @@ class BankruptPlayerEvents(Events): #incomplete
       if event == "trade"
       if event == "menu"
       '''   
-class AvaliablePropertyEvents(Events): # near complete
+class AvailablePropertyEvents(Events): # near complete
    #--Constructor--
    def __init__(self, *args):
       super().__init__(*args)   

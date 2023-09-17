@@ -11,8 +11,8 @@ import os
 
 # switch T/F to run monopoly or flask
 # cannot run both yet!
-run_monopoly = False
-run_flask = True
+run_monopoly = True
+run_flask = False
 
 if run_monopoly:
 	monopoly = Monopoly()
