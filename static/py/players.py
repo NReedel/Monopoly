@@ -192,8 +192,10 @@ class Players:
          elif tiles[self.deeds[i].index].monopoly_type.value == 8: #"Monopoly.BLUE":
             monopoly_properties_owned[7] += 1
                         
-      for i in range(0,len(self.deeds)): # new
+      for i in range(0,len(self.deeds)): 
          if tiles[self.deeds[i].index].hotels > 0: 
+            pass
+         elif self.changable_property_quantity(tiles,self.deeds[i].index,True) == False:
             pass
          elif tiles[self.deeds[i].index].monopoly_type.value == 1 and monopoly_properties_owned[0] == max_groups_value[0]:
             buildable_property.append(self.deeds[i])
@@ -213,7 +215,26 @@ class Players:
             buildable_property.append(self.deeds[i])
 
       return buildable_property
-        
+   
+   # changable_propert_quantity(self, tiles : list <tiles>, tile_index : int, increase : bool) # new
+   def changable_property_quantity(self, tiles, tile_index, increase): 
+      monopoly_group = [] # group of tiles related to tile_index
+      target_tile = tiles[tile_index]
+      for i in range(0,len(self.deeds)):
+         # get other properties in group
+         if tiles[self.deeds[i].index].monopoly_type.value == target_tile.monopoly_type.value and tiles[self.deeds[i].index].tile_id != target_tile.tile_id:  # "Monopoly.BROWN"
+            monopoly_group.append(tiles[self.deeds[i].index])
+      for i in range(0,len(monopoly_group)): 
+         if increase == True: # check if = or 1 more
+            if target_tile.houses == monopoly_group[i].houses +1:
+               return False 
+         else: # decrease # check if = or 1 less
+            if target_tile.houses == monopoly_group[i].houses -1:
+               return False
+            elif target_tile.houses == 4 and monopoly_group[i].hotels == 1:
+               return False 
+      return True # buildable property
+   
    # sellable_property_list(self,board_tiles: list <tiles>) : list <deeds> 
    def sellable_property_list(self,tiles):
       # tiles[i].tile_class
@@ -221,7 +242,10 @@ class Players:
       for i in range(0,len(self.deeds)):
          if tiles[self.deeds[i].index].tile_type == "street":
             if tiles[self.deeds[i].index].hotels > 0 or tiles[self.deeds[i].index].houses > 0:
-               sellable_property.append(self.deeds[i])
+               if self.changable_property_quantity(tiles,self.deeds[i].index,False) == False:
+                  pass
+               else:
+                  sellable_property.append(self.deeds[i])
       return sellable_property
    
    ## target_deed(self, index : int) : Deed
