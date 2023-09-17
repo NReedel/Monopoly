@@ -149,7 +149,7 @@ class TileSpecial(Tile):
         super(TileSpecial, self).__init__(tile)
         self.fname_icon = ""
         self.tile_type = tile['type']  # "special"
-        self.special_tile = tile['special'] # "corner" or "card" or"tax"
+        self.special_type = tile['special'] # "corner" or "card" or "tax"
 
 # Chance and Community Chest
 class TileCard(TileSpecial):
@@ -160,7 +160,7 @@ class TileCard(TileSpecial):
 # Income and Luxury Tax
 class TileTax(TileSpecial):
     def __init__ (self,tile):
-        super(TileTax, self).__init__(tile)
+        super().__init__(tile)
         self.tax_amount = tile['price']
 
 # Will need updating later ⚠⚠⚠

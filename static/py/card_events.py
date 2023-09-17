@@ -64,6 +64,7 @@ class StaticMoneyEvents(CardEvents):
     def __init__(self, event_name, event_value):
         super().__init__(event_name)
         self.static_money_amount = event_value
+        # NEEDS ACTION ATTRIBUTE
         
 
 class PayStaticAmount(StaticMoneyEvents):

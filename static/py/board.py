@@ -1,28 +1,23 @@
 ###############################################################
 # board.py
 ###############################################################
+
 from tiles import *
 from cards import *
 from deck import *
 import json
 
-
 ###############################################################
-
-
 
 class Board:
    
-   # --Data--
 	tile = []
 	community_chest = Deck()
 	chance = Deck()
  
 	# --Constructor--
 	def __init__(self):
-		# Load JSON here, use your own link 💬
-		with open('tiles.json', 'r') as rf:
-			# with open('tiles.json', 'r') as rf:
+		with open('../json/tiles.json', 'r') as rf:
 			for tiles in json.load(rf):
 				if tiles['type'] == "street":
 					self.tile.append(PropertyStreet(tiles))
@@ -38,11 +33,11 @@ class Board:
 					if(tiles['special'] == "corner"):
 						self.tile.append(TileCorner(tiles))
       
-		with open('community_chest.json', 'r') as rf:
+		with open('../json/community_chest.json', 'r') as rf:
 			for cards in json.load(rf):
 				self.community_chest.deck.append(Cards(cards))  
     
-		with open('chance.json', 'r') as rf:
+		with open('../json/chance.json', 'r') as rf:
 			for cards in json.load(rf):
 				self.chance.deck.append(Cards(cards))
     
@@ -97,6 +92,7 @@ class Board:
 				else:
 					for j in range(0,len(monopoly_property_index[i])):
 						self.tile[monopoly_property_index[i][j]].has_monopoly = False
+
    		#### apply multipliers to railroad and utilities
 			multiplier = 0
 			for i in range(0, len(all_players)): 
@@ -108,6 +104,7 @@ class Board:
 					if all_players[i].id == railroad_owners[j]:
 						self.tile[(j*10)+5].multiplier = multiplier
 				multiplier = 0
+				
 				### utility count
 				for j in range(len(utility_owners)): # finds the multiplier for player who owns a utility
 					if all_players[i].id == utility_owners[j]:

@@ -428,7 +428,7 @@ class MainMenuEvents(Events): # near complete
       if event == "rules": # "rules"
          # Load file here, use your own link 💬
          print() 
-         rules_file_path = 'rules.txt' #vary by user
+         rules_file_path = '../txt/rules.txt' #vary by user
          with open(rules_file_path, 'r') as file:
             # Read the contents of the file
             file_contents = file.read()

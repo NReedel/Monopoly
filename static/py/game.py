@@ -39,7 +39,7 @@ class Game:
    def __init__(self,):
       # Load Json here, use your own link 💬
       ### 
-      with open('tiles.json', 'r') as rf:
+      with open('../json/tiles.json', 'r') as rf:
          for tiles in json.load(rf):
             if tiles['type'] == "street":
                self.bank.deeds.append(DeedStreet(tiles))
@@ -89,11 +89,14 @@ class Game:
                
             avaliable_property_events.event(avaliable_property_events.events[int(target_event)])
             del avaliable_property_events
+
          elif current_tile.is_mortgaged == True: #mortgaged property
             print("\t\tproperty is mortgaged\n")
             return
+
          elif current_tile.owned_by == player.id: # self owned
             print("\t\tyou own this property\n")
+
          elif current_tile.owned_by != player.id and current_tile.owned_by != "bank": # pay rent
             print("\t\tyou landed on another player's property\n")
             owner_number = int(current_tile.owned_by)
@@ -129,15 +132,17 @@ class Game:
             print("")     
             
       else: # landing on special tile
+         if current_tile.special_type == "corner":
          # corner tiles (GO, Just Visiting, Go To Jail, Free Parking)
-         if current_tile.corner_type == "go":
-             pass
-         elif current_tile.corner_type == "jail":
-             pass
-         elif current_tile.corner_type == "parking":
-             pass
-         elif current_tile.corner_type == "arrested":   # Go To Jail
-             player.go_to_jail()
+            if current_tile.corner_type == "go":
+                pass
+            elif current_tile.corner_type == "jail":
+                pass
+            elif current_tile.corner_type == "parking":
+                pass
+            elif current_tile.corner_type == "arrested":   # Go To Jail
+                player.go_to_jail()
+
          # tax tiles
          elif current_tile.special_type == "tax":
              player.pay_money(current_tile.tax_amount)
@@ -241,7 +246,6 @@ class Game:
          
          if player.time_jailed == 3 and self.game_dice.rolled_same_values() == False:
             player.time_jailed = 0
-            global bail
             player.pay_money(self.bail)    
             
          print("\t\tplayer",player.id,"is now out of jail")
@@ -252,7 +256,7 @@ class Game:
             player.receive_amount(200)
             next_location = next_location % 40
             
-         player.move_location(next_location) # move
+         player.move_location(next_location, self.board.location(next_location)) # move
          print("")  
          return False # in_jail = False
       
