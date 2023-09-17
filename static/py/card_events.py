@@ -9,17 +9,6 @@
 ###
 
 ###############################################################
-# Here's what a card hierarchy might looks like
-# Although the below all look like they could be methods in the Card class,
-#	this problem arises: how do you enforce the use of only the methods
-#	associated with the card event? You technically could define the methods
-#	only in the "if this card event, define these variables" conditionals, but
-#	that gets very very messy. Each of the classes below can and should have
-#	their own data and methods associated with them.
-# Here's how this will work: an instance of each derived Card Event will be
-#	declared in their respective condiitonals below
-# Should the CardEvents remain here or in their own file?
-###############################################################
 '''
 CardEvents
 ├── StaticMoneyEvents
