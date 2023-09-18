@@ -1,4 +1,4 @@
-# players.py
+ # players.py
 
 ###
 # *Name:      Nate Reedel
@@ -7,16 +7,21 @@
 ###
 
 import copy
+from enum import Enum
+
+###############################################################
+# Enumerated Monopoly Class 🔎
+###############################################################
 
 class Players:
    
    # --Global Data--
    # nickname : string # represents username of player in monopoly
    # character : string # represents the figure a player uses in game
-   id = str(0) # -__money : int
+   id = str(0) # -id : str
    __money = int(0) # -__money : int
    __location = int(0) # -__location : int
-   location_name = "Go" # location : str
+   location_name = "go" # location_name : str
    has_rolled = False
    same_values_rolled = int(0) # doublesrolled : int
    in_jail = False  # +in_Jail : bool 
@@ -27,8 +32,8 @@ class Players:
    total_hotels = int(0) # +total_hotels : int
    bankrupt = False # +bankrupt : bool
    
-   #--Contstructor--
-   def __init__(self,startingTotal = 0, id_number = 0):
+   #--Constructor--
+   def __init__(self,startingTotal = 0, id_number = 0): 
       self.__money = startingTotal
       self.id = id_number
       
@@ -50,16 +55,16 @@ class Players:
       print("\t\tjail free cards =",self.jail_free_card)
       print("\t\tproperties:",len(self.deeds))
       tile_status = "" # (m),houses[n],hotel[n]
+      
       for i in range(0,len(self.deeds)):
-         
          owned_tile = tiles[self.deeds[i].index]
          if(owned_tile.is_mortgaged == True):
             tile_status += "(m) "
-         if(owned_tile.tile_type == "street" and owned_tile.has_monopoly == True): # new
+         if(owned_tile.tile_type == "street" and owned_tile.has_monopoly == True): 
             tile_status += "(M) "  
-         if(owned_tile.tile_type == "railroad"):# new # needs update 
+         if(owned_tile.tile_type == "railroad"):  
             tile_status += "(*"+str(owned_tile.multiplier)+")" 
-         if(owned_tile.tile_type == "utility"): # new # needs update    
+         if(owned_tile.tile_type == "utility"):
             tile_status += "(*"+str(owned_tile.multiplier)+")" 
          if(owned_tile.tile_type == "street" and owned_tile.houses > 0 and owned_tile.hotels < 1) :
             tile_status += "h = " + str(owned_tile.houses) + " "
@@ -76,9 +81,9 @@ class Players:
       # print("\t\tbankrupt =",self.bankrupt)
       # print("\t\t")
       print("\t\t-----------------------------")    
-      
+   
    # move_location(next_location : int, location_text) : void
-   def move_location(self,next_location, location_text): # new
+   def move_location(self,next_location, location_text): 
       # print("move to location number",next_location)
       self.__location = next_location
       self.location_name = location_text
@@ -140,11 +145,11 @@ class Players:
    def remove_property(self,index):
       for i in range(len(self.deeds)):
          if index == self.deeds[i].index:
-            target_deed = self.deeds[i]
+            target_deed = self.deeds[i].index
             self.deeds.pop(i)
             return target_deed
    
-   # mortgageable_property_list(self, tiles : list<tiles>) : list <deeds> # must refrence deed tile
+   # mortgageable_property_list(self, tiles : list<tiles>) : list <deeds> 
    def mortgageable_property_list(self, tiles): 
       mortgageable_property = []
       for i in range(len(self.deeds)):
@@ -163,69 +168,72 @@ class Players:
             
       return unmortgageable_property
    
-   # might simplify and by using monopoly check to board class 
    # buildable_property_list(self,board_tiles: list <tiles>) : list <deeds> 
-   def buildable_property_list(self, tiles): # new
-      # tiles[i].tile_class
-      #t_g_o = [brown,sky-blue,dark-orchid,orange,red,yellow,green,cobalt-blue]
-      total_groups_owned = [0, 0, 0, 0, 0, 0, 0, 0]
-      max_groups_value =  (2, 3, 3, 3, 3, 3, 3, 2)
-      # 2d array for indexes  # ?
-      buildable_property_index = [[1,3],[6,8,9],[11,13,14],[16,18,19],[21,23,24],[26,27,29],[31,32,34],[37,39]]
-      buildable_property = [] # tiles
-      for i in range(0,len(tiles)): 
-         if(tiles[i].owned_by == self.id and tiles[i].tile_class == "property prop-brown"):
-            total_groups_owned[0] += 1
-            if total_groups_owned[0] == max_groups_value[0]:
-               for j in range(0,len(buildable_property_index[0])):
-                  if tiles[buildable_property_index[0][j]].hotels == 0:
-                     buildable_property.append(self.target_deed(buildable_property_index[0][j]))
-         if(tiles[i].owned_by == self.id and tiles[i].tile_class == "property prop-sky-blue"):
-            total_groups_owned[1] += 1
-            if total_groups_owned[1] == max_groups_value[1]:
-               for j in range(0,len(buildable_property_index[1])):
-                  if tiles[buildable_property_index[1][j]].hotels == 0:
-                     # print(buildable_property_index[1][j],"h =",tiles[buildable_property_index[1][j]].houses)
-                     buildable_property.append(self.target_deed(buildable_property_index[1][j]))       
-         if(tiles[i].owned_by == self.id and tiles[i].tile_class == "property prop-dark-orchid"):
-            total_groups_owned[2] += 1
-            if total_groups_owned[2] == max_groups_value[2]:
-               for j in range(0,len(buildable_property_index[2])):
-                  if tiles[buildable_property_index[2][j]].hotels == 0:
-                     buildable_property.append(self.target_deed(buildable_property_index[2][j]))  
-         if(tiles[i].owned_by == self.id and tiles[i].tile_class == "property prop-orange"):
-            total_groups_owned[3] += 1
-            if total_groups_owned[3] == max_groups_value[3]:
-               for j in range(0,len(buildable_property_index[3])):
-                  if tiles[buildable_property_index[3][j]].hotels == 0:
-                     buildable_property.append(self.target_deed(buildable_property_index[3][j]))  
-         if(tiles[i].owned_by == self.id and tiles[i].tile_class == "property prop-red"):
-            total_groups_owned[4] += 1
-            if total_groups_owned[4] == max_groups_value[4]:
-               for j in range(0,len(buildable_property_index[4])):
-                  if tiles[buildable_property_index[4][j]].hotels == 0:
-                     buildable_property.append(self.target_deed(buildable_property_index[4][j]))  
-         if(tiles[i].owned_by == self.id and tiles[i].tile_class == "property prop-yellow"):
-            total_groups_owned[5] += 1 
-            if total_groups_owned[5] == max_groups_value[5]:
-               for j in range(0,len(buildable_property_index[5])):
-                  if tiles[buildable_property_index[5][j]].hotels == 0:
-                     buildable_property.append(self.target_deed(buildable_property_index[5][j]))  
-         if(tiles[i].owned_by == self.id and tiles[i].tile_class == "property prop-green"):
-            total_groups_owned[6] += 1
-            if total_groups_owned[6] == max_groups_value[6]:
-               for j in range(0,len(buildable_property_index[6])):
-                  if tiles[buildable_property_index[6][j]].hotels == 0:
-                     buildable_property.append(self.target_deed(buildable_property_index[6][j]))  
-         if(tiles[i].owned_by == self.id and tiles[i].tile_class == "property prop-cobalt-blue"):
-            # print(i,tiles[i].tile_class)
-            total_groups_owned[7] += 1  
-            if total_groups_owned[7] == max_groups_value[7]:
-               for j in range(0,len(buildable_property_index[7])):
-                  if tiles[buildable_property_index[7][j]].hotels == 0:
-                     buildable_property.append(self.target_deed(buildable_property_index[7][j]))  
-      return buildable_property      
-        
+   def buildable_property_list(self, tiles): 
+      monopoly_properties_owned = [0, 0, 0, 0, 0, 0, 0, 0] 
+      max_groups_value =  (2, 3, 3, 3, 3, 3, 3, 2) # add
+      buildable_property = [] # 
+      for i in range(0,len(self.deeds)):
+         if tiles[self.deeds[i].index].monopoly_type.value == 1:  # "Monopoly.BROWN"
+            monopoly_properties_owned[0] += 1
+         elif tiles[self.deeds[i].index].monopoly_type.value == 2: # "Monopoly.CYAN"
+            monopoly_properties_owned[1] += 1            
+         elif tiles[self.deeds[i].index].monopoly_type.value == 3: # "Monopoly.MAGENTA"
+            monopoly_properties_owned[2] += 1 
+         elif tiles[self.deeds[i].index].monopoly_type.value == 4: # "Monopoly.ORANGE"
+            monopoly_properties_owned[3] += 1
+         elif tiles[self.deeds[i].index].monopoly_type.value == 5: # "Monopoly.RED"
+            monopoly_properties_owned[4] += 1
+         elif tiles[self.deeds[i].index].monopoly_type.value == 6: # "Monopoly.YELLOW"
+            monopoly_properties_owned[5] += 1
+         elif tiles[self.deeds[i].index].monopoly_type.value == 7: # "Monopoly.GREEN"
+            monopoly_properties_owned[6] += 1
+         elif tiles[self.deeds[i].index].monopoly_type.value == 8: #"Monopoly.BLUE":
+            monopoly_properties_owned[7] += 1
+                        
+      for i in range(0,len(self.deeds)): 
+         if tiles[self.deeds[i].index].hotels > 0: 
+            pass
+         elif self.changable_property_quantity(tiles,self.deeds[i].index,True) == False:
+            pass
+         elif tiles[self.deeds[i].index].monopoly_type.value == 1 and monopoly_properties_owned[0] == max_groups_value[0]:
+            buildable_property.append(self.deeds[i])
+         elif tiles[self.deeds[i].index].monopoly_type.value == 2 and monopoly_properties_owned[1] == max_groups_value[1]:
+            buildable_property.append(self.deeds[i])
+         elif tiles[self.deeds[i].index].monopoly_type.value == 3 and monopoly_properties_owned[2] == max_groups_value[2]:
+            buildable_property.append(self.deeds[i])
+         elif tiles[self.deeds[i].index].monopoly_type.value == 4 and monopoly_properties_owned[3] == max_groups_value[3]:
+            buildable_property.append(self.deeds[i])
+         elif tiles[self.deeds[i].index].monopoly_type.value == 5 and monopoly_properties_owned[4] == max_groups_value[4]:
+            buildable_property.append(self.deeds[i])
+         elif tiles[self.deeds[i].index].monopoly_type.value == 6 and monopoly_properties_owned[5] == max_groups_value[5]:
+            buildable_property.append(self.deeds[i])
+         elif tiles[self.deeds[i].index].monopoly_type.value == 7 and monopoly_properties_owned[6] == max_groups_value[6]:
+            buildable_property.append(self.deeds[i])
+         elif tiles[self.deeds[i].index].monopoly_type.value == 8 and monopoly_properties_owned[7] == max_groups_value[7]:
+            buildable_property.append(self.deeds[i])
+
+      return buildable_property
+   
+   # changable_propert_quantity(self, tiles : list <tiles>, tile_index : int, increase : bool) # new
+   def changable_property_quantity(self, tiles, tile_index, increase): 
+      monopoly_group = [] # group of tiles related to tile_index
+      target_tile = tiles[tile_index]
+      for i in range(0,len(self.deeds)):
+         # get other properties in group
+         if tiles[self.deeds[i].index].monopoly_type.value == target_tile.monopoly_type.value and tiles[self.deeds[i].index].tile_id != target_tile.tile_id:  # "Monopoly.BROWN"
+            monopoly_group.append(tiles[self.deeds[i].index])
+      for i in range(0,len(monopoly_group)): 
+         if increase == True: # check if = or 1 more
+            if target_tile.houses == monopoly_group[i].houses +1:
+               return False 
+         else: # decrease # check if = or 1 less
+            if target_tile.houses == monopoly_group[i].houses -1:
+               return False
+            elif target_tile.houses == 4 and monopoly_group[i].hotels == 1:
+               return False 
+      return True # buildable property
+   
    # sellable_property_list(self,board_tiles: list <tiles>) : list <deeds> 
    def sellable_property_list(self,tiles):
       # tiles[i].tile_class
@@ -233,13 +241,15 @@ class Players:
       for i in range(0,len(self.deeds)):
          if tiles[self.deeds[i].index].tile_type == "street":
             if tiles[self.deeds[i].index].hotels > 0 or tiles[self.deeds[i].index].houses > 0:
-               sellable_property.append(self.deeds[i])
+               if self.changable_property_quantity(tiles,self.deeds[i].index,False) == False:
+                  pass
+               else:
+                  sellable_property.append(self.deeds[i])
       return sellable_property
    
    ## target_deed(self, index : int) : Deed
-   def target_deed(self, index): # new
+   def target_deed(self, index): 
       for i in range(len(self.deeds)):
          if self.deeds[i].index == index:
             return self.deeds[i]
-      return 
-   
+      return

@@ -19,7 +19,7 @@ Events
 ├── BankruptPlayerEvents  # incomplete
 ├── AvaliablePropertyEvents  
 ├── AuctionPropertyEvents # incomplete
-├── CardEvents # incomplete
+├── CardEvents # unused for now
 ├── MainMenuEvents
 ├── BuildBuildingEvents # incomplete
 ├── SellBuildingEvents  # incomplete  
@@ -34,6 +34,8 @@ Events
 # Imports
 import copy
 
+###############################################################
+
 class Events:
    #--Global Data--
    argc = int(0)
@@ -42,12 +44,21 @@ class Events:
    
    #--Constuctor--
    def __init__(self,*args):
+
       self.argc = len(args)
+      # self.arg = 0 # argument count, check for built in one
+      self.argc = len(args) 
+      
       if len(args) > 0:
          for i in range(len(args)):
-            self.arg.append(args[i]) 
-                 
+            self.arg.append(args[i])
+
+
    #--Method Implementation--
+   def display_event_options(self): 
+      return 
+   def event(self): # event() : void
+      return
    def display_event_options(self): 
       return 
    def event(self): # event() : void
@@ -146,9 +157,8 @@ class PlayerEvents(Events): # partial completion
                redeem.event(choice)
                redeem.update(self.arg[0])
 
-         
             # error doesn't update proper     
-                 
+
       '''     
       if event == "trade":
       
@@ -168,7 +178,7 @@ class JailedPlayerEvents(Events):
    def __init__(self, *args):
       super().__init__(*args)
       
-   #--Argumets--
+   #--Arguments--
    # arg[0] = self from game, used for bail and player
    
    #--Global Data--
@@ -240,8 +250,7 @@ class MenuPlayerEvents(Events):
          return
       if event == "rules":
          print() 
-         # Load file here, use your own link 💬
-         rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt' #vary by user
+         rules_file_path = 'rules.txt'
          with open(rules_file_path, 'r') as file:
             # Read the contents of the file
             file_contents = file.read()
@@ -278,7 +287,7 @@ class BankruptPlayerEvents(Events): #incomplete
       if event == "trade"
       if event == "menu"
       '''   
-class AvaliablePropertyEvents(Events): # near complete
+class AvailablePropertyEvents(Events): # near complete
    #--Constructor--
    def __init__(self, *args):
       super().__init__(*args)   
@@ -412,9 +421,8 @@ class MainMenuEvents(Events): # near complete
                print("Invalid quantiy, try again")
                
       if event == "rules": # "rules"
-         # Load file here, use your own link 💬
          print() 
-         rules_file_path = '/mnt/c/Users/Nreed/Code/All_Code/Monopoly/references/rules.txt' #vary by user
+         rules_file_path = '../txt/rules.txt' #vary by user
          with open(rules_file_path, 'r') as file:
             # Read the contents of the file
             file_contents = file.read()
@@ -449,19 +457,21 @@ class BuildBuildingEvents(Events):
       self.events = copy.deepcopy(player.buildable_property_list(board.tile))
       can_afford = False
       while can_afford == False:
-         print("\t\tSelect property to build:")
-         print("\t\t ",str(-1)+")","cancel building")
-         for i in range(0,len(self.events)):
-            h = "h ="
-            development = board.tile[self.events[i].index].houses 
-            if(board.tile[self.events[i].index].hotels > 0):
-               h = "H ="
-               development = board.tile[self.events[i].index].hotels
-            # self.events.append(self.events[i].name) #change to player.owned_deeds.name
-            num = str(i) + ") " # + str(self.events[i].index)
-            print("\t\t  ",num,self.events[i].name,h,development)          
-
-         target_event = input("\n\t\tchoice -> ")
+         target_event = "-2" 
+         while int(target_event) >= len(self.events) or int(target_event) < (-1):
+            print("\t\tSelect property to build:")
+            print("\t\t ",str(-1)+")","cancel building")
+            for i in range(0,len(self.events)):
+               h = "h ="
+               development = board.tile[self.events[i].index].houses 
+               if(board.tile[self.events[i].index].hotels > 0):
+                  h = "H ="
+                  development = board.tile[self.events[i].index].hotels
+               num = str(i) + ") " # + str(self.events[i].index)
+               print("\t\t  ",num,self.events[i].name,h,development)          
+            target_event = input("\n\t\tchoice -> ")
+            if int(target_event) >= len(self.events) or int(target_event) < (-1):
+               print("\t\tinvalid choice, try again\n") 
          print()
          if int(target_event) == -1:
             return -1
@@ -473,7 +483,7 @@ class BuildBuildingEvents(Events):
             payment = target_deed.hotel_cost
             can_afford = True
          else:
-            print("\t\tcan't afford the selection, try again\n")
+            print("\t\tcan't afford the selection\n") 
 
       bank = self.arg[0].bank
       # print("\n\t\t"+self.events[int(target_event)].name,"building =",self.events[int(target_event)].name)      
@@ -483,7 +493,7 @@ class BuildBuildingEvents(Events):
    # event(self,event : int) : void
    def event(self,player,event):
       board = self.arg[0].board
-      if board.tile[event].houses < 4:
+      if board.tile[event].houses < 4 and board.tile[event].hotels != 1: 
          board.tile[event].houses += 1
          player.total_houses += 1
          print("\t\t"+board.tile[event].tile_name,"h =",board.tile[event].houses,"\n")  
@@ -493,7 +503,6 @@ class BuildBuildingEvents(Events):
          player.total_hotels += 1
          print("\t\t"+board.tile[event].tile_name,"H =",board.tile[event].hotels,"\n")  
 
-   
 class SellBuildingEvents(Events): 
    #--Constructor--
    def __init__(self, *args):
@@ -504,20 +513,23 @@ class SellBuildingEvents(Events):
       board = self.arg[0].board
       # buildable_properties
       self.events = copy.deepcopy(player.sellable_property_list(board.tile))
-      print("\t\tSelect property to sell:")
-      print("\t\t ",str(-1)+")","cancel selling")
-      for i in range(0,len(self.events)):
-          h = "h ="
-          development = board.tile[self.events[i].index].houses 
-          
-          if(board.tile[self.events[i].index].hotels > 0):
-            h = "H ="
-            development = board.tile[self.events[i].index].hotels
+      target_event = "-2" 
+      while int(target_event) >= len(self.events) or int(target_event) < (-1):            
+         print("\t\tSelect property to sell:")
+         print("\t\t ",str(-1)+")","cancel selling")
+         for i in range(0,len(self.events)):
+            h = "h ="
+            development = board.tile[self.events[i].index].houses 
             
-          num = str(i) + ") " # + str(self.events[i].index)
-          print("\t\t  ",num,self.events[i].name,h,development)          
-
-      target_event = input("\n\t\tchoice -> ")
+            if(board.tile[self.events[i].index].hotels > 0):
+               h = "H ="
+               development = board.tile[self.events[i].index].hotels
+               
+            num = str(i) + ") " # + str(self.events[i].index)
+            print("\t\t  ",num,self.events[i].name,h,development)          
+         target_event = input("\n\t\tchoice -> ")
+         if int(target_event) >= len(self.events) or int(target_event) < (-1):
+            print("\t\tinvalid choice, try again\n")
       print()
       if int(target_event) == -1:
          return -1
@@ -525,9 +537,8 @@ class SellBuildingEvents(Events):
       if board.tile[self.events[int(target_event)].index].hotels == 1:
          payment = int(target_deed.hotel_cost / 2)
       else:
-         payment = int(target_deed.house_cost / 2)        
+         payment = int(target_deed.house_cost / 2)
       bank = self.arg[0].bank
-      # print("\n\t\t"+self.events[int(target_event)].name,"building =",self.events[int(target_event)].name)      
       self.arg[0].transfer_payment(bank,player,payment) 
       return self.events[int(target_event)].index
    

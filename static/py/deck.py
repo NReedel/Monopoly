@@ -44,4 +44,3 @@ class Deck:
     def print_deck(self):
         for cards in self.deck:
             print(cards.index)
-            

@@ -1,0 +1,97 @@
+Preparation
+The game starts at Go.
+To prepare the game:
+The board is laid out on the playing surface.
+The Chance and Community Chest card decks are shuffled and laid face down on their designated positions on the board.
+One player is selected to be the Banker. The Banker will manage the Bank's assets – dealing out title deeds, bonus money and buildings to players, collecting taxes and penalty money, and conducting auctions. The Banker may participate in the game if they want to, but they must keep their personal assets always separate from the Bank’s assets.
+Each player selects a token and places it on GO.
+Each player rolls the dice. The player with the highest total goes first. In the event of a tie, roll again.
+
+Basic Gameplay
+A player's turn consists of that player rolling the dice and moving their token clockwise that many spaces around the board. Then, the player undertakes an action corresponding to the type of space they landed on. Then, their turn ends and play passes to the next player clockwise from them.
+If a player rolls doubles (the same value on both dice), then after they have resolved the action for the space they landed on they are allowed to roll the dice again and take an additional turn. If they roll doubles a second consecutive time, they are allowed to take a second additional turn. However, if the player rolls doubles a third consecutive time they are "caught speeding" – they must go directly to Jail, and their turn is over.
+
+Types of Spaces
+There are two broad types of spaces in Monopoly – properties and action spaces.
+Properties
+There are 28 properties in the game, each of which has a title deed card associated with it, detailing rent, building cost and mortgage value. The properties are divided as follows:
+Streets are the most numerous property – there are 22 streets in the game. Each street belongs to a colour set alongside one or two other streets. Starting from GO and proceeding clockwise, the colour sets are brown (purple in earlier editions), light blue, pink, orange, red, yellow, green and dark blue. Each street space has a coloured bar along the top indicating what colour set that street belongs to – this bar is also present on the title deed.
+There are four railroads (also known as stations) located at the centre of each side of the board.
+Finally, there are two utilities, the Electric Company and the Water Works. The Electric Company is in between St. Charles Place/Pall Mall and States Avenue/Whitehall, while the Water Works is in between Ventnor Avenue/Coventry Street and Marvin Gardens/Piccadilly.
+
+Action Spaces
+There are 12 action spaces, organised as follows:
+Six card spaces, which are divided into three Chance spaces and three Community Chest spaces.
+Two tax spaces, Income and Luxury.
+The four corner spaces, which are GO, Jail, Free Parking and Go to Jail.
+
+Landing on Spaces
+When a player lands on a space, they take an action determined by the type of space they landed on:
+If the player lands on an unowned property, they may choose to either buy the property or put it up for auction.
+If the player chooses to buy the property, they pay the property's price, which is listed at the bottom of its space, to the Bank. Then the Banker gives them the property's title deed, which the new owner displays face up in front of them to designate that they own the property.
+If the player chooses not to buy the property, the property is put up for auction by the Banker, where each player (including the player who deferred buying the property) attempts to out-bid their opponents. Bidding starts at $10 and may be increased by increments of as little as $1. Also, bidding does not have to follow turn order. Each player must make a bid that is $1 higher than the previous bid. Once bidding has reached a high enough amount that no-one wants to bid any further, the player who made the highest bid wins the property for the agreed price. They pay the agreed price to the Bank and receive the title deed. Also, if no-one wants to bid on the property, the property remains unsold and the title deed remains with the Bank.
+If the player lands on a property that is owned by another player, the owner must ask them for rent.
+If the owner asks for rent, the lander must pay the owner rent. The amount of money paid will be stated by the title deed:
+For streets, rent is influenced by the street's monopoly status, development level and mortgage status.
+For railroads/stations, rent is determined by how many railroads/stations the owner owns – one railroad/station gives a rent of $25, two railroads/stations $50, three $100 and all four $200.
+For utilities, the total of the dice is multiplied by a number to give the rent amount. If the owner owns one utility the dice total is multiplied by four, and if the owner owns both utilities the dice total is multiplied by ten.
+If the owner fails to ask for rent before the next player in turn order rolls the dice, the lander does not have to pay.
+If the player lands on a Chance or Community Chest space, they must draw the top card from the appropriate deck. Then they follow the card's instructions, which will either involve paying or losing money or moving to a specific space. Once the instructions have been carried out, the card is returned to the bottom of the appropriate deck.
+The exceptions are the Get Out of Jail Free cards, of which there is one in each deck. If the player draws a Get Out of Jail Free card, they must keep it face up in front of them until they are ready to use or trade it.
+If the player lands on a tax space, they must pay the appropriate amount to the Bank.
+In earlier versions of the game, a player who landed on Income Tax was given one of two choices – they could pay $200 as with later editions, or they could calculate 10% of their total net worth in buildings, cash and properties and pay that. Once locked in the choice was final – no leeway was given to reverse an unwise choice. The 10% option was eliminated in the September 2008 graphic redesign of the game.
+If the player lands on Free Parking, Jail or a property that they own, nothing happens. The player will move from these spaces on their next turn.
+If the player lands on Jail as part of a normal turn, they place their token in the "Just Visiting" section of the space. They are unhindered and may move from Jail on their next turn.
+If the player lands on or passes GO, they receive a $200 salary from the Bank.
+Finally, if the player lands on Go to Jail, they must move their token to the "In Jail" section of the Jail space immediately. They move directly into Jail, so they do not pass GO and do not collect a salary, and their turn is over.
+
+Jail
+A piece in Jail. Passing pieces stay off the "In Jail" section in orange.
+A player will be sent to Jail if:
+They land on the Go to Jail space.
+They draw a Chance or Community Chest card that instructs them to "Go to Jail".
+They roll doubles three consecutive times on the dice.
+As already stated in the property actions heading above, If the player lands on Jail as part of a normal turn, they place their token in the "Just Visiting" section of the space. They are unhindered and may move from Jail on their next turn.
+
+Whilst a player is in Jail, they will be unable to move. However, they may still take part in other actions, such as buying and selling buildings, taking part in auctions, collecting rent and trading.
+
+In order to get out of Jail, a player has three options:
+Pay a $50 fine, then roll and move as normal.
+Use a Get Out of Jail Free card. The card is returned to the bottom of the appropriate deck, then the player rolls and moves as normal.
+The player may roll the dice. If they roll a double, they are released from Jail. They will use the roll to move, but unlike a normal double they will not be allowed to roll again. If the player does not roll a double, they remain in Jail.
+If the player fails to roll a double by their third turn in Jail, then if the third roll is not a double the player will be forced to pay $50. Then they use the roll to move.
+
+Buying Buildings
+If a player owns all of the streets in a colour set, they have a monopoly on that colour set. Rent on unimproved properties in that colour set will be doubled, and that player may start buying buildings on streets in that colour set to increase the rent, provided none of the properties in that colour set are mortgaged (which will be explained later).
+Buildings may only be built on streets – not on railroads/stations or utilities.
+There are two types of buildings in Monopoly: houses and hotels. Houses, which are coloured green, are always built first, followed by hotels, which are coloured red. A player may build buildings at any time they like – they do not have to wait for their turn. The prices of houses and hotels are listed on the street's title deed - $50 for the browns and light blues, $100 for the pinks and oranges, $150 for the reds and yellows and $200 for the greens and dark blues.
+If a player wants to build a house on a street, they pay the amount listed on the street's title deed and take a house from the Bank, which they place on the colour strip running along the top of the street's board space.
+Players must build evenly – if one street in the colour set has a house, a second house may not be built until houses have been built on the other streets. Likewise, a street with two houses may not receive a third until all of the streets in the colour set have two houses, and so on.
+
+The maximum number of houses that may be placed on a street is four. After that, if all of the streets in that colour set have four houses, the player may pay to upgrade the houses to a hotel. The player pays the appropriate amount, then returns the four houses to the Bank and places a hotel on the street's colour strip. Once a street has a hotel it may not be improved further.
+There are 32 houses and 12 hotels available from the Bank. If there are no houses left in the Bank, no player will be able to purchase new houses until houses are freed up, either from being upgraded to hotels or being sold. If no hotels are left in the Bank, then four-house groups may not be upgraded until new hotels become available
+The fact that players may buy buildings at any time may result in a situation where multiple players want to buy the last of a particular building. If this happens, the building(s) in question will be put up for auction, the auction working the same way as with a property auction.
+
+Trading
+A trade consists of a deal in which two players exchange some of their assets.
+A player may propose a trade with another player at any point in the game, even when it is not their turn. There are three assets that may be involved in a trade – money, properties and Get Out of Jail Free cards. The amount traded is decided by the players making the deal.
+If a player wishes to trade a street, any buildings on that street's colour set must be sold beforehand.
+The player who has been offered the trade may accept, reject, or propose a counter-offer on their own terms.
+Trades may not be used to loan or gift players money.
+
+Help! I Can't Pay!
+If a player finds that they owe money but do not have enough physical money to pay the debt, they will need to raise money to pay the debt. This can be done by selling buildings and mortgaging properties.
+
+Selling Buildings
+If a player wants to sell a building, they return the building to the Bank and collect the sale price, which is half of the initial purchase price for buildings in that colour set. Selling a hotel will immediately replace it with four houses. And like with buying buildings, buildings must be sold evenly across the colour set.
+
+Mortgaging Properties
+A player may mortgage a property once all of the buildings in its color set have been sold. To mortgage, the property's title deed is flipped over, revealing the "mortgaged" side, and the player collects the mortgage value from the Bank. Whilst a property is mortgaged rent cannot be collected on it. However, mortgaged streets in a monopoly do not prevent the unimproved unmortgaged properties in that color set from charging double rent. The boosted rent from owning multiple railroads/stations or utilities may be collected in the same manner even if some of those properties are mortgaged.
+A player may unmortgage a property later if they have sufficient funds. To unmortgage a property, the player pays back the mortgage value + 10% interest and flips the title deed back over to its "unmortgaged" side.
+If a player receives a mortgaged property through a trade or by bankrupting someone, they must immediately choose between unmortgaging the property or only paying the 10% interest and leaving the property mortgaged.
+
+Bankruptcy and the End of the Game
+If a player is in the very unfortunate situation where they have sold all of their buildings and mortgaged all of their properties, and still do not have enough money to pay a debt, that player is bankrupt, and they are eliminated from the game. What happens next depends on who bankrupted them:
+If the player was bankrupted by another player, the creditor will immediately seize all of the debtor's remaining assets. If mortgaged properties are amongst the assets seized, the creditor will immediately have to decide to unmortgage the properties or keep the mortgages.
+If the player was bankrupted by the Bank (e.g. via a tax they do not have the money to pay), the Bank will seize all of the player's assets – Any mortgaged properties have their mortgages cancelled, any money is returned to the Bank and any Get Out of Jail Free cards are returned to the bottom of the appropriate decks. Then, the Bank will auction off all of the properties that it has seized.
+The game ends once all but one player are bankrupt – that player is the winner.
