@@ -46,7 +46,7 @@ class Tile:
     def __init__ (self, tile):
         self.tile_id = tile['index']
         self.tile_name = tile['name']
-        self.owned_by = "none"    # "player number", "bank", "none"        
+        self.owned_by = "none"    # "player number", "bank", "none"
         self.event_on_land = None   # ⚠⚠⚠
         self.occupants = []         # list of player ids
         self.fname_bg = ""      # option for later dynamic rendering

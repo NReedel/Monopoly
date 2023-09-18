@@ -38,6 +38,7 @@ class Cards:
 			self.type = CardType.CHEST
 		else:
 			self.type = CardType.NONE
+		self.subtype = card['subtype']
 			
 		self.title = card['title']
 		self.image = card['image']
@@ -82,11 +83,10 @@ class Cards:
 				self.isMoveToUtility = True
 				self.card_event = card_events.MoveToNearestUtility(self.event_name, card[self.event_name], card['cardRentMultiplier'])
 			elif (card['moveToNearest'] == "Railroad"):
-				self.isMoveToRailroad = True
+				self.isMoveToUtility = False
 				self.card_event = card_events.MoveToNearestRailroad(self.event_name, card[self.event_name], card['cardRentMultiplier'])
 			else:
 				self.isMoveToUtility = False
-				self.isMoveToRailroad = False
 				print("Invalid moveToNearest card type in json; neither Railroad nor Utility")
 
 		# card event: move the specified number of tiles (forward or backward)

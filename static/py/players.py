@@ -32,7 +32,7 @@ class Players:
    total_hotels = int(0) # +total_hotels : int
    bankrupt = False # +bankrupt : bool
    
-   #--Contstructor--
+   #--Constructor--
    def __init__(self,startingTotal = 0, id_number = 0): 
       self.__money = startingTotal
       self.id = id_number
@@ -64,7 +64,7 @@ class Players:
             tile_status += "(M) "  
          if(owned_tile.tile_type == "railroad"):  
             tile_status += "(*"+str(owned_tile.multiplier)+")" 
-         if(owned_tile.tile_type == "utility"):      
+         if(owned_tile.tile_type == "utility"):
             tile_status += "(*"+str(owned_tile.multiplier)+")" 
          if(owned_tile.tile_type == "street" and owned_tile.houses > 0 and owned_tile.hotels < 1) :
             tile_status += "h = " + str(owned_tile.houses) + " "
@@ -125,7 +125,6 @@ class Players:
       self.in_jail = True
       print("\t\tplayer",self.id,"is now in jail")
       self.jail_counter = 0
-
 
    # buy_property(deed : deeds) : void
    def add_property(self,deed):
@@ -253,5 +252,4 @@ class Players:
       for i in range(len(self.deeds)):
          if self.deeds[i].index == index:
             return self.deeds[i]
-      return 
- 
+      return

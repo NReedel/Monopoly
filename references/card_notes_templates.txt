@@ -1,0 +1,125 @@
+Each card has a common theme (within their Community Chest and Chance designations) for which there is a common picture as follows:
+(format is "'image-description': 'card-theme' \n\t '- card-text'" except in the case of subgroups of Chance movement cards, in which the cards are subdivided by movement type.)
+
+*** For some context, the name of the Monopoly man is Rich Uncle Pennybags. His name is used in the image names below.
+*** GOJF: Get Out of Jail Free
+
+
+First, the custom card attributes currently coded into the Community Chest/Chance json file(s) are kept as generic as possible (although their associated descriptions should be specific) and are as follows:
+* Static (simple implementation)
+	- payStaticAmount : int
+	- collectStaticAmount : int
+
+* Rates (best practice requires an outside source to acquire the number of players/houses/hotels, value of dice roll, or other necessary component for implementation.)
+	- payPlayerRateAmount : int
+	- collectPlayerRateAmount : int
+	- **payHouseRateAmount : int
+	- **payHotelRateAmount : int
+	- ***cardRentMultiplier : int
+
+* Movement (certain implementation requirements specified per attribute)
+	- moveToIndex : int (index) of board location, starting from GO = 0 (requires player.move_location() to be called)
+	- moveSpaces : signed int, which is currently only used for the GO BACK THREE SPACES card (requires game.move() to be called)
+	- ***moveToNearest: string containing type of deed to move to, at which point calculations can be made to determine nearest of that type (requires player location and index of nearest tile type)
+
+* Get Out of Jail Free (GOJF; can be sold for custom price, traded for any other tradeable card, or used to GOJF, all encompassed by this bool)
+	- isGOJF : true
+
+** payHouseRateAmount and payHotelRateAmount are always paired with each other **
+*** moveToNearest and cardrentMultiplier are always paired with each other ***
+
+Community Chest:
+[
+	{
+		"index": 1,
+		"type": "Community Chest",
+		"subtype": "Neighborhood Charity",
+		"title": "type",
+		"image": "leaning-pennybags.svg",
+		"description": "copy description text here.",
+		"customAttribute": "based on description text, e.g. 'payStaticAmount' or 'moveTo'"
+	},
+]
+
+(1) Running: charity with personal financial benefits named in the code as holistic charity (movement to GO)
+	- “Just when you think you can't go another step, you finish that foot race - and raise money for your local hospital! ADVANCE TO GO. COLLECT $200.”
+
+(2) Leaning on Cane: neighborhood charity (pay/collect of same value)
+	- “Your fuzzy friends at the animal shelter will be thankful for your donation. PAY $50.”
+	- “You organize a group to clean up your town's walking path. COLLECT $50.”
+
+(5) Thumbs Up: interpersonal charity (collect)
+	- “You help your neighbor bring in her groceries. She makes you lunch to say thanks! COLLECT $20.”
+	- “You spend the day playing games with kids at a local children's hospital. COLLECT $100.”
+	- “You help your neighbors clean up their yards after a big storm. COLLECT $200.”
+	- “You set aside time every week to hang out with your elderly neighbor - you've heard some amazing stories! COLLECT $100.”
+	- “You help build a new school playground - then you get to test the slide! COLLECT $100.”
+
+(1) Wowed: neighborhood interpersonal charity (collect from each player)
+	- “You organize a block party so people on your street can get to know each other. COLLECT $10 FROM EACH PLAYER.”
+
+(1) Twirling Mustache: volunteerism (collect)
+	- “You volunteer at a blood drive. There are free cookies! COLLECT $10.”
+
+(1) Jumping: school charity (collect)
+	- “You organize a bake sale for your local school. COLLECT $25.”
+
+(3) Taken Aback/Negative: surprise payment (2 pay, 1 pay for each house/hotel)
+	- “You buy a few bags of cookies from that school bake sale. Yum! PAY $50.”
+	- “You go to the local school's car wash fundraiser - but you forget to close your windows! PAY $100.”
+	- “You should have volunteered for that home improvement project - you would have learned valuable skills! FOR EACH HOUSE YOU OWN, PAY $40. FOR EACH HOTEL YOU OWN, PAY $115.”
+
+(1) Behind Bars: jail time (image printed smaller than chance card to account for extra text)
+	- “Blasting music late at night? Your neighbors do not approve. GO TO JAIL. GO DIRECTLY TO JAIL. DO NOT PASS GO. DO NOT COLLECT $200.”
+
+(1) Open Jail Cell/Bars: Get Out of Jail Free (GOJF) (image printed smaller than chance card to account for extra text)
+	- “You rescue a puppy - and you feel rescued, too! GET OUT OF JAIL FREE. This card may be kept until needed, traded, or sold.”
+
+
+Chance:
+(and yes, most of them are in all caps on the card)
+[
+	{
+		"index": 1,
+		"type": "Chance",
+		"subtype": "Movement",
+		"title": "type",
+		"image": "running-pennybags.svg",
+		"description": "copy description text here.",
+		"customAttribute": "based on description text, e.g. 'payStaticAmount' or 'moveTo'"
+	},
+]
+
+(9) Running: in meta terms, always moving positions on the board with overall neutral financial consequences. See subgroups below
+	- Advance to the nearest Utility. Collect $200 if pass GO, but, if owned, pay 10 times your dice roll (the card does not mention whether the owner must own both utilities for this task, meaning the player must pay 10 times regardless of number of utilities owned)
+		- “ADVANCE TO THE NEAREST UTILITY. If UNOWNED, you may buy it from the Bank. If OWNED, roll the dice, and pay the owner 10 times your roll. IF YOU PASS GO, COLLECT $200.”
+	- (2) TWO identical cards: Advance to the next Railroad. Collect $200 if pass GO, but, if owned, pay twice the normal rent than the owner is originally entitled (if own more than one railroad, the same stacking rent applies, e.g. 2 railroads with a rent of $50 becomes a rent of $100 with this card.)
+		- “ADVANCE TO THE NEXT RAILROAD. If UNOWNED, you may buy it from the Bank. If OWNED, pay the owner twice the rent to which they are otherwise entitled. IF YOU PASS GO, COLLECT $200.”
+	- Advance to [Railroad @ index 5 (Reading Railroad in USA ed)]. No special rent rules apply.
+		- “TAKE A TRIP TO READING RAILROAD. IF YOU PASS GO, COLLECT $200.”
+	- Advance to (specific location) with subgroups below (PASS GO ability can be determined by 'if current_location is >= 0 and <= target_location'. Unable to determine rule for current_location == target_location):
+		[tile @ index 11]
+		- “ADVANCE TO ST. CHARLES PLACE. IF YOU PASS GO, COLLECT $200."
+		[tile @ index 24]
+		- “ADVANCE TO ILLINOIS AVENUE. IF YOU PASS GO, COLLECT $200."
+		[tile @ index 39] Due to index location, this card does not declare to collect $200 if pass GO, since no situation should arise in which the character passes GO by advancing here.
+		- “ADVANCE TO BOARDWALK.”
+	- ADVANCE TO GO. COLLECT $200.
+	- GO BACK THREE SPACES. This is the only counter-clockwise movement card in the game, which is denoted by a negative value.
+
+(2) Thumbs Up: financial benefits (collect)
+	- “BANK PAYS YOU DIVIDEND OF $50.”
+	- “YOUR BUILDING LOAN MATURES. COLLECT $150.”
+
+(1) Wowed: property repairs (pay for each house/hotel)
+	- “MAKE GENERAL REPAIRS ON ALL YOUR PROPERTY: FOR EACH HOUSE, PAY $25. FOR EACH HOTEL, PAY $100.”
+
+(2) Taken Aback/Negative: surprise fees (one pay, one pay to each player)
+	- “SPEEDING FINE. PAY $15.”
+	- “YOU HAVE BEEN ELECTED CHAIRPERSON OF THE BOARD. PAY EACH PLAYER $50.”
+
+(1) Behind Bars: jail time [Jail @ index 
+	- “GO TO JAIL. GO DIRECTLY TO JAIL. DO NOT PASS GO. DO NOT COLLECT $200.”
+
+(1) Open Jail Cell/Bars: out of jail free
+	- “GET OUT OF JAIL FREE. This card may be kept until needed, traded, or sold.”

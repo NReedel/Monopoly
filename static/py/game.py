@@ -10,7 +10,6 @@
 
 #--Imports--
 from . import dice
-from . import players
 from . import bank
 from . import events
 from . import board
@@ -25,7 +24,6 @@ class Game:
    bail = int(50)
    monopoly_characters = ("cannon", "thimble", "top hat", "iron", "battleship", "boot", "race car","purse") 
    payment = int(0) # Note: used to store return value from pay_money() and used as arg in recieve_money()
-
    game_dice = dice.Dice(2,6)
    turn = int(1)
    round = int(1)
@@ -42,33 +40,114 @@ class Game:
          for tiles in json.load(rf):
             if tiles['type'] == "street":
                self.bank.deeds.append(deeds.DeedStreet(tiles))
-               self.board.tile[tiles['index']].owned_by = "bank" 
             if tiles['type'] == "railroad":
                self.bank.deeds.append(deeds.DeedRailroad(tiles))
-               self.board.tile[tiles['index']].owned_by = "bank"
             if tiles['type'] == "utility":
                self.bank.deeds.append(deeds.DeedUtility(tiles))
-               self.board.tile[tiles['index']].owned_by = "bank"
+                
+            self.board.tile[tiles['index']].owned_by = "bank"
          
          self.board.tile_check(self.all_players) 
 
    ###--Method Implementations--
-   
    # transfer(self) : void
    def transfer_all(self): 
       starting_deeds_size = len(self.bank.deeds) # 
       for i in range(0,starting_deeds_size):
          self.transfer_deed(self.bank,self.all_players[0],self.bank.deeds[i].index)
-   
-   # move(self,Player : Players,  spaces_moving: int) : void
-   def move(self,player,spaces_moving): 
-      next_location = player.current_location() + (spaces_moving)
-      
+          
+   # pass_GO(self, player : Player, next_location : int) : int
+   def pass_GO_check(self, player, next_location):
+      ''' If player has passed GO, pays the player and resets to 40 > next_location > 0 based on next_location mod 40 '''
       if next_location >= 40:
          player.receive_money(200)
          next_location = next_location % 40
-   
-      player.move_location(next_location, self.board.location(next_location)) 
+      
+      return next_location
+
+
+   # card_event_match(self, card : Card, player : Player) : void
+   def card_event_match(self, card, player):
+       ''' Finds a match for the card's event name and conducts the given event '''
+       match card.event_name:
+           case "payStaticAmount":
+               new_player_balance = card.card_event.pay_money(player.current_money())
+               player.set_balance(new_player_balance)
+
+           case "receiveStaticAmount":
+               new_player_balance = card.card_event.receive_money(player.current_money())
+               player.set_balance(new_player_balance)
+
+           case "payPlayerRateAmount":
+               new_player_balance = card.card_event.pay_money(player.current_money(), len(self.all_players))
+               player.set_balance(new_player_balance)
+
+               # pay all other players using card_events.receive_owed_amount()
+               for i in range(len(self.all_players)):
+                   if (self.all_players[i].id != player.id):    # avoids the player drawing the card
+                       new_other_player_balance = card.card_event.receive_owed_amount(player.current_money())
+                       self.all_players[i].set_balance(new_other_player_balance)
+
+           case "receivePlayerRateAmount":
+               new_player_balance = card.card_event.receive_money(player.current_money(), len(self.all_players))
+               player.set_balance(new_player_balance)
+
+               # receive money from all other players using card_events.pay_owed_amount()
+               for i in range(len(self.all_players)):
+                   if (self.all_players[i].id != player.id):    # avoids the player drawing the card
+                       new_other_player_balance = card.card_event.pay_owed_amount(player.current_money())
+                       self.all_players[i].set_balance(new_other_player_balance)
+                       
+           case "payBuildingRateAmount":
+               new_player_balance = card.card_event.pay_money(player.current_money(), player.total_houses, player.total_hotels)
+               player.set_balance(new_player_balance)
+
+           # !!! ALL MOVE_TO ALGORITHMS BELOW CANNOT INCLUDE A RECURSIVE CALL TO GAME.MOVE()
+           # !!! ALL OWNED/NOT OWNED ISSUES UPON ARRIVING AT THE NEW LOCATION MUST BE HANDLED HERE
+           #        OR ELSE THE DEMANDS OF THE CARD MAY NOT BE FULFILLED
+           case "moveToIndex":
+               if (card.subtype != "Jail"):     # Go To Jail card does not allow collection of GO payment
+                   new_player_location = self.pass_GO_check(player, card.card_event.move_to_index())
+               else:
+                   new_player_location = card.card_event.move_to_index()
+
+               player.move_location(new_player_location, self.board.location(new_player_location))
+               # the usual if owned, if not owned property algorithms
+
+           case "moveToNearest":
+               if (card.isMoveToUtility):
+                   new_player_location = card.card_event.move_to_nearest_utility(player.current_location())
+                   player.move_location(new_player_location, self.board.location(new_player_location))
+                   # if owned, pay current owner using card_events.pay_card_rent() and dice roll
+                   # if not owned, offer the player the chance to buy the property
+               elif (card.isMoveToRailroad):
+                   new_player_location = card.card_event.move_to_nearest_railroad(player.current_location()) 
+                   player.move_location(new_player_location, self.board.location(new_player_location))
+                   # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
+                   # if not owned, offer the player the chance to buy the property
+               else:
+                   print("Invalid moveToNearest card type in card class; neither Railroad nor Utility")
+
+           case "moveSpaces":
+               new_player_location = card.card_event.move_spaces(player.current_location())
+               player.move_location(new_player_location, self.board.location(new_player_location))
+               # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
+               # if not owned, offer the player the chance to buy the property
+
+           case "isGOJF":
+               player.jail_free_card = card.card_event.give_card(player.jail_free_card)
+           
+           case _:
+               print(f"No event with the name {card.event_name} found.")
+        
+
+   # move(self, Player : Players, spaces_moving: int) : void
+   def move(self,player,spaces_moving):
+      # checks if the player passes GO on the next move
+      #     and sets the new location to either next_location % 40 (passed GO) or current_location + spaces_moving
+      next_location = self.pass_GO_check(player, player.current_location() + spaces_moving)
+         
+      player.move_location(next_location, self.board.location(next_location)) # new
       print("")
       current_tile = self.board.tile[next_location]
       if self.board.tile[next_location].tile_type != "special": # tile with deed
@@ -146,73 +225,17 @@ class Game:
          elif current_tile.special_type == "tax":
              player.pay_money(current_tile.tax_amount)
          # card tiles
-         elif current_tile.card_type == "chance":
+         elif (current_tile.card_type == "chance"):
              chance_card = self.board.chance.draw_card()
+             self.card_event_match(chance_card, player)
 
-             match chance_card.event_name:
-
-                 case "payStaticAmount":
-                     new_player_balance = chance_card.card_event.pay_money(player.current_money())
-                     player.set_balance(new_player_balance)
-
-                 case "receiveStaticAmount":
-                     new_player_balance = chance_card.card_event.receive_money(player.current_money())
-                     player.set_balance(new_player_balance)
-
-                 case "payPlayerRateAmount":
-                     new_player_balance = chance_card.card_event.pay_money(player.current_money(), len(self.all_players))
-                     player.set_balance(new_player_balance)
-                     # pay all other players using card_events.receive_owed_amount()
-
-                 case "receivePlayerRateAmount":
-                     new_player_balance = chance_card.card_event.receive_money(player.current_money(), len(self.all_players))
-                     player.set_balance(new_player_balance)
-                     # receive money from all other players using card_events.pay_owed_amount()
-
-                 case "payBuildingRateAmount":
-                     new_player_balance = chance_card.card_event.pay_money(player.current_money(), player.total_houses, player.total_hotels)
-                     player.set_balance(new_player_balance)
-
-                 # !!! ALL MOVE_TO ALGORITHMS BELOW CANNOT INCLUDE A RECURSIVE CALL TO GAME.MOVE()
-                 # !!! ALL OWNED/NOT OWNED ISSUES UPON ARRIVING AT THE NEW LOCATION MUST BE HANDLED HERE
-                 case "moveToIndex":
-                     new_player_location = chance_card.card_event.move_to_index()
-                     player.move_location(new_player_location, self.board.location(new_player_location))
-                     # the usual if owned, if not owned property algorithms
-
-                 case "moveToNearest":
-                     if (chance_card.isMoveToUtility):
-                         new_player_location = chance_card.card_event.move_to_nearest_utility(player.current_location())
-                         player.move_location(new_player_location, self.board.location(new_player_location))
-                         # if owned, pay current owner using card_events.pay_card_rent() and dice roll
-                         # if not owned, offer the player the chance to buy the property
-                     elif (chance_card.isMoveToRailroad):
-                         new_player_location = chance_card.card_event.move_to_nearest_railroad(player.current_location()) 
-                         player.move_location(new_player_location, self.board.location(new_player_location))
-                         # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
-                         # if not owned, offer the player the chance to buy the property
-                     else:
-                         print("Invalid moveToNearest card type in card class; neither Railroad nor Utility")
-
-                 case "moveSpaces":
-                     new_player_location = chance_card.card_event.move_spaces(player.current_location())
-                     player.move_location(new_player_location, self.board.location(new_player_location))
-                     # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
-                     # if not owned, offer the player the chance to buy the property
-
-                 case "isGOJF":
-                     player.jail_free_card = chance_card.card_event.give_card(player.jail_free_card)
-                 
-                 case _:
-                     print(f"No event with the name {chance_card.event_name} found.")
-                  
          elif (current_tile.card_type == "chest"):
              chest_card = self.board.community_chest.draw_card()
-             # card events will get put into a method somewhere in game and duplicated here later
+             self.card_event_match(chest_card, player)
          return
       
    # # transfer_payment(payer : T, recipient :  T, paymnet : int) : void
-   def transfer_payment(self,payer, recipient, payment): 
+   def transfer_payment(self,payer, recipient, payment):
       payer.pay_money(payment)
       recipient.receive_money(payment)
 
@@ -247,13 +270,8 @@ class Game:
             player.time_jailed = 0
             player.pay_money(self.bail)    
             
-         print("\t\tplayer",player.id,"is now out of jail")
-         next_location = player.current_location()
-         next_location += self.game_dice.total_rolled()
-         
-         if next_location >= 40:
-            player.receive_amount(200)
-            next_location = next_location % 40
+         print("\t\tplayer",player.id(),"is now out of jail")
+         next_location = self.pass_GO_check(player, player.current_location() + self.game_dice.total_rolled())
             
          player.move_location(next_location, self.board.location(next_location)) # move
          print("")  

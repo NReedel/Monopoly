@@ -6,10 +6,6 @@
 # *Purpose: Define Monopoly bank traits and actions
 #
 
-import json
-from . import deeds
-
-
 class Bank:
     ### -- Constructor ###
     def __init__(self):

@@ -9,17 +9,6 @@
 ###
 
 ###############################################################
-# Here's what a card hierarchy might looks like
-# Although the below all look like they could be methods in the Card class,
-#	this problem arises: how do you enforce the use of only the methods
-#	associated with the card event? You technically could define the methods
-#	only in the "if this card event, define these variables" conditionals, but
-#	that gets very very messy. Each of the classes below can and should have
-#	their own data and methods associated with them.
-# Here's how this will work: an instance of each derived Card Event will be
-#	declared in their respective condiitonals below
-# Should the CardEvents remain here or in their own file?
-###############################################################
 '''
 CardEvents
 ├── StaticMoneyEvents
@@ -134,7 +123,6 @@ class PayBuildingRateAmount(PayRateAmount):
     def pay_money(self, current_balance, house_count, hotel_count):
         ''' Takes player's current balance and number of players and returns the subtraction of their total amount paid '''
         self.total_money_paid = (self.rate_money_amount * house_count) + (self.hotel_rate_money_amount * hotel_count)
-        # second_rate_money_amount undefined ⚠⚠⚠
         self.print_event_action(self.action_text, self.total_money_paid)
         return current_balance - self.total_money_paid
 

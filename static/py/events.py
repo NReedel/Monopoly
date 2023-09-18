@@ -19,7 +19,7 @@ Events
 ├── BankruptPlayerEvents  # incomplete
 ├── AvaliablePropertyEvents  
 ├── AuctionPropertyEvents # incomplete
-├── CardEvents # incomplete
+├── CardEvents # unused for now
 ├── MainMenuEvents
 ├── BuildBuildingEvents # incomplete
 ├── SellBuildingEvents  # incomplete  
@@ -181,9 +181,6 @@ class JailedPlayerEvents(Events):
    #--Arguments--
    # arg[0] = self from game, used for bail and player
    
-
-class JailedPlayerEvents(Events): # partial completion
-  
    #--Global Data--
    events = ["roll doubles","pay jail fee","jail free card"]
    
@@ -253,8 +250,7 @@ class MenuPlayerEvents(Events):
          return
       if event == "rules":
          print() 
-         # Load file here, use your own link 💬
-         rules_file_path = 'rules.txt' 
+         rules_file_path = 'rules.txt'
          with open(rules_file_path, 'r') as file:
             # Read the contents of the file
             file_contents = file.read()
@@ -425,7 +421,6 @@ class MainMenuEvents(Events): # near complete
                print("Invalid quantiy, try again")
                
       if event == "rules": # "rules"
-         # Load file here, use your own link 💬
          print() 
          rules_file_path = '../txt/rules.txt' #vary by user
          with open(rules_file_path, 'r') as file:
@@ -542,8 +537,8 @@ class SellBuildingEvents(Events):
       if board.tile[self.events[int(target_event)].index].hotels == 1:
          payment = int(target_deed.hotel_cost / 2)
       else:
-         payment = int(target_deed.house_cost / 2)        
-      bank = self.arg[0].bank  
+         payment = int(target_deed.house_cost / 2)
+      bank = self.arg[0].bank
       self.arg[0].transfer_payment(bank,player,payment) 
       return self.events[int(target_event)].index
    
