@@ -253,3 +253,24 @@ class Players:
          if self.deeds[i].index == index:
             return self.deeds[i]
       return
+
+   # sort_deeds(sel) : void 
+   def sort_deeds(self):
+      if (len(self.deeds) == 0):
+         return 
+      min = 0 
+      sorted_list = []
+      i = 0
+      while(len(self.deeds) != 0):
+         i += 1 
+         if i == len(self.deeds):
+            sorted_list.append(self.deeds.pop(min))
+            i = 0
+            min = 0
+         else:
+            if self.deeds[i].index < self.deeds[min].index:
+               min = i  
+            else:
+               pass
+      self.deeds = copy.deepcopy(sorted_list)
+      return   
