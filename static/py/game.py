@@ -256,7 +256,10 @@ class Game:
       print("\t\t\""+str(target_deed.name)+"\"","received\n")
       self.board.tile[location].owned_by = recipient.id
       self.board.tile_check(self.all_players)
-
+      if owner.id != "bank":
+         owner.sort_deeds()
+      if recipient.id != "bank":   
+         recipient.sort_deeds()
       
    # jailed_move_attempt(self, player : Players) : void
    def jailed_move_attempt(self,player): 
