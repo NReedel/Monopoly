@@ -239,7 +239,6 @@ class Game:
       payer.pay_money(payment)
       recipient.receive_money(payment)
 
-      
    # transfer_deed(owner: T, recipient :  T, location : int) : void
    def transfer_deed(self,owner, recipient, location): 
       owner_deeds = copy.deepcopy(owner.deeds) # maybe
@@ -250,16 +249,19 @@ class Game:
          if location == owner_deeds[i].index:
             target_deed = owner_deeds[i]
             i = len(owner_deeds)
-
-      recipient_deeds.append(target_deed)
+      if len(recipient_deeds) == 0:
+         pass
+      elif location < recipient_deeds[0].index:  
+         recipient_deeds.insert(0,target_deed)
+      else:       
+         for i in range(1,len(recipient_deeds)): 
+            if location > recipient_deeds[i-1].index:
+               recipient_deeds.insert(i,target_deed)
+               i = len(recipient_deeds)
       recipient.deeds = copy.deepcopy(recipient_deeds)
       print("\t\t\""+str(target_deed.name)+"\"","received\n")
       self.board.tile[location].owned_by = recipient.id
       self.board.tile_check(self.all_players)
-      if owner.id != "bank":
-         owner.sort_deeds()
-      if recipient.id != "bank":   
-         recipient.sort_deeds()
       
    # jailed_move_attempt(self, player : Players) : void
    def jailed_move_attempt(self,player): 
