@@ -6,6 +6,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "Just when you think you can't go another step, you finish that foot race - and raise money for your local hospital! ADVANCE TO GO. COLLECT $200.",
+		"eventName":  "moveToIndex",
 		"moveToIndex": 0
 	},
 	{
@@ -15,6 +16,7 @@
 		"title": "type",
 		"image": "leaning-pennybags.svg",
 		"description": "Your fuzzy friends at the animal shelter will be thankful for your donation. PAY $50.",
+		"eventName": "payStaticAmount",
 		"payStaticAmount": 50
 	},
 	{
@@ -24,6 +26,7 @@
 		"title": "type",
 		"image": "leaning-pennybags.svg",
 		"description": "You organize a group to clean up your town's walking path. COLLECT $50.",
+		"eventName": "receiveStaticAmount",
 		"receiveStaticAmount": 50
 	},
 	{
@@ -33,6 +36,7 @@
 		"title": "type",
 		"image": "thumbs-up-pennybags.svg",
 		"description": "You help your neighbor bring in her groceries. She makes you lunch to say thanks! COLLECT $20.",
+		"eventName": "receiveStaticAmount",
 		"receiveStaticAmount": 20
 	},
 	{
@@ -42,6 +46,7 @@
 		"title": "type",
 		"image": "thumbs-up-pennybags.svg",
 		"description": "You spend the day playing games with kids at a local children's hospital. COLLECT $100.",
+		"eventName": "receiveStaticAmount",
 		"receiveStaticAmount": 100
 	},
 	{
@@ -51,6 +56,7 @@
 		"title": "type",
 		"image": "thumbs-up-pennybags.svg",
 		"description": "You help your neighbors clean up their yards after a big storm. COLLECT $200.",
+		"eventName": "receiveStaticAmount",
 		"receiveStaticAmount": 200
 	},
 	{
@@ -60,6 +66,7 @@
 		"title": "type",
 		"image": "thumbs-up-pennybags.svg",
 		"description": "You set aside time every week to hang out with your elderly neighbor - you've heard some amazing stories! COLLECT $100.",
+		"eventName": "receiveStaticAmount",
 		"receiveStaticAmount": 100
 	},
 	{
@@ -69,6 +76,7 @@
 		"title": "type",
 		"image": "thumbs-up-pennybags.svg",
 		"description": "You help build a new school playground - then you get to test the slide! COLLECT $100.",
+		"eventName": "receiveStaticAmount",
 		"receiveStaticAmount": 100
 	},
 	{
@@ -78,6 +86,7 @@
 		"title": "type",
 		"image": "wowed-pennybags.svg",
 		"description": "You organize a block party so people on your street can get to know each other. COLLECT $10 FROM EACH PLAYER.",
+		"eventName": "receivePlayerRateAmount",
 		"receivePlayerRateAmount": 10
 	},
 	{
@@ -87,6 +96,7 @@
 		"title": "type",
 		"image": "twirl-mustache-pennybags.svg",
 		"description": "You volunteer at a blood drive. There are free cookies! COLLECT $10.",
+		"eventName": "receiveStaticAmount",
 		"receiveStaticAmount": 10
 	},
 	{
@@ -96,6 +106,7 @@
 		"title": "type",
 		"image": "jumping-pennybags.svg",
 		"description": "You organize a bake sale for your local school. COLLECT $25.",
+		"eventName": "receiveStaticAmount",
 		"receiveStaticAmount": 25
 	},
 	{
@@ -105,6 +116,7 @@
 		"title": "type",
 		"image": "negative-pennybags.svg",
 		"description": "You buy a few bags of cookies from that school bake sale. Yum! PAY $50.",
+		"eventName": "payStaticAmount",
 		"payStaticAmount": 50
 	},
 	{
@@ -114,6 +126,7 @@
 		"title": "type",
 		"image": "negative-pennybags.svg",
 		"description": "You go to the local school's car wash fundraiser - but you forget to close your windows! PAY $100.",
+		"eventName": "payStaticAmount",
 		"payStaticAmount": 100
 	},
 	{
@@ -123,6 +136,7 @@
 		"title": "type",
 		"image": "negative-pennybags.svg",
 		"description": "You should have volunteered for that home improvement project - you would have learned valuable skills! FOR EACH HOUSE YOU OWN, PAY $40. FOR EACH HOTEL YOU OWN, PAY $115.",
+		"eventName": "payBuildingRateAmount",
 		"payHouseRateAmount": 40,
 		"payHotelRateAmount": 115
 	},
@@ -133,6 +147,7 @@
 		"title": "type",
 		"image": "jailed-pennybags.svg",
 		"description": "Blasting music late at night? Your neighbors do not approve. GO TO JAIL. GO DIRECTLY TO JAIL. DO NOT PASS GO. DO NOT COLLECT $200.",
+		"eventName": "moveToIndex",
 		"moveToIndex": 10
 	},
 	{
@@ -142,6 +157,7 @@
 		"title": "type",
 		"image": "jailbreak-pennybags.svg",
 		"description": "You rescue a puppy - and you feel rescued, too! GET OUT OF JAIL FREE. This card may be kept until needed, traded, or sold.",
+		"eventName": "isGOJF",
 		"isGOJF": true
 	}
 ]

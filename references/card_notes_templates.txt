@@ -8,11 +8,11 @@ Each card has a common theme (within their Community Chest and Chance designatio
 First, the custom card attributes currently coded into the Community Chest/Chance json file(s) are kept as generic as possible (although their associated descriptions should be specific) and are as follows:
 * Static (simple implementation)
 	- payStaticAmount : int
-	- collectStaticAmount : int
+	- receiveStaticAmount : int
 
 * Rates (best practice requires an outside source to acquire the number of players/houses/hotels, value of dice roll, or other necessary component for implementation.)
 	- payPlayerRateAmount : int
-	- collectPlayerRateAmount : int
+	- receivePlayerRateAmount : int
 	- **payHouseRateAmount : int
 	- **payHotelRateAmount : int
 	- ***cardRentMultiplier : int
@@ -28,6 +28,17 @@ First, the custom card attributes currently coded into the Community Chest/Chanc
 ** payHouseRateAmount and payHotelRateAmount are always paired with each other **
 *** moveToNearest and cardrentMultiplier are always paired with each other ***
 
+The frequency of each of these attributes as well as their deck location are as follows:
+- payStaticAmount: 1 Chance, 3 Chest (4 total)
+- receiveStaticAmount: 2 Chance, 8 Chest (10 total)
+- payPlayerRateAmount: 1 Chance, 0 Chest (1 total)
+- receivePlayerRateAmount: 0 Chance, 1 Chest (1 total)
+- payHouseRateAmount and payHotelRateAmount: 1 Chance, 1 Chest (2 total)
+- moveToNearest and cardRentMultiplier: 3 Chance, 0 Chest (3 total, 2 railroad and 1 utility)
+- moveToIndex: 6 Chance, 2 Chest (8 total)
+- moveSpaces: 1 Chance, 0 Chest (1 total)
+
+
 Community Chest:
 [
 	{
@@ -37,6 +48,7 @@ Community Chest:
 		"title": "type",
 		"image": "leaning-pennybags.svg",
 		"description": "copy description text here.",
+		"eventName": "customAttribute",
 		"customAttribute": "based on description text, e.g. 'payStaticAmount' or 'moveTo'"
 	},
 ]
@@ -86,6 +98,7 @@ Chance:
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "copy description text here.",
+		"eventName": "customAttribute",
 		"customAttribute": "based on description text, e.g. 'payStaticAmount' or 'moveTo'"
 	},
 ]

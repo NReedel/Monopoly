@@ -115,18 +115,18 @@ class Game:
                # the usual if owned, if not owned property algorithms
 
            case "moveToNearest":
-               if (card.isMoveToUtility):
-                   new_player_location = card.card_event.move_to_nearest_utility(player.current_location())
-                   player.move_location(new_player_location, self.board.location(new_player_location))
-                   # if owned, pay current owner using card_events.pay_card_rent() and dice roll
-                   # if not owned, offer the player the chance to buy the property
-               elif (card.isMoveToRailroad):
+               if (not card.isMoveToUtility): # railroads
                    new_player_location = card.card_event.move_to_nearest_railroad(player.current_location()) 
                    player.move_location(new_player_location, self.board.location(new_player_location))
                    # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
                    # if not owned, offer the player the chance to buy the property
+               elif (card.isMoveToUtility): # utilities
+                   new_player_location = card.card_event.move_to_nearest_utility(player.current_location())
+                   player.move_location(new_player_location, self.board.location(new_player_location))
+                   # if owned, pay current owner using card_events.pay_card_rent() and dice roll
+                   # if not owned, offer the player the chance to buy the property
                else:
-                   print("Invalid moveToNearest card type in card class; neither Railroad nor Utility")
+                   print("\t\tInvalid moveToNearest card type in card class; neither Railroad nor Utility")
 
            case "moveSpaces":
                new_player_location = card.card_event.move_spaces(player.current_location())
@@ -138,7 +138,7 @@ class Game:
                player.jail_free_card = card.card_event.give_card(player.jail_free_card)
            
            case _:
-               print(f"No event with the name {card.event_name} found.")
+               print(f"\t\tNo event with the name {card.event_name} found.")
         
 
    # move(self, Player : Players, spaces_moving: int) : void
@@ -249,19 +249,27 @@ class Game:
          if location == owner_deeds[i].index:
             target_deed = owner_deeds[i]
             i = len(owner_deeds)
-      if len(recipient_deeds) == 0:
-         pass
-      elif location < recipient_deeds[0].index:  
-         recipient_deeds.insert(0,target_deed)
-      else:       
-         for i in range(1,len(recipient_deeds)): 
-            if location > recipient_deeds[i-1].index:
-               recipient_deeds.insert(i,target_deed)
-               i = len(recipient_deeds)
+      ###Aleternative to performing a sort
+      # if len(recipient_deeds) == 0:
+      #    recipient_deeds.append(target_deed)
+      # elif location < recipient_deeds[0].index:  
+      #    print(location, recipient_deeds[0].index)
+      #    recipient_deeds.insert(0,target_deed)
+      # else:     
+      #    for i in range(1,len(recipient_deeds)): 
+            
+      #       if location > recipient_deeds[i-1].index:
+      #          recipient_deeds.insert(i,target_deed)
+      #          i = len(recipient_deeds)
+      recipient_deeds.append(target_deed)
       recipient.deeds = copy.deepcopy(recipient_deeds)
       print("\t\t\""+str(target_deed.name)+"\"","received\n")
       self.board.tile[location].owned_by = recipient.id
       self.board.tile_check(self.all_players)
+      if owner.id != "bank":
+         owner.sort_deeds()
+      if recipient.id != "bank":   
+         recipient.sort_deeds()
       
    # jailed_move_attempt(self, player : Players) : void
    def jailed_move_attempt(self,player): 

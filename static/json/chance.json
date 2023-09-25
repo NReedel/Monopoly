@@ -6,6 +6,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "ADVANCE TO THE NEAREST UTILITY. If UNOWNED, you may buy it from the Bank. If OWNED, roll the dice, and pay the owner 10 times your roll. IF YOU PASS GO, COLLECT $200.",
+		"eventName": "moveToNearest",
 		"moveToNearest": "Utility",
 		"cardRentMultiplier": 10
 	},
@@ -16,6 +17,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "ADVANCE TO THE NEXT RAILROAD. If UNOWNED, you may buy it from the Bank. If OWNED, pay the owner twice the rent to which they are otherwise entitled. IF YOU PASS GO, COLLECT $200.",
+		"eventName": "moveToNearest",
 		"moveToNearest": "Railroad",
 		"cardRentMultiplier": 2
 	},
@@ -26,6 +28,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "ADVANCE TO THE NEXT RAILROAD. If UNOWNED, you may buy it from the Bank. If OWNED, pay the owner twice the rent to which they are otherwise entitled. IF YOU PASS GO, COLLECT $200.",
+		"eventName": "moveToNearest",
 		"moveToNearest": "Railroad",
 		"cardRentMultiplier": 2
 	},
@@ -36,6 +39,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "TAKE A TRIP TO READING RAILROAD. IF YOU PASS GO, COLLECT $200.",
+		"eventName": "moveToIndex",
 		"moveToIndex": 5
 	},
 	{
@@ -45,6 +49,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "ADVANCE TO ST. CHARLES PLACE. IF YOU PASS GO, COLLECT $200.",
+		"eventName": "moveToIndex",
 		"moveToIndex": 11
 	},
 	{
@@ -54,6 +59,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "ADVANCE TO ILLINOIS AVENUE. IF YOU PASS GO, COLLECT $200.",
+		"eventName": "moveToIndex",
 		"moveToIndex": 24
 	},
 	{
@@ -63,6 +69,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "ADVANCE TO BOARDWALK.",
+		"eventName": "moveToIndex",
 		"moveToIndex": 39
 	},
 	{
@@ -72,6 +79,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "ADVANCE TO GO. COLLECT $200.",
+		"eventName": "moveToIndex",
 		"moveToIndex": 0
 	},
 	{
@@ -81,6 +89,7 @@
 		"title": "type",
 		"image": "running-pennybags.svg",
 		"description": "GO BACK THREE SPACES",
+		"eventName": "moveSpaces",
 		"moveSpaces": -3
 	},
 	{
@@ -90,6 +99,7 @@
 		"title": "type",
 		"image": "thumbs-up-pennybags.svg",
 		"description": "BANK PAYS YOU DIVIDEND OF $50.",
+		"eventName": "receiveStaticAmount",
 		"receiveStaticAmount": 50
 	},
 	{
@@ -99,6 +109,7 @@
 		"title": "type",
 		"image": "thumbs-up-pennybags.svg",
 		"description": "YOUR BUILDING LOAN MATURES. COLLECT $150.",
+		"eventName": "receiveStaticAmount",
 		"receiveStaticAmount": 150
 	},
 	{
@@ -108,6 +119,7 @@
 		"title": "type",
 		"image": "wowed-pennybags.svg",
 		"description": "MAKE GENERAL REPAIRS ON ALL YOUR PROPERTY: FOR EACH HOUSE, PAY $25. FOR EACH HOTEL, PAY $100.",
+		"eventName": "payBuildingRateAmount",
 		"payHouseRateAmount": 25,
 		"payHotelRateAmount": 100
 	},
@@ -118,6 +130,7 @@
 		"title": "type",
 		"image": "negative-pennybags.svg",
 		"description": "SPEEDING FINE. PAY $15.",
+		"eventName": "payStaticAmount",
 		"payStaticAmount": 15
 	},
 	{
@@ -127,6 +140,7 @@
 		"title": "type",
 		"image": "negative-pennybags.svg",
 		"description": "YOU HAVE BEEN ELECTED CHAIRPERSON OF THE BOARD. PAY EACH PLAYER $50.",
+		"eventName": "payPlayerRateAmount",
 		"payPlayerRateAmount": 50
 	},
 	{
@@ -136,6 +150,7 @@
 		"title": "type",
 		"image": "jailed-pennybags.svg",
 		"description": "GO TO JAIL. GO DIRECTLY TO JAIL. DO NOT PASS GO. DO NOT COLLECT $200.",
+		"eventName": "moveToIndex",
 		"moveToIndex": 10
 	},
 	{
@@ -145,6 +160,7 @@
 		"title": "type",
 		"image": "jailbreak-pennybags.svg",
 		"description": "GET OUT OF JAIL FREE. This card may be kept until needed, traded, or sold.",
+		"eventName": "isGOJF",
 		"isGOJF": true
 	}
 ]
