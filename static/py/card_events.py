@@ -8,7 +8,7 @@
 # *Purpose: Define Monopoly card events attributes and actions
 ###
 
-from enum import StrEnum
+from enum import *
 
 ###############################################################
 '''
@@ -34,7 +34,7 @@ CardEvents
 '''
 ###############################################################
 
-class Name(StrEnum):
+class Name(str, Enum):
     PAY_STATIC = "payStaticAmount"
     RECEIVE_STATIC = "receiveStaticAmount"
     PAY_PLAYERS = "payPlayerRateAmount"
