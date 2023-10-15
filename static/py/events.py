@@ -155,13 +155,14 @@ class PlayerEvents(Events): # partial completion
             if choice != -1 :
                redeem.event(choice)
                redeem.update(self.arg[0])
-
-         
-            # error doesn't update proper                      
-      '''     
+               
       if event == "trade":
-      
-      '''   
+         finished = 0
+         while finished != -1:
+            trade = TradeEvents(self.arg[0])
+            trade.display_event_options() 
+            print()    
+
       if event == "menu":
          menu = MenuPlayerEvents()
          choice = menu.display_event_options()
@@ -629,21 +630,161 @@ class TradeEvents(Events): #incomplete
    def __init__(self, *args):
       super().__init__(*args)  
          
-   # display_event_options(self,player : players) : list 
-   def display_event_options(self,player): #incomplete
-      print("\t\tSelect property to trade:")
-      ''' 
-      for i in range(0,len(player.owned_deeds)):  
-         self.events.append(player.owned_deeds[i]) #change to player.owned_deeds.name
-         num = str(i) + ")"
-         print("\t\t  ",num,self.events[i])
-      ''' 
-      print("\t\t  ",str(-1)+")","cancel trade offer") # maybe
-      target_event = input("\n\t\tchoice -> ")
-      print("\t\tSelect money to trade(",player.current_money(),")")
-      target_money = input("\n\t\tchoice -> ")
-      list_pairing = [target_event,target_money]
-      return list_pairing
-   
+ # display_event_options(self) : void
+   def display_event_options(self):
+      selectable_players = []
+      game = self.arg[0]
+      player = game.all_players[game.turn-1]
+      # list_pairing = []
+      # generate tradable player list  
+      for i in range(0,len(game.all_players)):
+         if game.all_players[i].id != player.id:
+            selectable_players.append(game.all_players[i])
+      # num = str(i) + ")"
+      target_player = -1
+      ### pick player to trade with
+      while target_player < 0 or target_player >= len(selectable_players):
+         print("\t\tChoose a player to trade with:")
+         print("\t\t ",str(-1)+")","cancel trade offer")
+         for i in range(0,len(selectable_players)):
+            num = str(i) + ")"
+            print("\t\t  ",num,"player",selectable_players[i].id)
+         target_player = int(input("\n\t\tchoice -> "))
+         if target_player == -1:
+            return
+      selected_player = selectable_players[target_player]
+      next_step = False 
+      ### offer asset properties
+      offered_properties = []
+      deed_choice = -1
+      player_properties = copy.deepcopy(player.deeds)
+      current_offer = ""
+      if len(player_properties) == 0:
+         next_step = True
+      while next_step == False: ### select properties
+         # for i in range(0, len(offered_properties)):
+         if current_offer != "":
+            print("\n\t\tproperties offered:", current_offer)
+         print("\n\t\tSelect property:")
+         print("\t\t ",str(-1)+")","finish property offer")
+         for i in range(0,len(player_properties)):
+            num = str(i) + ")"
+            print("\t\t  ", num, player_properties[i].name)
+         deed_choice = int(input("\n\t\tchoice -> "))
+         ### respond to offered choice
+         if deed_choice >= 0 and deed_choice < len(player_properties):
+            removed_property = player_properties.pop(deed_choice)
+            offered_properties.append(removed_property)
+            current_offer += "\n\t\t   -"+removed_property.name
+         elif int(deed_choice) == -1:
+            next_step = True
+            deed_choice = -1
+         else: 
+            print("\t\tinvalid choice, try again\n") 
+      ### reset
+      next_step = False
+      offered_money = -1
+      ### offer asset money
+      while offered_money < 0 or offered_money > player.current_money():
+         print("\n\t\tcurrent money:",player.current_money())
+         offered_money = int(input("\t\tenter offer: $"))
+         if offered_money < 0 or offered_money > player.current_money():   
+            print("\t\tinvalid choice, try again\n")
+      confirm_offer = -1
+      ### confirm property, money offer
+      while confirm_offer < 0 or confirm_offer > 1:
+         print("\n\t\tyour money offer is $"+str(offered_money))
+         if current_offer != "":
+            print("\t\tyour property offer is", current_offer+"\n") # current_offer is not the requested list
+         print("\t\tConfirm offer")
+         print("\t\t  ","0) yes, continue")
+         print("\t\t  ","1) no, exit trade")
+         confirm_offer = int(input("\n\t\tchoice -> "))
+      if confirm_offer == 1:
+         return
+      ### requested asset properties
+      print("\n\t\trequest assets from player "+str(selected_player.id))
+      desired_properties = []
+      deed_choice = -1
+      other_player_properties = copy.deepcopy(selected_player.deeds)
+      current_request = ""
+      if len(other_player_properties) == 0:
+         next_step = True
+      while next_step == False: ### select properties
+         if current_request != "":
+            print("\n\t\trequested properties:", current_request)
+         print("\n\t\tSelect property:")
+         print("\t\t ",str(-1)+")","finish property request")
+         for i in range(0,len(other_player_properties)):
+            num = str(i) + ")"
+            print("\t\t  ", num, other_player_properties[i].name)
+         deed_choice = int(input("\n\t\tchoice -> "))
+         ### respond to offered choice
+         if deed_choice >= 0 and deed_choice < len(player_properties):
+            removed_property = other_player_properties.pop(deed_choice)
+            desired_properties.append(removed_property)
+            current_request += removed_property.name
+         elif int(deed_choice) == -1:
+            next_step = True
+            deed_choice = -1
+         else: 
+            print("\t\tinvalid choice, try again\n")
+      ### reset
+      next_step = False
+      desired_money = -1
+      ### desired asset money
+      while desired_money < 0 or desired_money > selected_player.current_money():
+         print("\n\t\tcurrent money:",selected_player.current_money())
+         desired_money = int(input("\t\tenter request: $"))
+         if desired_money < 0 or desired_money > selected_player.current_money():   
+            print("\t\tinvalid choice, try again\n")
+      confirm_offer = -1
+      ### confirm property, money request0
+      while confirm_offer < 0 or confirm_offer > 1:
+         print("\n\t\tyour money request is $"+str(desired_money))
+         if current_request != "":
+            print("\t\tyour property request is", current_request+"\n")
+         print("\n\t\tConfirm request")
+         print("\t\t  ","0) yes, continue")
+         print("\t\t  ","1) no, exit trade")
+         confirm_offer = int(input("\n\t\tchoice -> "))
+      if confirm_offer == 1:
+         return      
+      ### selected_player accept/deny request
+      print("\n\t\tPlayer "+selected_player.id+" is offered by Player "+str(player.id))
+      print("\t\t   $"+str(offered_money))
+      for i in range(0,len(offered_properties)):
+            print("\t\t   -"+offered_properties[i].name)
+      print("\t\tIn exchange for")
+      print("\t\t   $"+str(desired_money))
+      for i in range(0,len(desired_properties)):
+         print("\t\t   -"+desired_properties[i].name)
+      print("\n\t\tConfirm trade?")
+      confirm_request= -1
+      while confirm_request < 0 or confirm_request > 1:
+         print("\t\t  ","0) accept")
+         print("\t\t  ","1) reject")
+         confirm_request = int(input("\n\t\tchoice -> "))
+         print()
+      if confirm_request == 1:
+         print("\t\toffer rejected")
+      elif confirm_request == 0:
+         print("\t\toffer accepted")
+         ### perforem trade
+         for i in range(0,len(offered_properties)):
+            if(i == 0):
+               print("\n\tfor player "+selected_player.id,"...")
+            game.transfer_deed(player,selected_player, offered_properties[i].index)
+         for i in range(0,len(desired_properties)):
+            if(i == 0):
+               print("\n\tfor player "+player.id,"...")            
+            game.transfer_deed(selected_player, player, desired_properties[i].index)
+         if offered_money != 0:   
+            game.transfer_payment(player, selected_player, offered_money)
+         if desired_money != 0:            
+            game.transfer_payment(selected_player, player, desired_money)
+         print()
+         player.player_status(game.board.tile)
+      return  
    # event(self,player : Player, event : int) : void
    # def event(self, player, event = 0):   
