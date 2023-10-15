@@ -76,8 +76,8 @@ class TileProperty(Tile):
         self.tile_type = tile['type']  # "street", "railroad", "utility"
         self.monopoly_type = Monopoly.NONE
         
-    # avaliable_deed(self) : bool
-    def avaliable_deed(self): 
+    # available_deed(self) : bool
+    def available_deed(self): 
       if self.owned_by == "bank":
          return True
       return False

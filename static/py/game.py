@@ -87,6 +87,10 @@ class Game:
                    if (self.all_players[i].id != player.id):    # avoids the player drawing the card
                        new_other_player_balance = card.card_event.receive_owed_amount(player.current_money())
                        self.all_players[i].set_balance(new_other_player_balance)
+                       
+           case "payBuildingRateAmount":
+               new_player_balance = card.card_event.pay_money(player.current_money(), player.total_houses, player.total_hotels)
+               player.set_balance(new_player_balance)
 
            case "receivePlayerRateAmount":
                new_player_balance = card.card_event.receive_money(player.current_money(), len(self.all_players))
@@ -97,14 +101,7 @@ class Game:
                    if (self.all_players[i].id != player.id):    # avoids the player drawing the card
                        new_other_player_balance = card.card_event.pay_owed_amount(player.current_money())
                        self.all_players[i].set_balance(new_other_player_balance)
-                       
-           case "payBuildingRateAmount":
-               new_player_balance = card.card_event.pay_money(player.current_money(), player.total_houses, player.total_hotels)
-               player.set_balance(new_player_balance)
 
-           # !!! ALL MOVE_TO ALGORITHMS BELOW CANNOT INCLUDE A RECURSIVE CALL TO GAME.MOVE()
-           # !!! ALL OWNED/NOT OWNED ISSUES UPON ARRIVING AT THE NEW LOCATION MUST BE HANDLED HERE
-           #        OR ELSE THE DEMANDS OF THE CARD MAY NOT BE FULFILLED
            case "moveToIndex":
                if (card.subtype != "Jail"):     # Go To Jail card does not allow collection of GO payment
                    new_player_location = self.pass_GO_check(player, card.card_event.move_to_index())
@@ -131,8 +128,7 @@ class Game:
            case "moveSpaces":
                new_player_location = card.card_event.move_spaces(player.current_location())
                player.move_location(new_player_location, self.board.location(new_player_location))
-               # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
-               # if not owned, offer the player the chance to buy the property
+               # the usual if owned, if not owned property algorithms
 
            case "isGOJF":
                player.jail_free_card = card.card_event.give_card(player.jail_free_card)
@@ -152,7 +148,7 @@ class Game:
       current_tile = self.board.tile[next_location]
       if self.board.tile[next_location].tile_type != "special": # tile with deed
          
-         if current_tile.avaliable_deed() == True : # purchasable
+         if current_tile.available_deed() == True : # purchasable
             print("\t\tthis property can be bought\n")
             available_property_events = events.AvailablePropertyEvents(self)
             cost = current_tile.property_cost

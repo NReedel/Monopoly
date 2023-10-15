@@ -17,7 +17,7 @@ Events
 ├── JailedPlayerEvents
 ├── MenuPlayerEvents   
 ├── BankruptPlayerEvents  # incomplete
-├── AvaliablePropertyEvents  
+├── availablePropertyEvents  
 ├── AuctionPropertyEvents # incomplete
 ├── CardEvents # incomplete
 ├── MainMenuEvents
@@ -287,7 +287,7 @@ class BankruptPlayerEvents(Events): #incomplete
       if event == "trade"
       if event == "menu"
       '''   
-class AvaliablePropertyEvents(Events): # near complete
+class availablePropertyEvents(Events): # near complete
    #--Constructor--
    def __init__(self, *args):
       super().__init__(*args)   
