@@ -158,10 +158,9 @@ class PlayerEvents(Events): # partial completion
                
       if event == "trade":
          finished = 0
-         while finished != -1:
-            trade = TradeEvents(self.arg[0])
-            trade.display_event_options() 
-            print()    
+         trade = TradeEvents(self.arg[0])
+         trade.display_event_options() 
+         print()    
 
       if event == "menu":
          menu = MenuPlayerEvents()
