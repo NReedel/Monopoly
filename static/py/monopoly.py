@@ -4,7 +4,8 @@
 # *Name:      Nate Reedel
 # *Credit:    PennWest Projects! (discord server)
 # *Purpose:   main executable for monopoly.Contains menue events, starts and 
-#             ends game after removing all but one player.
+#             ends game after removing all but one player. Execute via app.py
+#             using flask.
 ###
 
 # Imports
