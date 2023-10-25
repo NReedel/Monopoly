@@ -12,8 +12,8 @@ import os
 class Board:
    
 	tile = []
-	community_chest = deck.Deck()
-	chance = deck.Deck()
+	community_chest = deck.Deck("chest")
+	chance = deck.Deck("chance")
  
 	# --Constructor--
 	def __init__(self):

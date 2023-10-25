@@ -17,7 +17,7 @@ Events
 ├── JailedPlayerEvents
 ├── MenuPlayerEvents   
 ├── BankruptPlayerEvents  # incomplete
-├── availablePropertyEvents  
+├── AvailablePropertyEvents  
 ├── AuctionPropertyEvents # incomplete
 ├── CardEvents # incomplete
 ├── MainMenuEvents
@@ -69,11 +69,7 @@ class Events:
 class PlayerEvents(Events): # partial completion 
    #--Constructor--
    def __init__(self, *args):
-      super().__init__(*args)   
-      self.argc = len(args)
-      if len(args) > 0:
-         for i in range(len(args)):
-            self.arg.append(args[i]) 
+      super().__init__(*args)
    
    #--Argumets--
    # arg[0] = self from game 
@@ -286,15 +282,12 @@ class BankruptPlayerEvents(Events): #incomplete
       if event == "mortgage":
       if event == "trade"
       if event == "menu"
-      '''   
-class availablePropertyEvents(Events): # near complete
+      ''' 
+      
+class AvailablePropertyEvents(Events): # near complete
    #--Constructor--
    def __init__(self, *args):
-      super().__init__(*args)   
-      self.argc = len(args)
-      if len(args) > 0:
-         for i in range(len(args)):
-            self.arg.append(args[i]) 
+      super().__init__(*args)
             
    #--Argumets--
    # arg[0] = self from game, used for bank and all_players
@@ -317,7 +310,7 @@ class availablePropertyEvents(Events): # near complete
       return str(target_event)
       
    # event(self, event : string) : void
-   def event(self, event ):
+   def event(self, event):
       bank = self.arg[0].bank
       current_tile = self.arg[0].board.tile
       all_players = self.arg[0].all_players
@@ -387,7 +380,7 @@ class AuctionPropertyEvents(Events): #incomplete
 
 class MainMenuEvents(Events): # near complete
    #--Constructor--
-   def __init__(self, ):
+   def __init__(self):
       super().__init__()  
       
    #--Global Data--
@@ -504,7 +497,6 @@ class BuildBuildingEvents(Events):
          player.total_hotels += 1
          print("\t\t"+board.tile[event].tile_name,"H =",board.tile[event].hotels,"\n")  
 
-   
 class SellBuildingEvents(Events): 
    #--Constructor--
    def __init__(self, *args):

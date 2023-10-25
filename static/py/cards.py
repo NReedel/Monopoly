@@ -43,12 +43,6 @@ class Cards:
 		
 		self.event_name = card['eventName']
 		
-		# there has to be a way to genericize this with some sort of loop, dict, conditional, etc
-		# match cases for now, figure out genericized later
-		# cases cannot be doubled-up with multiple events just because they take the same parameters; they do,
-		#	but they all call different classes and do different things with those parameters
-		#	(so the class hierarchy probably couldn't and shouldn't be reworked to accommodate similar parameters)
-
 		match self.event_name:
 			case card_events.Name.PAY_STATIC:	# card event: pay a flat amount of money to the bank
 				self.card_event = card_events.PayStaticAmount(self.event_name, card[self.event_name])
