@@ -30,12 +30,13 @@ class Game:
    all_players = []
    bank = bank.Bank()
    board = board.Board()
+   last_deck_drawn = str("")
    player_events = events.PlayerEvents()
    jailed_player_events = events.JailedPlayerEvents()
    bankrupt_player_events = events.BankruptPlayerEvents()
 
    ###--Constructor--
-   def __init__(self,):
+   def __init__(self):
       with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'json', 'tiles.json'), 'r') as rf:
          for tiles in json.load(rf):
             if tiles['type'] == "street":
@@ -54,16 +55,167 @@ class Game:
    def transfer_all(self): 
       starting_deeds_size = len(self.bank.deeds) # 
       for i in range(0,starting_deeds_size):
-         self.transfer_deed(self.bank,self.all_players[0],self.bank.deeds[i].index)
+         self.transfer_deed(self.bank,self.all_players[0],self.bank.deeds[0].index)
           
    # pass_GO(self, player : Player, next_location : int) : int
    def pass_GO_check(self, player, next_location):
       ''' If player has passed GO, pays the player and resets to 40 > next_location > 0 based on next_location mod 40 '''
-      if next_location >= 40:
+      if next_location >= 40 or next_location == 0:
          player.receive_money(200)
          next_location = next_location % 40
       
       return next_location
+
+   # tile_landing_events(self, player : Player, next_location : int, isPersistentCardEvent : bool) : void
+   def tile_landing_events(self, player, next_location, isPersistentCardEvent):
+      ''' Determines the landed-on tile's type and conducts the actions associated with different tile types and states '''
+      current_tile = self.board.tile[next_location]
+      
+      if current_tile.tile_type != "special": # tile with deed
+         
+         if current_tile.available_deed() == True : # purchasable
+            print("\t\tthis property can be bought\n")
+            available_property_events = events.AvailablePropertyEvents(self)
+            cost = current_tile.property_cost
+            can_buy = False
+            if cost <= player.current_money():
+               can_buy = True
+            target_event = available_property_events.display_event_options(cost, player.current_money())
+            
+            while ((int(target_event) < 0 or len(available_property_events.events)) <= int(target_event) and can_buy == True) or (can_buy == False and (int(target_event) >= len(available_property_events.events) or int(target_event) < 1)):
+               print("\t\tinvalid choce, try again\n")
+               target_event = available_property_events.display_event_options(cost, player.current_money())
+               
+            available_property_events.event(available_property_events.events[int(target_event)])
+            del available_property_events
+
+         elif current_tile.is_mortgaged == True: #mortgaged property
+            print("\t\tproperty is mortgaged\n")
+            return
+
+         elif current_tile.owned_by == player.id: # self owned
+            print("\t\tyou own this property\n")
+
+         elif current_tile.owned_by != player.id and current_tile.owned_by != "bank": # pay rent
+            print("\t\tyou landed on another player's property\n")
+            owner_number = int(current_tile.owned_by)
+            rent_value = 0 # index for options
+            
+            current_deed = self.all_players[owner_number-1].target_deed(next_location)
+            
+            ### street
+            if current_tile.tile_type == "street":
+               # options = ["R", "M_R", "R_H_1", "R_H_2","R_H_3","R_H_4","R_H"]
+               if current_tile.has_monopoly == True:
+                  rent_value = 1 # monopoly_rent
+               if current_tile.houses > 0:
+                  rent_value =  current_tile.houses + 1 # rent_house_
+               if current_tile.hotels > 0:
+                  rent_value = 6 # rent_hotel_
+               
+               payment = current_deed.current_rent(rent_value)
+               self.transfer_payment(player, self.all_players[owner_number-1], payment)
+               print("")
+               return
+
+            ### railroad
+            if current_tile.tile_type == "railroad":
+               #options = ["R", "R_2", "R_3", "R_4"]
+               if current_tile.multiplier == 2:
+                  rent_value = 1
+               elif current_tile.multiplier == 3:
+                  rent_value = 2
+               elif current_tile.multiplier == 4:
+                  rent_value = 3
+                  
+               normal_payment = current_deed.current_rent(rent_value)
+
+               if isPersistentCardEvent:
+                  # gathering last_card_drawn for card_event attribute
+                  if self.last_deck_drawn is self.board.chance.deck_name:  # chance
+                     drawn_card = self.board.chance.last_card_drawn
+                  elif self.last_deck_drawn is self.board.community_chest.deck_name:   # chest
+                     drawn_card = self.board.community_chest.last_card_drawn
+                     
+                  
+                  print(f"\t\tplayer {player.id} normally owes = {normal_payment}")
+
+                  adjusted_payment = drawn_card.card_event.get_adjusted_rent(normal_payment)
+                  
+                  print(f"\t\tplayer {player.id} now owes = {adjusted_payment}")
+                  
+                  self.transfer_payment(player, self.all_players[owner_number-1], adjusted_payment)
+                  print("")
+                  return
+               
+               self.transfer_payment(player, self.all_players[owner_number-1], normal_payment)
+               print("")
+               return
+
+            ### utilites
+            if current_tile.tile_type  == "utility":
+               utility_dice = dice.Dice(2, 6)
+               utility_dice.roll()
+               print(f"\t\tplayer {player.id} roll = {utility_dice.print_roll}")
+               
+               if isPersistentCardEvent:
+                  # gathering last_card_drawn for card_event attribute
+                  if self.last_deck_drawn is self.board.chance.deck_name:  # chance
+                     drawn_card = self.board.chance.last_card_drawn
+                  elif self.last_deck_drawn is self.board.community_chest.deck_name:   # chest
+                     drawn_card = self.board.community_chest.last_card_drawn
+                     
+                  adjusted_payment = drawn_card.card_event.get_adjusted_rent(utility_dice.total_rolled())
+                  self.transfer_payment(player, self.all_players[owner_number-1], adjusted_payment)
+                  print("")
+                  return
+               
+               # options = ["R_M_1", "R_M_2"]
+               if current_tile.multiplier == 2:
+                  rent_value = 1
+
+               payment = current_deed.current_rent(rent_value) * utility_dice.total_rolled()
+               self.transfer_payment(player, self.all_players[owner_number-1], payment)
+               print("")
+               return
+
+      else: # landing on special tile
+         if current_tile.special_type == "corner":
+         # corner tiles (GO, Just Visiting, Go To Jail, Free Parking)
+            if current_tile.corner_type == "arrested":   # Go To Jail
+                player.go_to_jail()
+            elif current_tile.corner_type == "jail":
+                pass
+            elif current_tile.corner_type == "parking":
+                pass
+            elif current_tile.corner_type == "go":
+                pass
+
+         # tax tiles
+         elif current_tile.special_type == "tax":
+             player.pay_money(current_tile.tax_amount)
+             
+         # card tiles
+         elif (current_tile.card_type == self.board.chance.deck_name):
+             chance_card = self.board.chance.draw_card()
+             self.last_deck_drawn = self.board.chance.deck_name
+
+             print("\t\tThe card reads:")
+             print(f"\t\t{chance_card.description}")
+             print("")
+             
+             self.card_event_match(chance_card, player)
+
+         elif (current_tile.card_type == self.board.community_chest.deck_name):
+             chest_card = self.board.community_chest.draw_card()
+             self.last_deck_drawn = self.board.community_chest.deck_name
+
+             print("\t\tThe card reads:")
+             print(f"\t\t{chest_card.description}")
+             print("")
+             
+             self.card_event_match(chest_card, player)
+         return
 
 
    # card_event_match(self, card : Card, player : Player) : void
@@ -109,26 +261,27 @@ class Game:
                    new_player_location = card.card_event.move_to_index()
 
                player.move_location(new_player_location, self.board.location(new_player_location))
-               # the usual if owned, if not owned property algorithms
+               print("")
+               self.tile_landing_events(player, new_player_location, False)   # isPersistentCardEvent = False
 
-           case "moveToNearest":
+           case "moveToNearest": # isPersistentCardEvent
                if (not card.isMoveToUtility): # railroads
-                   new_player_location = card.card_event.move_to_nearest_railroad(player.current_location()) 
-                   player.move_location(new_player_location, self.board.location(new_player_location))
-                   # if owned, pay current owner using card_events.pay_card_rent() and normal rent amount
-                   # if not owned, offer the player the chance to buy the property
+                   new_player_location = card.card_event.move_to_nearest_railroad(player.current_location())
                elif (card.isMoveToUtility): # utilities
                    new_player_location = card.card_event.move_to_nearest_utility(player.current_location())
-                   player.move_location(new_player_location, self.board.location(new_player_location))
-                   # if owned, pay current owner using card_events.pay_card_rent() and dice roll
-                   # if not owned, offer the player the chance to buy the property
                else:
-                   print("\t\tInvalid moveToNearest card type in card class; neither Railroad nor Utility")
+                   print("\t\tInvalid moveToNearest card type in card class; neither Railroad nor Utility. Player will not be moved.")
+                   new_player_location = player.current_location()
+               
+               player.move_location(new_player_location, self.board.location(new_player_location))
+               print("")
+               self.tile_landing_events(player, new_player_location, True)   # isPersistentCardEvent = True
 
            case "moveSpaces":
                new_player_location = card.card_event.move_spaces(player.current_location())
                player.move_location(new_player_location, self.board.location(new_player_location))
-               # the usual if owned, if not owned property algorithms
+               print("")
+               self.tile_landing_events(player, new_player_location, False)   # isPersistentCardEvent = False
 
            case "isGOJF":
                player.jail_free_card = card.card_event.give_card(player.jail_free_card)
@@ -145,106 +298,24 @@ class Game:
          
       player.move_location(next_location, self.board.location(next_location)) # new
       print("")
-      current_tile = self.board.tile[next_location]
-      if self.board.tile[next_location].tile_type != "special": # tile with deed
-         
-         if current_tile.available_deed() == True : # purchasable
-            print("\t\tthis property can be bought\n")
-            available_property_events = events.AvailablePropertyEvents(self)
-            cost = current_tile.property_cost
-            can_buy = False
-            if cost <= player.current_money():
-               can_buy = True
-            target_event = available_property_events.display_event_options(cost, player.current_money())
-            
-            while ((int(target_event) < 0 or len(available_property_events.events)) <= int(target_event) and can_buy == True) or (can_buy == False and (int(target_event) >= len(available_property_events.events) or int(target_event) < 1)):
-               print("\t\tinvalid choce, try again\n")
-               target_event = available_property_events.display_event_options(cost, player.current_money())
-               
-            available_property_events.event(available_property_events.events[int(target_event)])
-            del available_property_events
-
-         elif current_tile.is_mortgaged == True: #mortgaged property
-            print("\t\tproperty is mortgaged\n")
-            return
-
-         elif current_tile.owned_by == player.id: # self owned
-            print("\t\tyou own this property\n")
-
-         elif current_tile.owned_by != player.id and current_tile.owned_by != "bank": # pay rent
-            print("\t\tyou landed on another player's property\n")
-            owner_number = int(current_tile.owned_by)
-            rent_value = 0 # index for options
-            ### street
-            if current_tile.tile_type == "street":
-               # options = ["R", "M_R", "R_H_1", "R_H_2","R_H_3","R_H_4","R_H"]
-               if current_tile.has_monopoly == True:
-                  rent_value = 1 # monopoly_rent
-               if current_tile.houses > 0:
-                  rent_value =  self.board.tiles[next_location].houses + 1 # rent_house_
-               if current_tile.hotels > 0:
-                  rent_value = 6 # rent_hotel_
-            ### railroad
-            if current_tile.tile_type == "railroad":
-               #options = ["R", "R_2", "R_3", "R_4"]
-               if current_tile.multiplier == 2:
-                  rent_value = 1
-               elif current_tile.multiplier == 3:
-                  rent_value = 2
-               elif current_tile.multiplier == 4:
-                  rent_value = 3
-            ### utilites
-            if current_tile.tile_type  == "utilities": 
-               # options = ["R_M_1", "R_M_2"]
-               if current_tile.multiplier == 2:
-                  rent_value = 1
-
-            current_deed = self.all_players[owner_number-1].target_deed(next_location)
-            payment = current_deed.current_rent(rent_value)
-            self.transfer_payment(player,self.all_players[owner_number-1],payment)
-
-            print("")     
-            
-      else: # landing on special tile
-         if current_tile.special_type == "corner":
-         # corner tiles (GO, Just Visiting, Go To Jail, Free Parking)
-            if current_tile.corner_type == "go":
-                pass
-            elif current_tile.corner_type == "jail":
-                pass
-            elif current_tile.corner_type == "parking":
-                pass
-            elif current_tile.corner_type == "arrested":   # Go To Jail
-                player.go_to_jail()
-
-         # tax tiles
-         elif current_tile.special_type == "tax":
-             player.pay_money(current_tile.tax_amount)
-         # card tiles
-         elif (current_tile.card_type == "chance"):
-             chance_card = self.board.chance.draw_card()
-             self.card_event_match(chance_card, player)
-
-         elif (current_tile.card_type == "chest"):
-             chest_card = self.board.community_chest.draw_card()
-             self.card_event_match(chest_card, player)
-         return
+      self.tile_landing_events(player, next_location, False)   # isPersistentCardEvent = False
       
    # # transfer_payment(payer : T, recipient :  T, paymnet : int) : void
    def transfer_payment(self,payer, recipient, payment):
       payer.pay_money(payment)
       recipient.receive_money(payment)
-
-   # transfer_deed(owner: T, recipient :  T, location : int) : void
+      
+ # transfer_deed(owner: T, recipient :  T, location : int) : void
    def transfer_deed(self,owner, recipient, location): 
       owner_deeds = copy.deepcopy(owner.deeds) # maybe
       recipient_deeds = copy.deepcopy(recipient.deeds)
-
+      ### fetch deed at location from owner
       for i in range(0,len(owner_deeds)): 
-         
          if location == owner_deeds[i].index:
             target_deed = owner_deeds[i]
+            pop_index = i
             i = len(owner_deeds)
+            # owner_deeds.pop(temp)
       ###Aleternative to performing a sort
       # if len(recipient_deeds) == 0:
       #    recipient_deeds.append(target_deed)
@@ -259,11 +330,16 @@ class Game:
       #          i = len(recipient_deeds)
       recipient_deeds.append(target_deed)
       recipient.deeds = copy.deepcopy(recipient_deeds)
+      
+      owner_deeds.pop(pop_index)
+      print(len(owner_deeds))
+      owner.deeds = copy.deepcopy(owner_deeds)
       print("\t\t\""+str(target_deed.name)+"\"","received\n")
       self.board.tile[location].owned_by = recipient.id
       self.board.tile_check(self.all_players)
       if recipient.id != "bank":   
          recipient.sort_deeds()
+  
       
    # jailed_move_attempt(self, player : Players) : void
    def jailed_move_attempt(self,player): 
@@ -309,7 +385,7 @@ class Game:
       while target_players[self.turn-1].in_debt() == True: 
          ###Bakrupt Player Events 
          self.bankrupt_player_events.update(self)
-         print("\t\tplayer",target_players[self.turn-1].id,"is in dept at","$"+str(target_players[self.turn-1].current_money()),"\n")
+         print("\t\tplayer",target_players[self.turn-1].id,"is in debt at","$"+str(target_players[self.turn-1].current_money()),"\n")
          target_event = self.bankrupt_player_events.display_event_options()
          
          while int(target_event) < 0 or len(self.bankrupt_player_events.events) <= int(target_event):
