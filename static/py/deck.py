@@ -15,9 +15,10 @@ from random import *
 
 class Deck:
     # -- Constructor --
-    def __init__(self):
+    def __init__(self, deck_name):
         # self.deck = SimpleQueue()
         self.deck = []
+        self.deck_name = deck_name
         self.shuffler = Random()
 
     # -- Methods --
@@ -34,6 +35,7 @@ class Deck:
 
         # index = 0 is starting point for FIFO
         self.card_drawn = self.deck.pop(0)
+        self.last_card_drawn = self.card_drawn
 
         self.deck.append(self.card_drawn)
 
