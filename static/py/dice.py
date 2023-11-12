@@ -8,15 +8,11 @@
 import random
 class Dice:
    
-   #--Global Data--
-   quantity = int(0)
-   sides = int(0)
-   all_dice = []
-   
-   #--Contstructor--
+   #--Constructor--
    def __init__(self, starting_quantity = 2, starting_sides = 6): 
       self.quantity = starting_quantity
       self.sides = starting_sides
+      self.all_dice = []
       for i in range(0,self.quantity):
          self.all_dice.append(int(0))
          

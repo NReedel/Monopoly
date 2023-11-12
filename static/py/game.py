@@ -53,7 +53,7 @@ class Game:
    ###--Method Implementations--
    # transfer(self) : void
    def transfer_all(self): 
-      starting_deeds_size = len(self.bank.deeds) # 
+      starting_deeds_size = len(self.bank.deeds)
       for i in range(0,starting_deeds_size):
          self.transfer_deed(self.bank,self.all_players[0],self.bank.deeds[0].index)
           

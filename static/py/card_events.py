@@ -56,9 +56,9 @@ class CardEvents:
         self.optional_verbage = ""
         
     # print_event_action(self, action : string, action_attribute : T, optional_verbage : string) : void
-    def print_event_action(self, action_text, action_attribute, optional_verbage=""):
-        print(f"\t\t{action_text} {action_attribute} {optional_verbage}.")
-
+    def print_event_action(self, action_text, action_attribute, optional_verbage = ""):
+        print(f"\t\t{action_text}{action_attribute}{optional_verbage}.")
+        print("")
 
 '''
 ├── StaticMoneyEvents
@@ -178,13 +178,13 @@ class MovePlayerEvents(CardEvents):
     def __init__(self, event_name, event_value):
         super().__init__(event_name)
         self.move = event_value
-        self.action_text = "Moved"
+        self.action_text = "Moved "
         
 
 class MoveToIndex(MovePlayerEvents):
     def __init__(self, event_name, event_value):
         super().__init__(event_name, event_value)
-        self.action_text = "Moved to tile at index"
+        self.action_text = "Moved to tile at index "
 
     # move_to_index(self) : int
     def move_to_index(self):
@@ -196,7 +196,7 @@ class MoveToIndex(MovePlayerEvents):
 class MoveToNearest(MovePlayerEvents):
     def __init__(self, event_name, event_value, second_event_value):
         super().__init__(event_name, event_value)
-        self.action_text = "Moved to nearest"
+        self.action_text = "Moved to nearest "
         self.rent_multiplier = second_event_value
         self.nearest_tile_index = int(0)
         
@@ -205,14 +205,14 @@ class MoveToNearestUtility(MoveToNearest):
     def __init__(self, event_name, event_value, second_event_value):
         super().__init__(event_name, event_value, second_event_value)
 
-    # move_to_index(self, current_location : int)
+    # move_to_index(self, current_location : int) : int
     def move_to_nearest_utility(self, current_location):
         ''' Returns the index of the nearest utility that the player must move to '''
         if (self.move == "Utility"):
             if (current_location >= 28 or current_location < 12):
                 # if current_location >= 28, make sure all pass GO criteria are being fulfilled
                 self.nearest_tile_index = 12
-            elif (current_location >= 12 or current_location < 28):
+            elif (current_location >= 12 and current_location < 28):
                 self.nearest_tile_index = 28
                 
             self.print_event_action(self.action_text, self.move)
@@ -220,29 +220,28 @@ class MoveToNearestUtility(MoveToNearest):
             print("\t\tInvalid move_to value in Utility. Cannot move player.")
         return self.nearest_tile_index
 
-    # pay_card_rent(self, current_balance : int, dice_roll : int) : int
-    def pay_card_rent(self, current_balance, dice_roll):
-        ''' Takes player's current balance and dice roll and returns the subtraction of the total amount paid from the current balance '''
-        self.total_paid = dice_roll * self.rent_multiplier
-        return current_balance - self.total_paid
+    # pay_card_rent(self, dice_roll : int) : int
+    def get_adjusted_rent(self, dice_roll):
+        ''' Calculates the new rent based on the rent multiplier and the dice roll '''
+        return dice_roll * self.rent_multiplier
 
 
 class MoveToNearestRailroad(MoveToNearest):
     def __init__(self, event_name, event_value, second_event_value):
         super().__init__(event_name, event_value, second_event_value)
 
-    # move_to_index(self, current_location : int)
+    # move_to_index(self, current_location : int) : int
     def move_to_nearest_railroad(self, current_location):
         ''' Returns the index of the nearest railroad that the player must move to '''
         if (self.move == "Railroad"):
             if (current_location >= 35 or current_location < 5):
-                # if current_location >= 28, make sure all pass GO criteria are being fulfilled
+                # if current_location >= 35, make sure all pass GO criteria are being fulfilled
                 self.nearest_tile_index = 5
-            elif(current_location >= 5 or current_location < 15):
+            elif(current_location >= 5 and current_location < 15):
                 self.nearest_tile_index = 15
-            elif(current_location >= 15 or current_location < 25):
+            elif(current_location >= 15 and current_location < 25):
                 self.nearest_tile_index = 25
-            elif (current_location >= 25 or current_location < 35):
+            elif (current_location >= 25 and current_location < 35):
                 self.nearest_tile_index = 35
                 
             self.print_event_action(self.action_text, self.move)
@@ -250,22 +249,22 @@ class MoveToNearestRailroad(MoveToNearest):
             print("\t\tInvalid move_to value in Railroad. Cannot move player.")
         return self.nearest_tile_index
 
-    # pay_card_rent(self, current_balance : int, normal_rent_amount : int) : int
-    def pay_card_rent(self, current_balance, normal_rent_amount):
-        ''' Takes player's current balance and the amount of rent normally owed and returns the subtraction of the total amount paid from the current balance '''
-        self.total_paid = normal_rent_amount * self.rent_multiplier
-        return current_balance - self.total_paid
+    # pay_card_rent(self, normal_rent_amount : int) : int
+    def get_adjusted_rent(self, normal_rent_amount):
+        ''' Calculates the new rent based on the rent multiplier and the normal rent owed '''
+        return normal_rent_amount * self.rent_multiplier
 
 
 class MoveSpaces(MovePlayerEvents):
     def __init__(self, event_name, event_value):
         super().__init__(event_name, event_value)
-        self.isReverseMove = self.move < 0
+        self.isReverseMove = bool(self.move < 0)
+        self.new_location = int(0)
         
         if (self.isReverseMove):
-            self.optional_verbage = "spaces forward"
+            self.optional_verbage = " spaces backward"
         elif (not self.isReverseMove):
-            self.optional_verbage = "spaces backward"
+            self.optional_verbage = " spaces forward"
         else:
             print("No spaces moved. Number of spaces to move is 0.")
 
@@ -276,7 +275,12 @@ class MoveSpaces(MovePlayerEvents):
             self.print_event_action(self.action_text, self.move * -1, self.optional_verbage)
         if (not self.isReverseMove):
             self.print_event_action(self.action_text, self.move, self.optional_verbage)
-        return current_location + self.move
+            
+        self.new_location = current_location + self.move
+        if self.new_location < 0:
+            self.new_location = (current_location + 40) + self.move
+
+        return self.new_location
 
 
 '''
@@ -286,7 +290,7 @@ class MoveSpaces(MovePlayerEvents):
 class OwnableCardEvents(CardEvents):
     def __init__(self, event_name, event_value):
         super().__init__(event_name)
-        self.action_text = "Player now owns"    #... "total number of owned cards of that type"
+        self.action_text = "Player now owns "    #... "total number of owned cards of that type"
         self.isOwnable = event_value    # not used by class, but may be used for implementation
         self.new_total_owned = int(0)   # changed when new card and total number of owned cards of a specific category are both given
 
@@ -294,10 +298,11 @@ class OwnableCardEvents(CardEvents):
 class GetOutOfJailFree(OwnableCardEvents):  # AKA: GOJF
     def __init__(self, event_name, event_value):
         super().__init__(event_name, event_value)
-        self.optional_verbage = "Get Out Of Jail Free Cards"
+        self.optional_verbage = " Get Out Of Jail Free Cards"
     
     # give_card(self, GOJF_owned_count : int) : int
     def give_card(self, GOJF_owned_count):
         ''' Takes the amount of GOJF cards currently owned and returns the addition of one more card '''
+        self.new_total_owned = GOJF_owned_count + 1
         self.print_event_action(self.action_text, self.new_total_owned, self.optional_verbage)
-        return GOJF_owned_count + 1
+        return self.new_total_owned
