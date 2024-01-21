@@ -85,7 +85,7 @@ class Game:
             while ((int(target_event) < 0 or len(available_property_events.events)) <= int(target_event) and can_buy == True) or (can_buy == False and (int(target_event) >= len(available_property_events.events) or int(target_event) < 1)):
                print("\t\tinvalid choce, try again\n")
                target_event = available_property_events.display_event_options(cost, player.current_money())
-               
+            
             available_property_events.event(available_property_events.events[int(target_event)])
             del available_property_events
 
@@ -330,9 +330,7 @@ class Game:
       #          i = len(recipient_deeds)
       recipient_deeds.append(target_deed)
       recipient.deeds = copy.deepcopy(recipient_deeds)
-      
       owner_deeds.pop(pop_index)
-      print(len(owner_deeds))
       owner.deeds = copy.deepcopy(owner_deeds)
       print("\t\t\""+str(target_deed.name)+"\"","received\n")
       self.board.tile[location].owned_by = recipient.id

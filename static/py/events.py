@@ -12,13 +12,13 @@
 ###############################################################
 '''
 Events
-├── InitialPlayerEvents
+├── InitialPlayerEvents # incomplete
 ├── PlayerEvents
 ├── JailedPlayerEvents
 ├── MenuPlayerEvents   
 ├── BankruptPlayerEvents  # incomplete
 ├── AvailablePropertyEvents  
-├── AuctionPropertyEvents # incomplete
+├── AuctionPropertyEvents 
 ├── CardEvents # incomplete
 ├── MainMenuEvents
 ├── BuildBuildingEvents 
@@ -51,8 +51,6 @@ class Events:
          for i in range(len(args)):
             self.arg.append(args[i]) 
                  
-
-
    #--Method Implementation--
    def display_event_options(self): 
       return 
@@ -65,7 +63,6 @@ class Events:
    def update(self,*argument):
       self.arg = argument
       
-
 class PlayerEvents(Events): # partial completion 
    #--Constructor--
    def __init__(self, *args):
@@ -216,6 +213,7 @@ class JailedPlayerEvents(Events):
 
 class MenuPlayerEvents(Events):
    
+   
    #--Constructor--
    def __init__(self, *args):
       super().__init__(*args)   
@@ -283,7 +281,7 @@ class BankruptPlayerEvents(Events): #incomplete
       if event == "trade"
       if event == "menu"
       ''' 
-      
+    
 class AvailablePropertyEvents(Events): # near complete
    #--Constructor--
    def __init__(self, *args):
@@ -320,18 +318,19 @@ class AvailablePropertyEvents(Events): # near complete
       # bank_deeds = bank.deeds 
       if event == "purchase":
          ### buy deed from bank
-         self.arg[0].transfer_payment(current_player, self.arg[0].bank, current_tile.property_cost)
+         self.arg[0].transfer_payment(current_player, bank, current_tile.property_cost)
          self.arg[0].transfer_deed(bank, current_player, current_player.current_location())
-        
-         
-      if event == "auction": #needs testing
+      if event == "auction": 
          auction = AuctionPropertyEvents(self.arg[0])
          auction_deed = self.arg[0].bank.deeds[current_player.current_location()] # copys current locations deed
          self.arg[0].bank.deeds.pop(current_player.current_location()) #remove deed
-         auction.display_event_options(auction_deed,self.arg[0].all_players, self.arg[0].turn)
+         deed_reciever, highest_bid = auction.display_event_options(auction_deed,self.arg[0].all_players, self.arg[0].turn)
+         self.arg[0].transfer_payment(all_players[deed_reciever], bank, highest_bid)
+         self.arg[0].transfer_deed(bank,all_players[deed_reciever], current_player.current_location())
+         print("\tPlayer",self.arg[0].turn,":")
          del auction
-         
-class AuctionPropertyEvents(Events): #incomplete
+   
+class AuctionPropertyEvents(Events): 
    #--Constructor--
    def __init__(self, *args):
       super().__init__(*args)  
@@ -343,19 +342,71 @@ class AuctionPropertyEvents(Events): #incomplete
    # display_event_options(self,auctioned_deed : Deed, all_players : Players, starting_bidder : int) : string 
    def display_event_options(self,auctioned_deed, all_players, starting_bidder): #incomplete
       current_bid = 0
-      current_bidder = starting_bidder
-      biding_players = all_players 
+      highest_bidder = 0
+      current_bidder = starting_bidder-1
+      biding_players = copy.deepcopy(all_players) 
+      
       while len(biding_players) > 1:
+         print("\t\tbidder: player"+biding_players[current_bidder].id+"["+str(biding_players[current_bidder].current_money())+"]")
          print("\t\tcurrent bid: ",current_bid)
          for i in range(len(self.events)):
             num = str(i) + ")"
-            print("\t\t  ",num,self.events[i]) 
-            target_event = input("\n\t\tchoice -> ") 
-         self.event(biding_players[current_bidder-1],target_event) 
-
+            if i == 0 and current_bid >= biding_players[current_bidder].current_money():
+               print("\n\t\tPlayer",biding_players[current_bidder].id)
+               pass 
+            else:
+               print("\t\t  ",num,self.events[i])
+         ### player doesn't have enough money and forfeits
+         if current_bid >= biding_players[current_bidder].current_money():
+            target_event = 1
+         ### player chooses option
+         else:
+            valid = False
+            ### input, validate player input
+            while(valid != True):
+               target_event = int(input("\n\t\tchoice -> "))
+               valid = self.is_valid_number(target_event, len(self.events))
+               if valid == False:
+                  print("\t\tInvalid choice, try again")
+         choice = self.event(biding_players[current_bidder],self.events[target_event], current_bid) 
+         
+         if choice == 0: # remove player from bid list
+            print("\t\tplayer "+biding_players[current_bidder].id+" has forfeited")
+            biding_players.pop(current_bidder)
+            # current_bidder =  int(biding_players.id)-1
+            if len(biding_players) == 1: # highest bidder wins
+               print("\n\t\tplayer",biding_players[0].id,"wins!")
+               return (int(biding_players[0].id)-1), current_bid
+            
+               
+         elif choice > 0: # place bid, set highest bidder
+            current_bid = choice
+            highest_bidder = int(biding_players[current_bidder].id)-1
+            current_bidder = (current_bidder + 1) % len(biding_players) # next bidder
+            
+         elif choice == -1:
+            print("\t\tthe value you entered is too low")
+         
    # event(self, players : Players, event : int) : void
-   def event(self, player, event):
-      return
+   def event(self, player, event, highest_bid):
+      if event == "forfeit":
+         return 0
+      elif event == "bid":
+         bid = int(input("\n\t\tenter bid > "+str(highest_bid)+" -> "))
+         if bid > highest_bid:
+            print("\n\t\tplayer",player.id,"has bidded at",str(bid),"\n")
+            return bid
+         else:
+            # invalid
+            return -1
+         
+   # is_valid_number(self, str : input_str, event_size : int)
+   def is_valid_number(self,input_str,events_size):
+      try:
+         number = int(input_str)
+         return 0 <= number < events_size
+      except ValueError:
+         return False
 
 # !!! Cards have no user-based input, 
 #       but there may be some house rules otherwise 
