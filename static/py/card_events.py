@@ -38,8 +38,8 @@ class Name(str, Enum):
     PAY_STATIC = "payStaticAmount"
     RECEIVE_STATIC = "receiveStaticAmount"
     PAY_PLAYERS = "payPlayerRateAmount"
-    RECEIVE_PLAYERS = "receivePlayerRateAmount"
     PAY_BUILDINGS = "payBuildingRateAmount"
+    RECEIVE_PLAYERS = "receivePlayerRateAmount"
     MOVE_INDEX = "moveToIndex"
     MOVE_NEAREST = "moveToNearest"
     MOVE_SPACES = "moveSpaces"
@@ -263,21 +263,20 @@ class MoveSpaces(MovePlayerEvents):
         
         if (self.isReverseMove):
             self.optional_verbage = " spaces backward"
-        elif (not self.isReverseMove):
-            self.optional_verbage = " spaces forward"
         else:
-            print("No spaces moved. Number of spaces to move is 0.")
+            self.optional_verbage = " spaces forward"
 
     # move_spaces(self, current_location : int) : int
     def move_spaces(self, current_location):
         ''' Takes player's current location and returns the addition of the number of spaces to move '''
         if (self.isReverseMove):
             self.print_event_action(self.action_text, self.move * -1, self.optional_verbage)
-        if (not self.isReverseMove):
+        elif (not self.isReverseMove):
             self.print_event_action(self.action_text, self.move, self.optional_verbage)
             
         self.new_location = current_location + self.move
-        if self.new_location < 0:
+        
+        if self.new_location < 0:   # possible only for reverse movement/negative moveSpaces
             self.new_location = (current_location + 40) + self.move
 
         return self.new_location

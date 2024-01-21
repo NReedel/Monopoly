@@ -1,7 +1,7 @@
 # events.py
 
 ###
-# *Name:      Nate Reedel
+# *Name:      Nate Reedel, Alicyn Knapp
 # *Credit:    PennWest Projects! (discord server)
 # *Purpose:   Handle specialised user event and display event options.
 #             Covers all user based input
@@ -54,16 +54,43 @@ class Events:
 
 
    #--Method Implementation--
+   # display_event_options() : int
+   def display_event_options(self):
+      return 
+   
+   # event() : void
+   def event(self):
+      return
+   
+   # display_event_options() : void
    def display_event_options(self): 
       return 
-   def event(self): # event() : void
+   
+   # event() : void
+   def event(self):
       return
-   def display_event_options(self): 
-      return 
-   def event(self): # event() : void
-      return
+   
    def update(self,*argument):
       self.arg = argument
+   
+   # try_input(lower_limit : int, upper_limit : int, input_message : string) : int
+   def try_input(self, lower_limit, upper_limit, input_message = "\n\t\tchoice -> "):
+      valid_option = False
+
+      while not valid_option:
+         try:
+            user_input = int(input(input_message))
+            
+            if user_input < lower_limit or user_input > upper_limit:
+               print("\t\tinvalid choice, try again\n")
+            else:
+               valid_option = True
+               
+         except ValueError:
+            print("\t\tinvalid choice, try again\n")
+            
+      return user_input
+
       
 
 class PlayerEvents(Events): # partial completion 
@@ -78,7 +105,7 @@ class PlayerEvents(Events): # partial completion
    events = ["roll","build","sell","mortgage","redeem","trade","menu","status"]
     
    #--Method Implementations--
-   # display_event_options(self, has_rolled) : string
+   # display_event_options(self, has_rolled) : int
    def display_event_options(self, has_rolled):
       
       if self.arg[0].all_players[self.arg[0].turn-1].bankrupt == False: 
@@ -92,87 +119,85 @@ class PlayerEvents(Events): # partial completion
          for i in range(1,len(self.events)):
             num = str(i) + ")"
             print("\t\t  ",num,self.events[i])
-         target_event = input("\n\t\tchoice -> ")      
-         return target_event
+            
+         return self.try_input(0, len(self.events) - 1)
       
       else: 
          return 0
    
    # event(self player : Players, event : string) : void
-   def event(self,player,event = ""):
+   def event(self, player, event = ""):
       current_player = self.arg[0].all_players[self.arg[0].turn-1]
       
-      if event == "roll":
-         self.arg[0].game_dice.roll()
-         print("\t\tplayer",player.id,"roll =",self.arg[0].game_dice.print_roll()) # add roll total
-         # needs if condition for alt moves
-         self.arg[0].move(player, self.arg[0].game_dice.total_rolled()) 
+      match event:
+         case "roll":
+            self.arg[0].game_dice.roll()
+            print("\t\tplayer",player.id,"roll =",self.arg[0].game_dice.print_roll()) # add roll total
+            # needs if condition for alt moves
+            self.arg[0].move(player, self.arg[0].game_dice.total_rolled()) 
          
-      if event == "build":
-         choice = 0
-         while choice != -1:
-            build = BuildBuildingEvents(self.arg[0])
-            choice = build.display_event_options(player)
-            
-            if choice != -1 :
-               build.event(player, choice)
-               build.update(self.arg[0])
+         case "build":
+            choice = 0
+            while choice != -1:
+               build = BuildBuildingEvents(self.arg[0])
+               choice = build.display_event_options(player)
+               
+               if choice != -1 :
+                  build.event(player, choice)
+                  build.update(self.arg[0])
          
-      if event == "sell":
-         choice = 0
-         while choice != -1:
-            sell = SellBuildingEvents(self.arg[0])
-            choice = sell.display_event_options(player)
-            
-            if choice != -1 :
-               sell.event(player, choice)
-               sell.update(self.arg[0])        
+         case "sell":
+            choice = 0
+            while choice != -1:
+               sell = SellBuildingEvents(self.arg[0])
+               choice = sell.display_event_options(player)
+               
+               if choice != -1 :
+                  sell.event(player, choice)
+                  sell.update(self.arg[0])        
       
-      if event == "mortgage": 
-         choice = 0
-         while choice != -1:
-            mortgage = MortgagePropertyEvents(self.arg[0])
-            choice = mortgage.display_event_options(player)
-            print()
+         case "mortgage": 
+            choice = 0
+            while choice != -1:
+               mortgage = MortgagePropertyEvents(self.arg[0])
+               choice = mortgage.display_event_options(player)
+               print()
+               
+               if choice != -1 :
+                  mortgage.event(choice)
+                  mortgage.update(self.arg[0])
+               
+            # mortgage.update(self.arg[0])
+
+         case "redeem":
+            choice = 0
+            while choice != -1:
+               redeem = RedeemPropertyEvents(self.arg[0])
+               choice = redeem.display_event_options(player) 
+               print()
+
+               if choice != -1 :
+                  redeem.event(choice)
+                  redeem.update(self.arg[0])
+               
+         case "trade":
+            finished = 0
+            trade = TradeEvents(self.arg[0])
+            trade.display_event_options() 
+            print()    
+
+         case "menu":
+            menu = MenuPlayerEvents()
             
-            if choice != -1 :
-               mortgage.event(choice)
-               mortgage.update(self.arg[0])
-               
-         # mortgage.update(self.arg[0])
-
-      if event == "redeem":
-         choice = 0
-         while choice != -1:
-            redeem = RedeemPropertyEvents(self.arg[0])
-            choice = redeem.display_event_options(player) 
-            print()
-
-            if choice != -1 :
-               redeem.event(choice)
-               redeem.update(self.arg[0])
-               
-      if event == "trade":
-         finished = 0
-         trade = TradeEvents(self.arg[0])
-         trade.display_event_options() 
-         print()    
-
-      if event == "menu":
-         menu = MenuPlayerEvents()
-         choice = menu.display_event_options()
-         
-         while int(choice) < 0 or int(choice) >= len(menu.events):
-            print("\t\tInvalid choice, try again\n")
             choice = menu.display_event_options()
-            
-         menu.event(player,menu.events[int(choice)])
-         if player.bankrupt == True:
-            return
+               
+            menu.event(player,menu.events[int(choice)])
+            if player.bankrupt == True:
+               return
          
-      if event == "status":
-         print("\t\t-----------------------------")    
-         player.player_status(self.arg[0].board.tile)
+         case "status":
+            print("\t\t-----------------------------")    
+            player.player_status(self.arg[0].board.tile)
          
 class JailedPlayerEvents(Events): 
   
@@ -180,9 +205,10 @@ class JailedPlayerEvents(Events):
    events = ["roll doubles","pay jail fee","jail free card"]
    
    #--Method Implementations--
-   # display_event_options(self, player : Players) : string
+   # display_event_options(self, player : Players) : int
    def display_event_options(self,player):
       print("\t\tSelect Jailed player action:")
+      
       for i in range(0,len(self.events)):
          num = str(i)+")"
          if i == 0:
@@ -191,26 +217,27 @@ class JailedPlayerEvents(Events):
             print("\t\t  ",num,self.events[i],"$",self.arg[0].bail)
          elif i == 2 and player.jail_free_card > 0: 
             print("\t\t  ",num,self.events[i])
-      target_event = input("\n\t\tchoice -> ")      
-      return target_event
+            
+      return self.try_input(0, len(self.events) - 1)
    
    # event(player : Players, event : string) : bool
    def event(self,player,event=""): 
       # player = self.arg[0].all_players[self.arg[0].turn-1]
-      if event == "roll doubles":
-         return True # attempt_escape == True
+      match event:
+         case "roll doubles":
+            return True # attempt_escape == True
       
-      if event == "pay jail fee":   
-         player.pay_money(self.arg[0].bail)
-         player.time_jailed = 0
-         print("\t\tPlayer",player.id,"is now out of jail\n")
-         return False #player.in_jail == False
+         case "pay jail fee":   
+            player.pay_money(self.arg[0].bail)
+            player.time_jailed = 0
+            print("\t\tPlayer",player.id,"is now out of jail\n")
+            return False #player.in_jail == False
       
-      if event == "jail free card":
-         player.jail_free_card -= 1
-         player.time_jailed = 0
-         print("\t\tPlayer",player.id,"is now out of jail\n")
-         return False #player.in_jail == False
+         case "jail free card":
+            player.jail_free_card -= 1
+            player.time_jailed = 0
+            print("\t\tPlayer",player.id,"is now out of jail\n")
+            return False #player.in_jail == False
       
       return True
 
@@ -224,36 +251,42 @@ class MenuPlayerEvents(Events):
    events = ["leave game","return to game","rules"]
     
    #--Method Implementations--
-   # display_event_options(self) : string
+   # display_event_options(self) : int
    def display_event_options(self): 
       print("\t\tSelect players action:")
+      
       for i in range(0,len(self.events)):
          num = str(i)+")"
          print("\t\t  ",num,self.events[i])
-      target_event = input("\n\t\tchoice -> ")       
-      return target_event
+         
+      return self.try_input(0, len(self.events) - 1)
       
    # event(self, player : Players, event : string) : void
    def event(self,player,event = ""): 
-      if event == "leave game":
-         #Note: doesn't consider AI players
-         player.bankrupt = True
-         print()
-         return
-      if event == "return to game":
-         print()
-         return
-      if event == "rules":
-         print() 
-         # Load file here, use your own link 💬
-         rules_file_path = '../txt/monopoly_rules.txt' 
-         with open(rules_file_path, 'r') as file:
-            # Read the contents of the file
-            file_contents = file.read()
-         # Print the contents of the file
-         print(file_contents)
-         blank = input("\npress enter to exit\n")
-         return
+      match event:
+         case "leave game":
+            #Note: doesn't consider AI players
+            player.bankrupt = True
+            print()
+            return
+         
+         case "return to game":
+            print()
+            return
+      
+         case "rules":
+            print() 
+            # Load file here, use your own link 💬
+            rules_file_path = '../txt/monopoly_rules.txt' 
+            
+            with open(rules_file_path, 'r') as file:
+               # Read the contents of the file
+               file_contents = file.read()
+            
+            # Print the contents of the file
+            print(file_contents)
+            blank = input("\npress enter to exit\n")
+            return
             
 class BankruptPlayerEvents(Events): #incomplete
    #--Constructor--
@@ -264,24 +297,27 @@ class BankruptPlayerEvents(Events): #incomplete
    events = ["give up","sell","mortgage","trade","menu"]
    
    #--Method Implementations--
-   # display_event_options(self) : string
+   # display_event_options(self) : int
    def display_event_options(self):
       print("\t\tSelect in dept players action:")  
+      
       for i in range(0,len(self.events)):
          num = str(i) + ")"
-         print("\t\t  ",num,self.events[i])      
-      target_event = input("\n\t\tchoice -> ")      
-      return target_event
+         print("\t\t  ",num,self.events[i])
+         
+      return self.try_input(0, len(self.events) - 1)
       
    # event(self, player : Players, event : string) : void
    def event(self,player,event = ""):
-      if event == "give up":
-         player.bankrupt = True
+      match event:
+         case "give up":
+            player.bankrupt = True
+            return
       '''      
-      if event == "sell":
-      if event == "mortgage":
-      if event == "trade"
-      if event == "menu"
+      case "sell":
+      case "mortgage":
+      case "trade":
+      case "menu":
       ''' 
       
 class AvailablePropertyEvents(Events): # near complete
@@ -296,17 +332,19 @@ class AvailablePropertyEvents(Events): # near complete
    events = ["purchase","auction"]
     
    #--Method Implementations--
-   # display_event_options(self) : string
+   # display_event_options(self, property_cost, ) : int
    def display_event_options(self,property_cost, player_money):
       print("\t\tSelect players action:")
+      
       for i in range(0,len(self.events)):
          num = str(i)+")"
          if i == 0 and player_money >= property_cost:
             print("\t\t  ",num,self.events[i],"for",str("$")+str(property_cost))
          elif i == 1: 
             print("\t\t  ",num,self.events[i])
-      target_event = input("\n\t\tchoice -> ")
-      print()       
+            
+      target_event = self.try_input(0, len(self.events) - 1)
+      print()
       return str(target_event)
       
    # event(self, event : string) : void
@@ -317,19 +355,19 @@ class AvailablePropertyEvents(Events): # near complete
       current_player = (all_players[self.arg[0].turn-1])
       current_tile = self.arg[0].board.tile[current_player.current_location()]
       # player_deeds.deep_copy(current_player.deeds)
-      # bank_deeds = bank.deeds 
-      if event == "purchase":
-         ### buy deed from bank
-         self.arg[0].transfer_payment(current_player, self.arg[0].bank, current_tile.property_cost)
-         self.arg[0].transfer_deed(bank, current_player, current_player.current_location())
-        
+      # bank_deeds = bank.deeds
+      match event:
+         case "purchase":
+            ### buy deed from bank
+            self.arg[0].transfer_payment(current_player, self.arg[0].bank, current_tile.property_cost)
+            self.arg[0].transfer_deed(bank, current_player, current_player.current_location())
          
-      if event == "auction": #needs testing
-         auction = AuctionPropertyEvents(self.arg[0])
-         auction_deed = self.arg[0].bank.deeds[current_player.current_location()] # copys current locations deed
-         self.arg[0].bank.deeds.pop(current_player.current_location()) #remove deed
-         auction.display_event_options(auction_deed,self.arg[0].all_players, self.arg[0].turn)
-         del auction
+         case "auction": #needs testing
+            auction = AuctionPropertyEvents(self.arg[0])
+            auction_deed = self.arg[0].bank.deeds[current_player.current_location()] # copys current locations deed
+            self.arg[0].bank.deeds.pop(current_player.current_location()) #remove deed
+            auction.display_event_options(auction_deed,self.arg[0].all_players, self.arg[0].turn)
+            del auction
          
 class AuctionPropertyEvents(Events): #incomplete
    #--Constructor--
@@ -340,17 +378,21 @@ class AuctionPropertyEvents(Events): #incomplete
    events = ["bid","forfeit"]
     
    #--Method Implementations--
-   # display_event_options(self,auctioned_deed : Deed, all_players : Players, starting_bidder : int) : string 
+   # display_event_options(self,auctioned_deed : Deed, all_players : Players, starting_bidder : int) : int 
    def display_event_options(self,auctioned_deed, all_players, starting_bidder): #incomplete
       current_bid = 0
       current_bidder = starting_bidder
       biding_players = all_players 
+      
       while len(biding_players) > 1:
          print("\t\tcurrent bid: ",current_bid)
+         
          for i in range(len(self.events)):
             num = str(i) + ")"
             print("\t\t  ",num,self.events[i]) 
-            target_event = input("\n\t\tchoice -> ") 
+            
+         target_event = self.try_input(0, len(self.events) - 1)
+            
          self.event(biding_players[current_bidder-1],target_event) 
 
    # event(self, players : Players, event : int) : void
@@ -387,7 +429,7 @@ class MainMenuEvents(Events): # near complete
    events = ["start game","players","rules","settings","exit"] 
    
    #--Method Implementations--
-   # display_event_options(self, initial_players : int) : string
+   # display_event_options(self, initial_players : int) : int
    def display_event_options(self,initial_players): 
       print("\nMonopoly Menu :")
       for i in range(len(self.events)):
@@ -396,48 +438,43 @@ class MainMenuEvents(Events): # near complete
             print("  ",num,self.events[i])
          else:
             print("  ",num,self.events[i],"=", "[" + str(initial_players) + "]") 
-      target_event = input("\nchoice -> ")
-      return target_event
+            
+      return self.try_input(0, len(self.events) - 1)
    
    # event(self, event : string, start_game : bool, initial_players : int, exit_menu : bool)) : tuple<T>
    def event(self, event, start_game, initial_players, exit_menu):
-      if event == "start game": # "start_game"
-         #start_game = main_menu.event(main_menu.events[int(choice)])
-         start_game = True
-      if event == "players": # "number of players"
-         #initial_players = main_menu.event(main_menu.events[int(choice)])
-         initial_players = 0     
+      match event:
+         case "start game":
+            #start_game = main_menu.event(main_menu.events[int(choice)])
+            start_game = True
             
-         while initial_players < 2 or initial_players > 6:
-            initial_players = int(input("\nEnter number of players(2-6): "))
-            if initial_players < 2 or initial_players > 6:
-               print("Invalid quantiy, try again")
+         case "players": # "number of players"
+            #initial_players = main_menu.event(main_menu.events[int(choice)])
+            initial_players = 0     
                
-      if event == "rules": # "rules"
-         # Load file here, use your own link 💬
-         print() 
-         rules_file_path = '../txt/monopoly_rules.txt' 
-         with open(rules_file_path, 'r') as file:
-            # Read the contents of the file
-            file_contents = file.read()
-            # Print the contents of the file
-            print(file_contents)
-         blank = input("\npress enter to exit\n")
+            while initial_players < 2 or initial_players > 6:
+               initial_players = int(input("\nEnter number of players(2-6): "))
+               if initial_players < 2 or initial_players > 6:
+                  print("Invalid quantiy, try again")
+               
+         case "rules": # "rules"
+            # Load file here, use your own link 💬
+            print() 
+            rules_file_path = '../txt/monopoly_rules.txt' 
+            with open(rules_file_path, 'r') as file:
+               # Read the contents of the file
+               file_contents = file.read()
+               # Print the contents of the file
+               print(file_contents)
+            blank = input("\npress enter to exit\n")
          
-      if event == "settings": # "settings" # for house rules, might be front-end 
-         pass
+         case "settings": # "settings" # for house rules, might be front-end 
+            pass
       
-      if event == "exit": # "exit"
-         exit_menu = True
+         case "exit": # "exit"
+            exit_menu = True
 
       return start_game, initial_players, exit_menu # unpack tuple
-   ''' 
-      if event == "start game":
-      if event == "number of players"
-      if event == "rules": 
-      if event == "settings":
-      if event == "exit":
-   '''
       
 class BuildBuildingEvents(Events): 
    #--Constructor--
@@ -450,30 +487,38 @@ class BuildBuildingEvents(Events):
       # buildable_properties
       self.events = copy.deepcopy(player.buildable_property_list(board.tile))
       can_afford = False
+      
       while can_afford == False:
-         target_event = "-2" 
-         while int(target_event) >= len(self.events) or int(target_event) < (-1):
+         target_event = -2
+         
+         while target_event >= len(self.events) or target_event < (-1):
             print("\t\tSelect property to build:")
             print("\t\t ",str(-1)+")","cancel building")
+            
             for i in range(0,len(self.events)):
                h = "h ="
                development = board.tile[self.events[i].index].houses 
+               
                if(board.tile[self.events[i].index].hotels > 0):
                   h = "H ="
                   development = board.tile[self.events[i].index].hotels
+                  
                num = str(i) + ") " # + str(self.events[i].index)
-               print("\t\t  ",num,self.events[i].name,h,development)          
-            target_event = input("\n\t\tchoice -> ")
-            if int(target_event) >= len(self.events) or int(target_event) < (-1):
-               print("\t\tinvalid choice, try again\n") 
+               print("\t\t  ",num,self.events[i].name,h,development)  
+               
+            target_event = self.try_input(-1, len(self.events) - 1)
+               
          print()
-         if int(target_event) == -1:
+         
+         if target_event == -1:
             return -1
-         target_deed = self.events[int(target_event)]
-         if board.tile[self.events[int(target_event)].index].houses < 4 and player.current_money() >= target_deed.house_cost:
+         
+         target_deed = self.events[target_event]
+         
+         if board.tile[self.events[target_event].index].houses < 4 and player.current_money() >= target_deed.house_cost:
             payment = target_deed.house_cost
             can_afford = True
-         elif board.tile[self.events[int(target_event)].index].houses == 4  and player.current_money() >= target_deed.hotel_cost:
+         elif board.tile[self.events[target_event].index].houses == 4  and player.current_money() >= target_deed.hotel_cost:
             payment = target_deed.hotel_cost
             can_afford = True
          else:
@@ -482,7 +527,7 @@ class BuildBuildingEvents(Events):
       bank = self.arg[0].bank
       # print("\n\t\t"+self.events[int(target_event)].name,"building =",self.events[int(target_event)].name)      
       self.arg[0].transfer_payment(player,bank,payment) 
-      return self.events[int(target_event)].index
+      return self.events[target_event].index
    
    # event(self,event : int) : void
    def event(self,player,event):
@@ -507,10 +552,12 @@ class SellBuildingEvents(Events):
       board = self.arg[0].board
       # buildable_properties
       self.events = copy.deepcopy(player.sellable_property_list(board.tile))
-      target_event = "-2" 
-      while int(target_event) >= len(self.events) or int(target_event) < (-1):            
+      target_event = -2
+      
+      while target_event >= len(self.events) or target_event < (-1):
          print("\t\tSelect property to sell:")
          print("\t\t ",str(-1)+")","cancel selling")
+         
          for i in range(0,len(self.events)):
             h = "h ="
             development = board.tile[self.events[i].index].houses 
@@ -520,20 +567,25 @@ class SellBuildingEvents(Events):
                development = board.tile[self.events[i].index].hotels
                
             num = str(i) + ") " # + str(self.events[i].index)
-            print("\t\t  ",num,self.events[i].name,h,development)          
-         target_event = input("\n\t\tchoice -> ")
-         if int(target_event) >= len(self.events) or int(target_event) < (-1):
-            print("\t\tinvalid choice, try again\n")
+            print("\t\t  ",num,self.events[i].name,h,development)    
+            
+         target_event = self.try_input(-1, len(self.events) - 1)
+            
       print()
-      if int(target_event) == -1:
+      
+      if target_event == -1:
          return -1
-      target_deed = self.events[int(target_event)]
-      if board.tile[self.events[int(target_event)].index].hotels == 1:
+      
+      target_deed = self.events[target_event]
+      
+      if board.tile[self.events[target_event].index].hotels == 1:
          payment = int(target_deed.hotel_cost / 2)
       else:
-         payment = int(target_deed.house_cost / 2)        
+         payment = int(target_deed.house_cost / 2)
+         
       bank = self.arg[0].bank  
-      self.arg[0].transfer_payment(bank,player,payment) 
+      self.arg[0].transfer_payment(bank,player,payment)
+      
       return self.events[int(target_event)].index
    
    # event(self, event : int) : void
@@ -564,20 +616,24 @@ class MortgagePropertyEvents(Events):
       print("\t\tSelect property to mortgage:")
       
       print("\t\t ",str(-1)+")","cancel mortgage")
+      
       for i in range(0,len(self.events)):
           # self.events.append(self.events[i].name) #change to player.owned_deeds.name
           num = str(i) + ")" 
           print("\t\t  ",num,self.events[i].name)          
 
-      target_event = input("\n\t\tchoice -> ")
+      target_event = self.try_input(-1, len(self.events) - 1)
+      
       if int(target_event) == -1:
          return -1
-      target_deed = self.events[int(target_event)]
+      
+      target_deed = self.events[target_event]
       payment = target_deed.mortgage_value # mortgage_value
       bank = self.arg[0].bank
-      print("\n\t\t"+self.events[int(target_event)].name,"is mortgaged")      
-      self.arg[0].transfer_payment(bank,player,payment)      
-      return self.events[int(target_event)].index
+      print("\n\t\t"+self.events[target_event].name,"is mortgaged")      
+      self.arg[0].transfer_payment(bank,player,payment)
+      
+      return self.events[target_event].index
    
    # event(self, event : int) : void
    def event(self,event): 
@@ -601,14 +657,17 @@ class RedeemPropertyEvents(Events): #incomplete
           num = str(i) + ")"  
           print("\t\t  ",num,self.events[i].name)      
           
-      target_event = input("\n\t\tchoice -> ")
+      target_event = self.try_input(-1, len(self.events) - 1)
+      
       if int(target_event) == -1:
-         return -1      
+         return -1
+      
       target_deed = self.events[int(target_event)]
       payment = target_deed.unmortgage_value # unmortgage_value
       bank = self.arg[0].bank
       print("\n\t\t"+self.events[int(target_event)].name,"is unmortgaged")
-      self.arg[0].transfer_payment(player,bank,payment)     
+      self.arg[0].transfer_payment(player,bank,payment)
+      
       return self.events[int(target_event)].index
    
    # event(self,event : int) : void
@@ -628,40 +687,54 @@ class TradeEvents(Events): #incomplete
       player = game.all_players[game.turn-1]
       # list_pairing = []
       # generate tradable player list  
+
       for i in range(0,len(game.all_players)):
          if game.all_players[i].id != player.id:
             selectable_players.append(game.all_players[i])
+            
       # num = str(i) + ")"
       target_player = -1
+      
       ### pick player to trade with
       while target_player < 0 or target_player >= len(selectable_players):
          print("\t\tChoose a player to trade with:")
          print("\t\t ",str(-1)+")","cancel trade offer")
+         
          for i in range(0,len(selectable_players)):
             num = str(i) + ")"
             print("\t\t  ",num,"player",selectable_players[i].id)
-         target_player = int(input("\n\t\tchoice -> "))
+            
+         target_player = self.try_input(-1, len(selectable_players) - 1)
+         
          if target_player == -1:
             return
+         
       selected_player = selectable_players[target_player]
-      next_step = False 
+      next_step = False
+      
       ### offer asset properties
       offered_properties = []
       deed_choice = -1
       player_properties = copy.deepcopy(player.deeds)
       current_offer = ""
+      
       if len(player_properties) == 0:
          next_step = True
+         
       while next_step == False: ### select properties
          # for i in range(0, len(offered_properties)):
          if current_offer != "":
             print("\n\t\tproperties offered:", current_offer)
+            
          print("\n\t\tSelect property:")
          print("\t\t ",str(-1)+")","finish property offer")
+         
          for i in range(0,len(player_properties)):
             num = str(i) + ")"
             print("\t\t  ", num, player_properties[i].name)
-         deed_choice = int(input("\n\t\tchoice -> "))
+            
+         deed_choice = self.try_input(-1, len(player_properties) - 1)
+         
          ### respond to offered choice
          if deed_choice >= 0 and deed_choice < len(player_properties):
             removed_property = player_properties.pop(deed_choice)
@@ -670,46 +743,57 @@ class TradeEvents(Events): #incomplete
          elif int(deed_choice) == -1:
             next_step = True
             deed_choice = -1
-         else: 
-            print("\t\tinvalid choice, try again\n") 
+            
       ### reset
       next_step = False
       offered_money = -1
+      
       ### offer asset money
-      while offered_money < 0 or offered_money > player.current_money():
-         print("\n\t\tcurrent money:",player.current_money())
-         offered_money = int(input("\t\tenter offer: $"))
-         if offered_money < 0 or offered_money > player.current_money():   
-            print("\t\tinvalid choice, try again\n")
+      print("\n\t\tcurrent money:",player.current_money())
+         
+      offered_money = self.try_input(0, player.current_money(), "\t\tenter offer: $")
+            
       confirm_offer = -1
+      
       ### confirm property, money offer
       while confirm_offer < 0 or confirm_offer > 1:
          print("\n\t\tyour money offer is $"+str(offered_money))
+         
          if current_offer != "":
             print("\t\tyour property offer is", current_offer+"\n") # current_offer is not the requested list
+            
          print("\t\tConfirm offer")
          print("\t\t  ","0) yes, continue")
          print("\t\t  ","1) no, exit trade")
-         confirm_offer = int(input("\n\t\tchoice -> "))
+         
+         confirm_offer = self.try_input(0, 1)
+               
       if confirm_offer == 1:
          return
+      
       ### requested asset properties
       print("\n\t\trequest assets from player "+str(selected_player.id))
       desired_properties = []
       deed_choice = -1
       other_player_properties = copy.deepcopy(selected_player.deeds)
       current_request = ""
+      
       if len(other_player_properties) == 0:
          next_step = True
+         
       while next_step == False: ### select properties
          if current_request != "":
             print("\n\t\trequested properties:", current_request)
+            
          print("\n\t\tSelect property:")
          print("\t\t ",str(-1)+")","finish property request")
+         
          for i in range(0,len(other_player_properties)):
             num = str(i) + ")"
             print("\t\t  ", num, other_player_properties[i].name)
-         deed_choice = int(input("\n\t\tchoice -> "))
+            
+         deed_choice = self.try_input(-1, len(other_player_properties) - 1)
+         
          ### respond to offered choice
          if deed_choice >= 0 and deed_choice < len(player_properties):
             removed_property = other_player_properties.pop(deed_choice)
@@ -720,60 +804,81 @@ class TradeEvents(Events): #incomplete
             deed_choice = -1
          else: 
             print("\t\tinvalid choice, try again\n")
+            
       ### reset
       next_step = False
       desired_money = -1
+      
       ### desired asset money
       while desired_money < 0 or desired_money > selected_player.current_money():
          print("\n\t\tcurrent money:",selected_player.current_money())
-         desired_money = int(input("\t\tenter request: $"))
-         if desired_money < 0 or desired_money > selected_player.current_money():   
-            print("\t\tinvalid choice, try again\n")
+         
+         desired_money = self.try_input(0, selected_player.current_money(), "\t\tenter offer: $")
+            
       confirm_offer = -1
+      
       ### confirm property, money request0
       while confirm_offer < 0 or confirm_offer > 1:
          print("\n\t\tyour money request is $"+str(desired_money))
+         
          if current_request != "":
             print("\t\tyour property request is", current_request+"\n")
+            
          print("\n\t\tConfirm request")
          print("\t\t  ","0) yes, continue")
          print("\t\t  ","1) no, exit trade")
-         confirm_offer = int(input("\n\t\tchoice -> "))
+         
+         confirm_offer = self.try_input(0, 1)
+         
       if confirm_offer == 1:
-         return      
+         return
+      
       ### selected_player accept/deny request
       print("\n\t\tPlayer "+selected_player.id+" is offered by Player "+str(player.id))
       print("\t\t   $"+str(offered_money))
+      
       for i in range(0,len(offered_properties)):
             print("\t\t   -"+offered_properties[i].name)
+            
       print("\t\tIn exchange for")
       print("\t\t   $"+str(desired_money))
+      
       for i in range(0,len(desired_properties)):
          print("\t\t   -"+desired_properties[i].name)
+         
       print("\n\t\tConfirm trade?")
       confirm_request= -1
+      
       while confirm_request < 0 or confirm_request > 1:
          print("\t\t  ","0) accept")
          print("\t\t  ","1) reject")
-         confirm_request = int(input("\n\t\tchoice -> "))
+         confirm_request = self.try_input(0, 1)
          print()
+         
       if confirm_request == 1:
          print("\t\toffer rejected")
       elif confirm_request == 0:
          print("\t\toffer accepted")
+         
          ### perforem trade
          for i in range(0,len(offered_properties)):
             if(i == 0):
                print("\n\tfor player "+selected_player.id,"...")
+               
             game.transfer_deed(player,selected_player, offered_properties[i].index)
+            
          for i in range(0,len(desired_properties)):
             if(i == 0):
-               print("\n\tfor player "+player.id,"...")            
+               print("\n\tfor player "+player.id,"...")   
+               
             game.transfer_deed(selected_player, player, desired_properties[i].index)
+            
          if offered_money != 0:   
             game.transfer_payment(player, selected_player, offered_money)
+            
          if desired_money != 0:            
             game.transfer_payment(selected_player, player, desired_money)
+            
          print()
          player.player_status(game.board.tile)
       return  

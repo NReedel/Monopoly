@@ -53,11 +53,11 @@ class Cards:
 			case card_events.Name.PAY_PLAYERS:	# card event: pay money to each player
 				self.card_event = card_events.PayPlayerRateAmount(self.event_name, card[self.event_name])
 				
-			case card_events.Name.RECEIVE_PLAYERS:	# card event: receive money from each player
-				self.card_event = card_events.ReceivePlayerRateAmount(self.event_name, card[self.event_name])
-				
 			case card_events.Name.PAY_BUILDINGS:	# card event: pay money per owned house and hotel to the bank
 				self.card_event = card_events.PayBuildingRateAmount(self.event_name, card['payHouseRateAmount'], card['payHotelRateAmount'])
+				
+			case card_events.Name.RECEIVE_PLAYERS:	# card event: receive money from each player
+				self.card_event = card_events.ReceivePlayerRateAmount(self.event_name, card[self.event_name])
 				
 			case card_events.Name.MOVE_INDEX:	# card event: move to the specified tile
 				self.card_event = card_events.MoveToIndex(self.event_name, card[self.event_name])
