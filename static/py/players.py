@@ -41,7 +41,7 @@ class Players:
    # player_assets(self, tiles) : void
    def player_status(self,tiles): 
       ###List Player Assets (static stats)
-      # print("player number = "self.id)
+      # print("\t\tid =",self.id)
       # print("player character = "self.character)
       print("\t\tmoney =","$"+str(self.current_money()))
       print("\t\tin debt =",self.in_debt())

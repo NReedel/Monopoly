@@ -58,7 +58,7 @@ class Game:
    def transfer_all(self): 
       starting_deeds_size = len(self.bank.deeds)
       for i in range(0,starting_deeds_size):
-         self.transfer_deed(self.bank,self.all_players[0],self.bank.deeds[i].index)
+         self.transfer_deed(self.bank,self.all_players[0],self.bank.deeds[0].index)
           
    # pass_GO(self, player : Player, next_location : int) : int
    def pass_GO_check(self, player, next_location):
@@ -98,7 +98,7 @@ class Game:
             while ((int(target_event) < 0 or len(available_property_events.events)) <= int(target_event) and can_buy == True) or (can_buy == False and (int(target_event) >= len(available_property_events.events) or int(target_event) < 1)):
                print("\t\tinvalid choce, try again\n")
                target_event = available_property_events.display_event_options(cost, player.current_money())
-               
+            
             available_property_events.event(available_property_events.events[int(target_event)])
             del available_property_events
 
@@ -341,17 +341,18 @@ class Game:
    def transfer_payment(self,payer, recipient, payment):
       payer.pay_money(payment)
       recipient.receive_money(payment)
-
-   # transfer_deed(owner: T, recipient :  T, location : int) : void
+      
+ # transfer_deed(owner: T, recipient :  T, location : int) : void
    def transfer_deed(self,owner, recipient, location): 
       owner_deeds = copy.deepcopy(owner.deeds) # maybe
       recipient_deeds = copy.deepcopy(recipient.deeds)
-
+      ### fetch deed at location from owner
       for i in range(0,len(owner_deeds)): 
-         
          if location == owner_deeds[i].index:
             target_deed = owner_deeds[i]
+            pop_index = i
             i = len(owner_deeds)
+            # owner_deeds.pop(temp)
       ###Aleternative to performing a sort
       # if len(recipient_deeds) == 0:
       #    recipient_deeds.append(target_deed)
@@ -366,11 +367,14 @@ class Game:
       #          i = len(recipient_deeds)
       recipient_deeds.append(target_deed)
       recipient.deeds = copy.deepcopy(recipient_deeds)
+      owner_deeds.pop(pop_index)
+      owner.deeds = copy.deepcopy(owner_deeds)
       print("\t\t\""+str(target_deed.name)+"\"","received\n")
       self.board.tile[location].owned_by = recipient.id
       self.board.tile_check(self.all_players)
       if recipient.id != "bank":   
          recipient.sort_deeds()
+  
       
    # jailed_move_attempt(self, player : Players) : void
    def jailed_move_attempt(self,player): 
