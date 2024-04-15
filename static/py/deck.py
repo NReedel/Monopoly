@@ -24,7 +24,6 @@ class Deck:
     # -- Methods --
     def shuffle(self):
         ''' Shuffles the cards in the deck '''
-        print("\t\tShuffling the deck... ")
         self.shuffler.shuffle(self.deck)
 
 
